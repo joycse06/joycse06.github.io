@@ -1,0 +1,16 @@
+---
+layout: post
+title: Boot Slax from your USB flash drive
+date: 2008-4-13
+comments: true
+categories: life
+link: false
+---
+<p>Slax is a lightweight linux based distro with some important features. It's possible to boot this from a USB flash drive. Just follow the steps bellow and enjoy your time with Slax 6.0.4.<br />
+        1. Download the package for flash drive from <a href="http://http://nimue.fit.vutbr.cz/slax/SLAX-6.x/slax-6.0.4.tar">here</a><br />
+        2. Unzip the .tar file to the root directory of your Flash drive.<br />
+        3. Navigate to the boot directory of your flash drive.<br />
+        4. Double click on the file bootinst.bat and follow the instruction.<br />
+        5. Reboot the system and enter the boot menu to boot from the flash drive.<br />
+        6. Enter the live session and install to your HDD if you like.</p>
+<p>Enjoy your time with slax.</p>
