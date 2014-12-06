@@ -12,6 +12,8 @@ But Laravel 4 combines both of those things. It’s extremely architecturally pu
 
 Last weekend I was checking a video on Laravel 4 which was discussing about facades in Laravel 4 and I was truly amazed to see how the fancy looking static API's are mapped into their original Classes. Laravel 4 takes advantage of Facade Design Pattern[ <a href="http://en.wikipedia.org/wiki/Facade_pattern">http://en.wikipedia.org/wiki/Facade_pattern</a> ] which allows it to provide expressive syntax through static API's but still keep it testable under the hood.
 
+<!-- more -->
+
 So, back to the main point of the post, how a static method like 
 
 ``` php Facade Examples
