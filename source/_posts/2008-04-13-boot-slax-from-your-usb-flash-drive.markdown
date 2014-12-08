@@ -3,7 +3,7 @@ layout: post
 title: Boot Slax from your USB flash drive
 date: 2008-4-13
 comments: true
-categories: life
+categories: linux
 link: false
 ---
 <p>Slax is a lightweight linux based distro with some important features. It's possible to boot this from a USB flash drive. Just follow the steps bellow and enjoy your time with Slax 6.0.4.<br />

@@ -4,7 +4,7 @@ title: 'Setting up the environment and Running your first Rails app in mac OSX S
   Leopard '
 date: '2012-5-2'
 comments: true
-categories: life
+categories: rails
 link: false
 ---
 I have been into Rails recently and found out that configuring Rails Environment is easy in Mac. So I will be sharing the steps I followed to setup the environment and running my first rails app.

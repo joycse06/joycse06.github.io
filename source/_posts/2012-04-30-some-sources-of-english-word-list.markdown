@@ -3,7 +3,7 @@ layout: post
 title: Some Sources of English Word List
 date: '2012-4-30'
 comments: true
-categories: life
+categories: tools
 link: false
 ---
 I was in need of a english word list for a application and I was searching for a complete list.

@@ -3,7 +3,7 @@ layout: post
 title: Making your terminal more intuitive with oh-my-zsh and other tools
 date: '2012-4-28'
 comments: true
-categories: life
+categories: linux tools
 link: false
 ---
 I have started using Terminal massively since I got my Macbook back in 2010. I used it in Ubuntu but not that much. So I have always been searching for way about how to be more productive in Terminal and at the same time make it look beautiful as pass a great amount of time everyday. So I will be sharing some of the cool things I found in the internet which made my Macbook's Terminal far better than it was before. Here is a screenshot of my current terminal window.

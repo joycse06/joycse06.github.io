@@ -3,7 +3,7 @@ layout: post
 title: My first post about ACM problem
 date: 2008-4-9
 comments: true
-categories: life
+categories: programming cpp
 link: false
 ---
 Hi, Guys this is my first post about acm problems. As this is my first post I am going to publish one of my AC code. It's a very easy problem. But the title seems to be horrible. You just calculate the difference between the input and print the output.

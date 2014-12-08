@@ -3,7 +3,7 @@ layout: post
 title: Gits stash - a very handy git feature in some scenario
 date: '2012-4-28'
 comments: true
-categories: life
+categories: git
 link: false
 ---
 I have started using <strong>git</strong>(a DVCS) from last month and I am liking it much. Some days back I came across the <strong>git stash</strong> command in a Stack Overflow question and was glad that git have this feature which svn doesn't. I will be describing a scenario when <strong>git stash</strong> is very helpful.

@@ -3,7 +3,7 @@ layout: post
 title: "Revisting Data Structure : Linked List Part 1"
 date: 2014-12-06 21:27:38 -0500
 comments: true
-categories: 
+categories: programming cpp data-structure
 ---
 
 Linked List is a very important data structure in terms of the concepts required to understand it's inner working and the operation that can be performed on it.

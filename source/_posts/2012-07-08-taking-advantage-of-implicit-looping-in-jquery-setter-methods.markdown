@@ -3,7 +3,7 @@ layout: post
 title: Taking Advantage of Implicit looping In jQuery Setter Methods
 date: '2012-7-8'
 comments: true
-categories: life
+categories: web jquery
 link: false
 ---
 jQuery setter methods are those methods using which we can set the value of any input field, or any attributes like width,height,classes etc and some of the setter methods are 

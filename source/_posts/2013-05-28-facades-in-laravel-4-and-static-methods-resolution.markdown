@@ -3,7 +3,7 @@ layout: post
 title: Facades in Laravel 4 and Static methods resolution
 date: '2013-5-28'
 comments: true
-categories: life
+categories: web laravel php
 link: false
 ---
 Several months ago in a blog post I saw people complaining about Laravel3's Static methods stating Static methods are very difficult to Unit Test with and Laravel is a pile of Static API's rather than a framework. I dont remember the Link. It said Laravel 3 is not architecturally “pure”, but it has super clean syntax. 

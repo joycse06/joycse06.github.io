@@ -3,7 +3,7 @@ layout: post
 title: Lets build a terminal one-liner to add all new files into a subversion repository
 date: '2012-5-3'
 comments: true
-categories: life
+categories: tools
 link: false
 ---
 Those who of you have been working with subversion for a while may have noticed that when you add a number of files in different directories into an existing subversion repository you have to add each one of them from command line which is a pain.

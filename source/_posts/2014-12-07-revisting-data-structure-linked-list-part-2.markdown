@@ -3,13 +3,13 @@ layout: post
 title: "Revisting Data Structure : Linked List Part 2"
 date: 2014-12-07 22:57:17 -0500
 comments: true
-categories: 
+categories: programming cpp data-structure
 ---
  In previous part of the series We talked about Linked List in General and it's implementation details in C++ Programming language. We saw how to layout the structure of a Linked List and how to insert data into the list.
 
  In this episode we will be talking about how we can print all the nodes of a linked list. So we can assume from the nature of Linked list that we have to traverse the whole list and print each nodes value.
 
- ##Printing Linked List through Iteration Method
+## Printing Linked List through Iteration Method
 
  The definition of the print function using iteration is as follows:
 
@@ -26,6 +26,8 @@ categories:
  }
 
 ```
+
+<!-- more -->
 
 The definition of the function is fairly straight forward. We take ```head``` of the list as argument and then using a while loop we traverse through the List and print the value at each node.
 

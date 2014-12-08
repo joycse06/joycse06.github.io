@@ -3,7 +3,7 @@ layout: post
 title: on and off jQuery's new event binding awesomeness
 date: '2012-4-29'
 comments: true
-categories: life
+categories: web jquery
 link: false
 ---
 I have been using jQuery for quite a while and have used all of jQuery's event handlers like <em>$.bind $.live $delegate $.click etc. </em>

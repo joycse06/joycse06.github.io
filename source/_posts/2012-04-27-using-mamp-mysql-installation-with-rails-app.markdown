@@ -3,7 +3,7 @@ layout: post
 title: Using MAMP's mysql Installation with Rails App
 date: '2012-4-27'
 comments: true
-categories: life
+categories: web rails mysql
 link: false
 ---
 Being primarily a PHP developer I always have one AMP package installed in my machine no matter what platform I work with. Now-a-days as I work on my macbook I have MAMP installed.

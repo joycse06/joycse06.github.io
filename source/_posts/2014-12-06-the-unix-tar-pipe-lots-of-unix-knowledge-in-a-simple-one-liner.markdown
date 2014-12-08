@@ -3,7 +3,7 @@ layout: post
 title: "The Unix Tar Pipe : Lots of Unix Knowledge in a simple one liner"
 date: 2014-12-06 03:22:15 -0500
 comments: true
-categories: Unix Shell
+categories: linux tools
 ---
 
 I have recently been introduced to the Tar Pipe. It's not a command to run in the shell but a pattern which I liked very much.

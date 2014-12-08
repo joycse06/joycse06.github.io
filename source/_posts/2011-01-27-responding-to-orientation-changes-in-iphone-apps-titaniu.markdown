@@ -3,7 +3,7 @@ layout: post
 title: Responding to orientation changes in Iphone Application Using Titanium
 date: '2011-1-27'
 comments: true
-categories: life
+categories: programming ios
 link: false
 ---
 I am learning Titanium and Just Loving it. Earlier I thought i wont be able to do many things using titanium and started learning Obj-C and Cocoa-touch framework. And that path needs lots of study and learning before someone can build something really productive.

@@ -3,7 +3,7 @@ layout: post
 title: Increasing your productivity using Alfred in mac osx
 date: '2012-4-29'
 comments: true
-categories: life
+categories: tools osx
 link: false
 ---
 <p style="text-align: center;">I have been using mac for a while. For quickly Starting applications mac have a spotlight thing which we can invoke using the CMD+SPACEBAR shortcut and type anything it will search for matching applications, documents, images and it's lightning fast as mac does offline indexing of directories and files. Have a look here:<a href="http://blog.joynag.net/wp-content/uploads/2012/04/spotlight.png"><img class="alignnone size-medium wp-image-133" title="spotlight" src="http://blog.joynag.net/wp-content/uploads/2012/04/spotlight-262x300.png" alt="" width="262" height="300" /></a></p>

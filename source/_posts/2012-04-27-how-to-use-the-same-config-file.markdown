@@ -3,7 +3,7 @@ layout: post
 title: How to Use the same Config file both in Localhost and in Live Server
 date: '2012-4-27'
 comments: true
-categories: life
+categories: web php
 link: false
 ---
 Every projects have some kind of configuration such

@@ -3,7 +3,7 @@ layout: post
 title: 'Using MAMP Pro''s VHosts feature to run Rails app in a fancy domain name '
 date: '2012-4-27'
 comments: true
-categories: life
+categories: rails web
 link: false
 ---
 I have been playing with ROR(Ruby On Rails) from last few days. Those who of you have idea about the the nature of Rails apps know that, to run a rails app you have to run the following command in the terminal from inside the apps directory.
