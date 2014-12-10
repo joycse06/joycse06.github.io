@@ -6,7 +6,7 @@ comments: true
 categories: programming android java
 ---
 
-Few months ago I created an Android app [Al-Quran Bangla Mormobani](https://play.google.com/store/apps/details?id=quantum.org.quran) in several days for a quick deadline, so couldn't add much features to it. One such feature was the search terms were not highlighted in the results view so users couldn't use it effectively for reference. I got several requests from the users asking for this features. Few days ago I had couple of hours free to look into it and after searching for a while found a solution.
+Few months ago I created an Android app [Al-Quran Bangla Mormobani](https://play.google.com/store/apps/details?id=quantum.org.quran) in several days with a quick deadline, so couldn't add much features to it. One such feature was the search terms were not highlighted in the results view so users couldn't use it effectively for reference. I got several requests from the users asking for this features. Few days ago I had couple of hours free to look into it and after searching for a while found a solution.
 
 <!-- more -->
 
