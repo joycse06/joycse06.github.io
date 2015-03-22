@@ -14,6 +14,7 @@ And the amazing thing is that it's open source. They have an example app which h
 
 Anyway, let's talk about the Title of this post. You know Iphone,Ipod Touch, IPad have accelerometers built-in. That means it can detect orientation changes. Now responding to orientation changes Is a very important feature that every Iphone Apps should have. Doing it is not tough with Titanium. Here is a code block, which will respond to device orientation changes by changing the UI orientation. Place it anywhere in you app.js file.
 ``` js
+
 Ti.Gesture.addEventListener(
 'orientationchange', function(e) {
 // alert("Called");
@@ -33,6 +34,7 @@ Ti.UI.orientation = Titanium.UI.LANDSCAPE_RIGHT;
 Titanium.UI.orientation = Titanium.UI.PORTRAIT;
 }
 });
+
 ```
 
 The code is pretty straightforward. We are attaching an event listener into the Ti.Gesture and once the orientation of the device changes this callback is fired and we can do anything we want into that callback. I will try to write small posts on titanium as i go along learning Titanium.

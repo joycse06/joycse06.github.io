@@ -54,6 +54,7 @@ class StartOverCommand extends Command {
 }
 
 ```
+
 Only the relevant parts of the file is included here. BTW, you can create a boiler plate command using the ```php artisan command:make StartOverCommand``` command from terminal.
 
 the name you set above will be the actual command, I have set it like ```appname:startover``` Its always a good practice to namespace things whenever possible.

@@ -13,6 +13,7 @@ The solution of problem No. 10055
 The code:
 
 ``` cpp
+
 //10055.cpp
 
 #include <iostream.h>

@@ -129,6 +129,7 @@ Though jQuery still supports previous event binding method's, it's good to write
 And here goes some examples how you can convert previous $.bind, $.delegate or $.live calls
 
 ``` js
+
 /* for $.bind to $.on */
 /* Old: */ $(&quot;.foo&quot;).bind(&quot;click&quot;, handler);
 /* New: */ $(&quot;.foo&quot;).on(&quot;click&quot;, handler);
@@ -142,4 +143,5 @@ And here goes some examples how you can convert previous $.bind, $.delegate or $
 
 /* Old: */ $(&quot;.foo&quot;).live(&quot;click&quot;, handler);
 /* New: */ $(document).on(&quot;click&quot;, &quot;.foo&quot;, handler);
+
 ```

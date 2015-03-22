@@ -25,7 +25,7 @@ There are several benefits of this using this pattern:
 
 Let me give you an example, With everything properly set up, lets see how a ```user register``` action method of registration controller will look like,
 
-```php RegistrationController@register
+``` php RegistrationController@register
 
 pubic function register()
 {
@@ -58,7 +58,7 @@ Lets clarify some terms:
 
  ```Data Transfer Objects``` are instances of simple classes with public properties to pass between different componets of your application. A simple ```RegisterUserCommand``` DTO can look like (Taken from one of my personal project)
 
-```php Saphira/Users/Commands/RegisterUserCommand.php
+``` php Saphira/Users/Commands/RegisterUserCommand.php
 
 <?php namespace Saphira\Users\Commands;
 
@@ -94,7 +94,7 @@ as you see it has everything I need for user registration. And the cool thing is
 
 Likewise, A sample ```RegisterUserHandler``` can look like,
 
-```php Saphira/Users/Handlers/RegisterUserHandler.php
+``` php Saphira/Users/Handlers/RegisterUserHandler.php
 
 <?php namespace Saphira\Users\Handlers;
 
@@ -137,7 +137,7 @@ class RegisterUserHandler implements CommandHandlerInterface{
 
 And with these two and some other classes( like ```EventListener```, ```RegisterUserValidator``` etc) placed in proper directories my ```RegistrationController@store``` method is as simple as following
 
-```php RegistrationController.php
+``` php RegistrationController.php
 
 public function store()
 {

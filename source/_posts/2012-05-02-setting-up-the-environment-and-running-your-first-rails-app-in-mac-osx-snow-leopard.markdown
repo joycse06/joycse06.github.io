@@ -14,25 +14,33 @@ I have been into Rails recently and found out that configuring Rails Environment
 <strong>Installing RVM: </strong>Ruby Version Manager is a very handy tool while working with multiple version of Rubies. Snow Leopard comes with Ruby 1.8.7. And using RVM you can install Ruby 1.9.2 or the current stable version 1.9.3. And switching between version using RVM is very easy. So let's jump into installing RVM. Rvm's installation is very easy. The rvm <a title="RVM" href="https://rvm.io/rvm/install/" target="_blank">website</a> provides a one liner installation script to run in your terminal.
 
 ``` bash
+
 $ curl -L get.rvm.io | bash -s stable
+
 ```
 Then to load the rvm you have to run the following command:
 
 ``` bash
+
 $ source ~/.rvm/scripts/rvm
+
 ```
 
 But you are not going to load the rvm every time you start terminal. So its better to add the following file in your <em>~/.bashrc</em> or <em>~/.bash_profile</em> file and <em>~/.zshrc</em> if you are using zsh as your default shell.
 
 ``` bash
+
 # place in ~/.bash_profile or ~/.bashrc as the very last line
 [[ -s $HOME/.rvm/scripts/rvm ]] &amp;&amp; . $HOME/.rvm/scripts/rvm
+
 ```
 
 After loading the rvm script file to check if rvm is properly installed in your system run the following command in terminal
 
 ``` bash
+
 $ type rvm | head -n1
+
 ```
 
 If you it says "<em>rvm is a shell function</em>" or "<em>rvm is a function</em>" then it's fine and you are good to go.
@@ -40,55 +48,70 @@ If you it says "<em>rvm is a shell function</em>" or "<em>rvm is a function</em>
 Now go ahead and install an updated ruby version like 1.9.2 or 1.9.3 using the command
 
 ``` bash
+
 $ rvm install 1.9.2
 # or
 $ rvm install 1.9.3
+
 ```
 
 It will take some time and that specific ruby version will be installed automatically. Now to check which version of ruby is default in terminal you can try the following command
 
 ``` bash
+
 $ ruby -v
+
 ```
 
 It's supposed to say 1.8.7  if you havent upgraded the default Ruby version. Now to use the newly installed Ruby you have to tell rvm to do so using the command
 
 ``` bash
+
 # Use which version you installed using rvm
 rvm use 1.9.2
 # The above command will load the environment in current terminal session
 # if you want to use this as the default version in terminal all the time use --default option instead
 $ rvm use 1.9.2 --default
+
 ```
 
 now if you run <em>ruby -v </em>you will see your desired ruby version. Now let install rails gem using <em>gem install </em>command.
 
 ``` bash
+
 $ gem install rails
+
 ```
 
 It will take some time and install latest <em>rails </em>system into your system. Now let's create a new rails project. Move to your desired directory and run the following command
 
 ``` bash
+
 $ rails new blog
+
 ```
 
 It will create a new rails application named blog in current directory. Now move into the new blog directory. and then run following command for bundling the gems :
 
 ``` bash
+
 $ cd blog
 $ bundle install
+
 ```
 
 It will take some time and install all gems required to run the application. Now start the app using the follwoing command
 
 ``` bash
+
 $ rails server
+
 ```
 
 if you followed the previous steps properly you should see something like the following
 
 ``` bash
+
 Booting WEBrick
 Rails 3.2.3 application starting in development on http://0.0.0.0:3000
 Call with -d to detach
@@ -96,6 +119,7 @@ Ctrl-C to shutdown server
 [2012-05-02 14:57:59] INFO WEBrick 1.3.1
 [2012-05-02 14:57:59] INFO ruby 1.9.2 (2012-02-14) [x86_64-darwin10.8.0]
 [2012-05-02 14:57:59] INFO WEBrick::HTTPServer#start: pid=81487 port=3000
+
 ```
 
 It will start WEBrick (a simple  web server rails ships with itself ). And you can open your browser and point it to http://0.0.0.0:3000 and you should see the following screen

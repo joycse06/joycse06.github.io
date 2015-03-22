@@ -42,7 +42,7 @@ mysqldump -h DB_HOST -u DB_USER -p DB_NAME > EXPORT_FILENAME.sql
 
 It will prompt you for password and after you provide that it will start dumping the database into the file you specified. It can take time depending on the amount of data you have in your magento store. Like in my case it took quite some time to export a database of size around 4GB. Once done, you will get a uncompressed sql file whose size can be reduced easily. As it's a text file it's compression ratio will be good and you should get a file much smaller in size. You can compress it using ```tar```
 
-```bash tar
+``` bash tar
 tar -czf  EXPORT_FILENAME.sql.tar.gz EXPORT_FILENAME.sql
 
 ```
@@ -51,7 +51,7 @@ tar -czf  EXPORT_FILENAME.sql.tar.gz EXPORT_FILENAME.sql
 
 If it's a very big dump then you should be using ```scp``` (Secure Copy over ssh) to save yourself time. That would reduce the step of downloading it in your local machine first and then re upload into the new server. If you have ```ssh``` access of the new server then you should definitely try to use ```scp``` . For that login into the old server where you have the exported database dump then run a command like
 
-```bash scp
+``` bash scp
 
  scp -P SSH_PORT /PATH/TO/EXPORT_FILENAME.sql.gz username@NEW_SERVER_IP:/NEW/SERVER/PATH/
 
@@ -66,7 +66,8 @@ You can copy the magento codebase the same way over to the new server.
 
 First ```untar``` the copied database into it's original ```.sql``` format. Use the following command,
 
-```bash untar
+``` bash untar
+
 tar -xzf EXPORT_FILENAME.sql.tar.gz
 
 ```
@@ -75,7 +76,7 @@ After this step you will have a file named ```EXPORT_FILENAME``` in the current 
 
 Create a new database in the new server either from command line using ```mysql cli``` or from ```cpanel``` or any kind of database administration tool and then ```ssh``` into the new server. Then you can import the copied database dump into the newly created database using the following command,
 
-```bash mysql import
+``` bash mysql import
 
 mysql -u DB_USER -p DB_NAME < EXPORT_FILENAME.sql
 
@@ -92,7 +93,7 @@ As you may have guessed from the path names ```secure``` and ```unsecure``` ```b
 
 You can now load the new url in browser and it should load the new site. If it doesn't then you might have to clear the cache of the site. The ```cache``` directory is in ```app/var/cache``` . Remove the contents of that directory and you should be done. You could remove the contents of that directory from command line using the following command too
 
-```bash rm
+``` bash rm
 
 rm -rf ./app/var/cache/*
 

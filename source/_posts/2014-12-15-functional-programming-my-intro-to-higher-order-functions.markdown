@@ -63,7 +63,7 @@ Here we are defining these functions by passing in an anonymous functions to the
 
 Other than this we could also use the ```factorial``` function from [my last blog post](/blog/2014/12/a-bite-of-functional-programming/) and declare a sum of factorials function like
 
-```scala Sum of factorials
+``` scala Sum of factorials
 
 def sumFactorials = sum(factorial)
 

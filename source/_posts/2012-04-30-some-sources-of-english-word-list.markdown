@@ -14,6 +14,7 @@ So I will be sharing some of the sources I have found which can save you some ti
 <strong>Finding one from within your *nix/mac OS</strong>: If you are on a mac or any other *nix distro, chances are that you already have a word list in you os. You can find it out by browsing the <em>/usr/share/dict/  </em>directory. In my mac which is 10.6.8 I have the following files in my <em>/usr/share/dict/ </em>directory:
 
 ``` bash
+
 ls /usr/share/dict/
 README  connectives  propernames  web2  web2a  words
 

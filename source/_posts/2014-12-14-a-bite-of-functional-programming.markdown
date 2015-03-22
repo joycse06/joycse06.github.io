@@ -18,7 +18,7 @@ Though I am a know-nothing in functional programming, I decided I will be good e
 
  Enough talking, lets do some trivial functional programming together maybe ```finding the factorial of a number``` . Lets do it in scala first.
 
-```scala factorial.scala
+``` scala factorial.scala
 
 def factorial(n:Int):Int =
     if (n==0)
@@ -45,7 +45,7 @@ We see with each call we get more and more ```*'s``` and all steps stacks up in 
 
 But we cant just make the last call ```factorial(n-1)``` in that case we will lose the number n. So to make it tail recursive we can redefine the function like
 
-```scala factorial
+``` scala factorial
 
 def factorial(n:Int, accumulator: Int): Int =
     if ( n==0 )

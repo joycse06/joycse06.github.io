@@ -15,7 +15,9 @@ I knew I can use ```grep``` to do this. I instantly looked at the man page of ``
 The final command I wrote on the server's terminal was
 
 ``` bash Grep
+
 grep -R -i -n 'type="number"' public_html/app
+
 ```
 
  ```-R``` tells ```grep``` to search recursively into that directory, ```-i``` is for ```ignore-case``` and ```-n``` finds and outputs the line number along with file name too. As soon as I ran that command it searched the whole ```app``` directory and came back with all the place where ```type="number"``` occurred with line number too. Then I just edited those files and the issue was fixed.

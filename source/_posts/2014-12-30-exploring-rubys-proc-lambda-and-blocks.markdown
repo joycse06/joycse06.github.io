@@ -19,12 +19,14 @@ I have always wanted to get involved into some ROR projects just to learn their 
 I would like to give example of a few like
 
 ``` ruby times method
+
 4.times { puts "Hello Ruby!" }
+
 ```
 
 which amazes me every time. Most of the languages I tried have something called primitive types and values like integers, floats, strings are treated specially. But in Ruby almost everything is object. There's no notion of primitive types and surprisingly at least to me even ```classes``` are objects too. To prove that we can do something like following in any ruby REPL
 
-```ruby
+``` ruby
 # Output from Pry
 
 Array.class # returns Class < Module
@@ -35,13 +37,13 @@ Array.class.superclass.superclass # returns Object < BasicObject
 
 So the hierarchy for ```Array``` class is
 
- dy```Array < Class < Module < Object < BasicObject```
+  ```Array < Class < Module < Object < BasicObject```
 
 So ```BasicObject``` is at the top of the Ruby object Model. And every class in ruby is a subclass of that. Lets stop here, i will write about the Ruby object model another day.
 
 The designer of the language have put a lot of thought on the syntax specially to make the code more readable, and make developer's life easier. Lets see some other syntactic awesomeness
 
-```ruby
+``` ruby
 
 email = "Joy Nag <joy@example.com>"
 
@@ -80,7 +82,7 @@ blocks, procs and lambdas are all example of ```closures``` in ```ruby```. In la
 
 Blocks are still the only thing I am aware of where the everything's a object rule is broken. blocks are language constructs and doesn't have any type. Block are handy small chunk of code which can be passed around easily to methods to change the way of how they will behave. Kind of like allowing the user of a function or method to inject behaviors to that method based on what the output of that function or method changes. Like if we see from our previous example
 
-```ruby Block example
+``` ruby Block example
 [1,2,3,4].select { |n| n % 2 == 0 }
 
 # { |n| n % 2 == 0 } is a block which takes one argument
@@ -88,7 +90,7 @@ Blocks are still the only thing I am aware of where the everything's a object ru
 ```
  Block can be of two form. If the content of the block is small to fit in a line then you can just enclose that in ```{}```. And if the content if larger you can use the ```do end``` construct to create the block. Lets re-implement a simple version of the ```map``` method of array class. Ohh, here's one catch, Ruby system classes are open and you can add or overwrite any method on any system class at your own risk. It's a great power and if not done carefully can cause mess in your program.
 
-```ruby mymap method
+``` ruby mymap method
 
 class Array
     def mymap
@@ -119,13 +121,15 @@ Blocks are too mainstream in ruby programs and found almost everywhere. Due to t
 
 Ok there lot more to block itself. Like you can't pass more than one block to a method. Blocks which are passed implicitly to a method can be converted to a explicit method parameter using ```&``` . Like we can do the following
 
-```ruby Converting Implicit blocks to Explicit named parameter
+``` ruby Converting Implicit blocks to Explicit named parameter
+
 def calculate(a, b , &block) # &block is an explicit param
     block.call(a, b)
 end
 
 # then you can call it like
 puts calculcate(5,5) { |a, b| a + b }
+
 ```
 
 You can do the other way around too, like converting a lambda into a implicit block and pass it to a function which doesnt receive a explicit block.
@@ -136,7 +140,7 @@ lets talk about lambdas.
 
  ```Lambdas``` are actually ```Proc``` objects which slight differences. ```lambda``` is a keyword and not a function which return an instance of class ```Proc```. We can check this using the following
 
-```ruby Lambda and Procs
+``` ruby Lambda and Procs
 
 proc = Proc.new { puts "Hello world" }
 lam = lambda { puts "Hello World" }
@@ -150,7 +154,8 @@ lambdas are kind of named blocks which can be passed around functions without co
 
 Lets look at a slightly complex exercise from Rubymonk which I had hard time understanding first. Understanding this will help clear many things about the conversions
 
-```ruby Implicit Explicit conversions
+``` ruby Implicit Explicit conversions
+
 Filter = lambda do |array, &block|
     array.select &block
 end
@@ -161,6 +166,7 @@ Filter.call([1, 2, 3, 4]) {|number| number.even? } # returns [2,4]
 # or
 Filter.call([1, 2.0, 3, 4.0]) {|number| number.integer? } returns [1, 3]
 # returns [1,3]
+
 ```
 
 So lets break the Filter lambda down, that lambda takes two arguments first is an array and second is an explicit block so when we are calling it like
@@ -171,7 +177,7 @@ So lets break the Filter lambda down, that lambda takes two arguments first is a
 
  ```Proc``` is a short for ```Procedure``` and its a class in ```Ruby```. We can define a proc like
 
-```ruby Proc
+``` ruby Proc
 p = Proc.new { puts "hello Proc" }
 
 # and then we can use p just like any other variable
@@ -201,7 +207,7 @@ This one is fairly straight forward and doesn't require much of a explanation. L
 
  ```return``` inside of a lambda triggers the code right outside of the lambda code. Lets see an example:
 
-```ruby
+``` ruby
 def lambda_test
   lam = lambda { return }
   lam.call
@@ -209,6 +215,7 @@ def lambda_test
 end
 
 lambda_test                 # calling lambda_test prints 'Hello World'
+
 ```
 
 so we see the ```return``` statement inside the ```lambda``` return the control of the code right outside of the lambda code. and the ```puts``` call execute properly.
@@ -216,7 +223,8 @@ so we see the ```return``` statement inside the ```lambda``` return the control 
 while on the contrary
 
  ```return``` inside of a proc triggers the code outside of the method where the proc is being executed
-```ruby
+``` ruby
+
 def proc_test
   proc = Proc.new { return }
   proc.call
@@ -224,6 +232,7 @@ def proc_test
 end
 
 proc_test                 # calling proc_test prints nothing
+
 ```
 
 so we see the ```return``` statement in the ```proc``` return from the ```proc_test``` function itself.

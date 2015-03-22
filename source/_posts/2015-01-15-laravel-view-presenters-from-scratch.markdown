@@ -41,7 +41,7 @@ But it's better not to hard code that logic inside a function and make it more f
 
 The functions of the ```present()``` method seems to be same for every models, so we could just use a trait for it and use it in every model. Lets see a reference implementation of the trait,
 
-```php PresentableTrait
+``` php PresentableTrait
 
 <?php namespace Acme\Core\Presenter;
 
@@ -83,7 +83,7 @@ We can ignore this if we want, just adding the ```Presenter Class``` is enough f
 
 Lets check the following abstract Presenter class
 
-```php Base Presenter Class
+``` php Base Presenter Class
 <?php namespace Acme\Core\Presenter;
 
 
@@ -118,7 +118,7 @@ Lets see how can we use this in a project with an Eloquent Model.
 
 Lets do it for the ```User``` model. First we will define the ```Presenter``` class.
 
-```php Acme\Users\UserPresenter.php
+``` php Acme\Users\UserPresenter.php
 
 <?php namespace Acme\Users;
 
@@ -148,7 +148,7 @@ We see in the user Presenter we used ```$this->email```, ```$this->first_name```
 
 Now lets create an ```User``` model.
 
-```php Acme\Users\User.php
+``` php Acme\Users\User.php
 
 <?php namespace Acme\Users;
 
@@ -166,7 +166,7 @@ class User extends \Eloquent {
 
 And we are done. We can now use it like,
 
-```php Presenter Usage
+``` php Presenter Usage
 
 $user = User::find(1);
 

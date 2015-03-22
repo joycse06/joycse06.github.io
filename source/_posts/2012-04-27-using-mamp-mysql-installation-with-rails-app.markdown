@@ -57,7 +57,9 @@ sudo ln -s /Applications/MAMP/Library/lib/libmysqlclient.16.dylib /usr/lib/libmy
 <div>5. Now clean up your temp directory</div>
 
 ``` bash
+
  rm -rf /tmp/mysql-5.5.9 /tmp/mysql-5.5.9.tar.gz
+
 ```
 <div>and you are done. Now you can try <strong>bundle install or </strong> <strong>rake db:create</strong></div>
 <div>and they should work fine. :)</div>
