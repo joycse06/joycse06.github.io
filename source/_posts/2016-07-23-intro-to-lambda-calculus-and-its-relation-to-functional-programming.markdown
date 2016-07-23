@@ -6,8 +6,11 @@ comments: true
 categories: functional-programming, code
 ---
 This post is written based on the First Chapter (All you need is lambda) of the [HaskellBook](http://haskellbook.com/) which is great book for learning Haskell. All the code examples in this post will be using Haskell but should be understandable to anyone having decent experience in any programming language.
+
 Lambda calculus is a model of computation devised in the 1930s by Alanzo Church. It's one process for formalizing a method. Like Turing machines it formalizes the concept of effective computability, thus determining which problems or classes of problems, can be solved.
 You might be thinking but thats Calculus(Math), how is it related to functional programming or programming in general. It is indeed deeply related.
+
+<!-- more -->
 
 Lets define Functional programming, we know that functional programming is a programming paradigm that relies on functions modeled on mathematical functions. The essence of functional programming is that programs are a combination of expressions. Expressions include concrete values, variables and also functions. Functional programming languages are all based on the lambda calculus. Though some of them incorporate features into the language that are not translatable into lambda expressions. Haskell doesn't do that because it's a pure functional language. We will not get into what it means for a functional programming language to be *Pure* because it's an topic of it's own.
 
