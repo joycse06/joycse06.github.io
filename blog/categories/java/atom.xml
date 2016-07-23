@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Java | Prasenjit Kumar Nag a.k.a Joy]]></title>
+  <link href="http://joycse06.github.io/blog/categories/java/atom.xml" rel="self"/>
+  <link href="http://joycse06.github.io/"/>
+  <updated>2016-07-23T20:49:45+10:00</updated>
+  <id>http://joycse06.github.io/</id>
+  <author>
+    <name><![CDATA[Joy Nag]]></name>
+    <email><![CDATA[joyruet06@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How to Highlight the Search Term in Results in an Android App]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/how-to-highlight-the-search-term-in-results-in-an-android-app/"/>
+    <updated>2014-12-09T00:40:11+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/how-to-highlight-the-search-term-in-results-in-an-android-app</id>
+    <content type="html"><![CDATA[<p>Few months ago I created an Android app <a href="https://play.google.com/store/apps/details?id=quantum.org.quran">Al-Quran Bangla Mormobani</a> in several days with a quick deadline, so couldn&rsquo;t add much features to it. One such feature was the search terms were not highlighted in the results view so users couldn&rsquo;t use it effectively for reference. I got several requests from the users asking for this features. Few days ago I had couple of hours free to look into it and after searching for a while found a solution.</p>
+
+<!-- more -->
+
+
+<p>The data was coming from an Sqlite database and I am using a listview to present the results. As the adapter of the <code>ListView</code> I am using a <code>SimpleCursorAdapter</code> . Now to decorate specific terms in the <code>ListViewItems</code> I am using a <code>viewBinder</code> . The code is as follows,</p>
+
+<pre><code class="java ViewBinder">adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+       public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+           if (view.getId() == R.id.favorite_bangla_description) {
+               String description = cursor.getString(cursor.getColumnIndex("bangla_description"));
+               int startPos = description.indexOf(query);
+               int endPos = description.indexOf(" ", startPos);
+               if (startPos != -1) // This should always be true, just a sanity check
+               {
+                   Spannable spannable = new SpannableString(description);
+                   ColorStateList blueColor = new ColorStateList(new int[][] { new int[] {}}, new int[] { Color.BLUE });
+                   TextAppearanceSpan highlightSpan = new TextAppearanceSpan(null, Typeface.BOLD, -1, blueColor, null);
+                   spannable.setSpan(highlightSpan, startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                   ((TextView) view).setText(spannable);
+               }
+               else
+                   ((TextView) view).setText(description);
+               return true;
+           }
+           return false;
+       }
+});
+</code></pre>
+
+<p>I am not in a mood to explain the nitty gritty of the whole code above in this post, but the main part which is doing the highlighting is the use of <code>Spannable</code> String. Or more precisely the following code,</p>
+
+<pre><code class="java Highlighting Text">
+Spannable spannable = new SpannableString(description);
+ColorStateList blueColor = new ColorStateList(new int[][] { new int[] {}}, new int[] { Color.BLUE });
+TextAppearanceSpan highlightSpan = new TextAppearanceSpan(null, Typeface.BOLD, -1, blueColor, null);
+spannable.setSpan(highlightSpan, startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+</code></pre>
+
+<p>It&rsquo;s creating a highlight span, setting its color as <code>blue</code> and then setting that as a span of the original <code>Spannable</code> String using the start and end pos of the query string&rsquo;s occurence in the original string. And the result is a very good highlighted word.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Php | Prasenjit Kumar Nag a.k.a Joy]]></title>
+  <link href="http://joycse06.github.io/blog/categories/php/atom.xml" rel="self"/>
+  <link href="http://joycse06.github.io/"/>
+  <updated>2016-07-23T20:49:45+10:00</updated>
+  <id>http://joycse06.github.io/</id>
+  <author>
+    <name><![CDATA[Joy Nag]]></name>
+    <email><![CDATA[joyruet06@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Moving Magento Store From One Server to Another Easily Using Ssh]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/moving-magento-from-one-server-to-another-easily-using-ssh/"/>
+    <updated>2014-12-11T00:40:11+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/moving-magento-from-one-server-to-another-easily-using-ssh</id>
+    <content type="html"><![CDATA[<p>When I first started working with Magento I thought moving a magento installation with lots of data from one server to another wont be easy considering the db size is very big and the codebase is not small either.</p>
+
+<p>I was a noob at linux server&rsquo;s stuff then, I am not good at all now, but I have become better than before. And after moving several Magento installations around, creating development sandboxes from live data with large databases like 4GB+ I do think with some terminal kungfu you can pretty easily move magento from one  server to another. The method I will show will required <code>ssh</code> access to both servers.</p>
+
+<!-- more -->
+
+
+<p>I will walk you through step by step,</p>
+
+<h2>Exporting the current Magento Database</h2>
+
+<p>To export the current database magento is using, first <code>ssh</code> into the server and then find the database config from magento config file located at <code>app/etc/local.xml</code> . In that file you will see a connection node like following</p>
+
+<p><code>xml app/etc/local.xml</code>
+    <connection>
+          <host>&lt;![CDATA[localhost]]&gt;</host>
+          <username>&lt;![CDATA[username]]&gt;</username>
+          <password>&lt;![CDATA[password]]&gt;</password>
+          <dbname>&lt;![CDATA[dbname]]&gt;</dbname>
+          <initStatements>&lt;![CDATA[SET NAMES utf8]]&gt;</initStatements>
+          <model>&lt;![CDATA[mysql4]]&gt;</model>
+          <type>&lt;![CDATA[pdo_mysql]]&gt;</type>
+          <pdoType>&lt;![CDATA[]]&gt;</pdoType>
+          <active>1</active>
+    </connection>
+&#8220;`</p>
+
+<p>So you have DB access to export the database magento is using. You can use <code>mysqldump</code> to dump the database using the following command:</p>
+
+<pre><code class="bash mysqldump">
+mysqldump -h DB_HOST -u DB_USER -p DB_NAME &gt; EXPORT_FILENAME.sql
+</code></pre>
+
+<p>It will prompt you for password and after you provide that it will start dumping the database into the file you specified. It can take time depending on the amount of data you have in your magento store. Like in my case it took quite some time to export a database of size around 4GB. Once done, you will get a uncompressed sql file whose size can be reduced easily. As it&rsquo;s a text file it&rsquo;s compression ratio will be good and you should get a file much smaller in size. You can compress it using <code>tar</code></p>
+
+<pre><code class="bash tar">tar -czf  EXPORT_FILENAME.sql.tar.gz EXPORT_FILENAME.sql
+</code></pre>
+
+<h2>Moving the database into the new server</h2>
+
+<p>If it&rsquo;s a very big dump then you should be using <code>scp</code> (Secure Copy over ssh) to save yourself time. That would reduce the step of downloading it in your local machine first and then re upload into the new server. If you have <code>ssh</code> access of the new server then you should definitely try to use <code>scp</code> . For that login into the old server where you have the exported database dump then run a command like</p>
+
+<pre><code class="bash scp">
+ scp -P SSH_PORT /PATH/TO/EXPORT_FILENAME.sql.gz username@NEW_SERVER_IP:/NEW/SERVER/PATH/
+</code></pre>
+
+<p>It will copy the database over to the new server in no time, in server&rsquo;s internet speed which is high in most cases.</p>
+
+<p>You can copy the magento codebase the same way over to the new server.</p>
+
+<h2>Importing the database into the new server</h2>
+
+<p>First <code>untar</code> the copied database into it&rsquo;s original <code>.sql</code> format. Use the following command,</p>
+
+<pre><code class="bash untar">
+tar -xzf EXPORT_FILENAME.sql.tar.gz
+</code></pre>
+
+<p>After this step you will have a file named <code>EXPORT_FILENAME</code> in the current directory you are in.</p>
+
+<p>Create a new database in the new server either from command line using <code>mysql cli</code> or from <code>cpanel</code> or any kind of database administration tool and then <code>ssh</code> into the new server. Then you can import the copied database dump into the newly created database using the following command,</p>
+
+<pre><code class="bash mysql import">
+mysql -u DB_USER -p DB_NAME &lt; EXPORT_FILENAME.sql
+</code></pre>
+
+<p>It will ask for password, will take some time and eventually import the database into the new server.</p>
+
+<h2>Updating Database config in Code and base url in database</h2>
+
+<p>Like I said copy over the magento codebase the say way with <code>scp</code> or in any other way you want. Now update the database config in <code>app/etc/local.xml</code> file.</p>
+
+<p>You also have to update the <code>base_url</code> in <code>core_config_data</code> table of magento which it uses internally to render links throughout the site. Load the <code>core_config_data</code> table into any database browser like <code>Sequel Pro</code> or <code>PHPMyAdmin</code> . You will see that table has a column named <code>path</code> . Search for path values of <code>web/unsecure/base_url</code> and <code>web/secure/base_url</code> and replace the value which is of the old site with the new web root of your magento installation you copied a while ago.</p>
+
+<p>As you may have guessed from the path names <code>secure</code> and <code>unsecure</code> <code>base_url</code> means what they should mean and they are the <code>http</code> and <code>https</code> urls of your new magento home.</p>
+
+<p>You can now load the new url in browser and it should load the new site. If it doesn&rsquo;t then you might have to clear the cache of the site. The <code>cache</code> directory is in <code>app/var/cache</code> . Remove the contents of that directory and you should be done. You could remove the contents of that directory from command line using the following command too</p>
+
+<pre><code class="bash rm">
+rm -rf ./app/var/cache/*
+</code></pre>
+
+<p>If you still face any problem in loading the new site then you should try to debug the specific problem you are having. Thats all for today. Enjoy!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Taking a Magento Site Into Maintenance Mode for Everyone Except You]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/taking-a-magento-site-into-maintenance-mode-for-everyone-except-you/"/>
+    <updated>2014-12-10T18:54:25+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/taking-a-magento-site-into-maintenance-mode-for-everyone-except-you</id>
+    <content type="html"><![CDATA[<p>Magento takes a dead simple approach for activating the maintanence mode for any site using it. You just get into servers&rsquo;s terminal via <code>ssh</code> , <code>cd</code> into the magento root folder and run the following command <code>touch maintenance.flag</code> or just crate a file named <code>maintenance.flag</code> in the root of the your magento installation and voila, you will see the maintenance mode message when you visit your store now.</p>
+
+<p>Now Its locked for everyone, but say you are updating somethings on the site and you would like to check how thats affecting the look of the store but you dont want anyone to view it before getting done. Fortunately thas easy too.</p>
+
+<!-- more -->
+
+
+<p>If you look into the <code>index.php</code> at your magento root folder you will see a code block like below</p>
+
+<pre><code class="php index.php">$maintenanceFile = 'maintenance.flag';
+if (file_exists($maintenanceFile)) {
+    include_once dirname(__FILE__) . '/errors/503.php';
+    exit;
+}
+</code></pre>
+
+<p>I guess you understand what it does from the look of it, it just checks if the  <code>maintenance.flag</code> file and if it exists it include the <code>errors/503.php</code> file which contains the maintenance mode message. On a side note you can edit that file to change the message or to add some styling.</p>
+
+<p>Now we want it to stay same for other but to allow us to view the site. How can you determine the request came from your machine in that script? Well you might already know, you have a public identifier which is your <code>PUBLIC IP</code> , and by using that you can bypass that check and view the site.</p>
+
+<p>To make the solution a more robust we will use an array of IPs so you can whitelist more peoples like maybe your co-worker, or your QA or your boss. First we create an array like this, <code>$allowed = array('27.147.178.86','27.147.185.185');</code> , you can add as many IPs as you want in that array and each one of those owners will be able to view the store while it&rsquo;s still in maintenance mode. Now to get the IP of a Specific HTTP request you can go around the easier way with something like
+  <code>$ip = $_SERVER['REMOTE_ADDR'];</code> But keep in mind that might not always work like when user is using behind a proxy server. Search in google for a better way to find the IP address using PHP.</p>
+
+<p>We are almost done, just append <code>&amp;&amp; !in_array($ip, $allowed)</code> in the condition of <code>if</code> and you are done. The function <code>in_array</code> checks if the first argument is present in the array passed int he second argument and return true if found, we are negating the output of the function, because we want that part of the condition to return false and proceed with the code execution if the request came from one of the specified IPs.</p>
+
+<p>Thats all you need. I am adding the complete code below.</p>
+
+<pre><code class="php index.php">
+$ip = $_SERVER['REMOTE_ADDR'];
+$allowed = array('27.147.178.84','27.147.180.185','96.240.89.118');
+
+if (file_exists($maintenanceFile) &amp;&amp; !in_array($ip, $allowed)) {
+    include_once dirname(__FILE__) . '/errors/503.php';
+    exit;
+}
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Facades in Laravel 4 and Static Methods Resolution]]></title>
+    <link href="http://joycse06.github.io/blog/2013/05/facades-in-laravel-4-and-static-methods-resolution/"/>
+    <updated>2013-05-28T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2013/05/facades-in-laravel-4-and-static-methods-resolution</id>
+    <content type="html"><![CDATA[<p>Several months ago in a blog post I saw people complaining about Laravel3&rsquo;s Static methods stating Static methods are very difficult to Unit Test with and Laravel is a pile of Static API&rsquo;s rather than a framework. I dont remember the Link. It said Laravel 3 is not architecturally “pure”, but it has super clean syntax.</p>
+
+<p>But Laravel 4 combines both of those things. It’s extremely architecturally pure, yet maintains the same terse, expressive syntax.</p>
+
+<p>Last weekend I was checking a video on Laravel 4 which was discussing about facades in Laravel 4 and I was truly amazed to see how the fancy looking static API&rsquo;s are mapped into their original Classes. Laravel 4 takes advantage of Facade Design Pattern[ <a href="http://en.wikipedia.org/wiki/Facade_pattern"><a href="http://en.wikipedia.org/wiki/Facade_pattern">http://en.wikipedia.org/wiki/Facade_pattern</a></a> ] which allows it to provide expressive syntax through static API&rsquo;s but still keep it testable under the hood.</p>
+
+<!-- more -->
+
+
+<p>So, back to the main point of the post, how a static method like</p>
+
+<pre><code class="php Facade Examples">
+File:get(),View::make, Redirect::to, Cache::put
+</code></pre>
+
+<p>is resolved under the hood. Let&rsquo;s take File:get() and see how that maps to it&rsquo;s original class. Seeing File:: I first though there must be a File.php some where where the static method will be available. Searched for that and found one at /vendor/laravel/framework/src/Illuminate/Support/Facades/File.php surprisingly it barely has any content in it.
+<a href="https://github.com/illuminate/support/blob/master/Facades/File.php"><a href="https://github.com/illuminate/support/blob/master/Facades/File.php">https://github.com/illuminate/support/blob/master/Facades/File.php</a></a></p>
+
+<pre><code class="php File Facade">
+&lt;?php namespace Illuminate\Support\Facades;
+
+class File extends Facade {
+
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor() { return 'files'; }
+
+}
+</code></pre>
+
+<p>As I didn&rsquo;t find a static get method there my second target was to search in the Facade Base class as File class was extending it. But there wasn&rsquo;t any static get method either. But I did find a __callStatic magic method and became sure thats handling the call dynamically. You can check the contents of Facade.php here at <a href="https://github.com/illuminate/support/blob/master/Facades/Facade.php#L167"><a href="https://github.com/illuminate/support/blob/master/Facades/Facade.php#L167">https://github.com/illuminate/support/blob/master/Facades/Facade.php#L167</a></a></p>
+
+<p>The first line in __callStatic method is</p>
+
+<pre><code class="php Resolving Facade">
+$instance = static::resolveFacadeInstance(static::getFacadeAccessor());
+</code></pre>
+
+<p>Where&rsquo;s its calling the static resolveFacadeInstance() method and passing child class&rsquo;s static method&rsquo;s static::getFacadeAccessor() return value as a argument. Which is in above you can see returns the string &lsquo;files&rsquo;. Now lets look at the definition of resolveFacadeInstance()</p>
+
+<pre><code class="php resolveFacadeInstance function">
+protected static function resolveFacadeInstance($name)
+{
+    if (is_object($name)) return $name;
+
+    if (isset(static::$resolvedInstance[$name]))
+    {
+        return static::$resolvedInstance[$name];
+    }
+
+    return static::$resolvedInstance[$name] = static::$app[$name];
+}
+</code></pre>
+
+<p>First two conditions wont work for us. So it will return static::$app[$name]. What does $app[&lsquo;file&rsquo;] have in it. Must be an instance of a class. To check this I was studying about the bootstrapping of Laravel 4 and found that at some point in booting up, Laravel 4 registers the service providers passed into it via /app/config/app.php file. And checking that I found a serviceproviders as follows</p>
+
+<pre><code class="php Service Provider">
+'Illuminate\Filesystem\FilesystemServiceProvider'
+</code></pre>
+
+<p>Then I checked the file Illuminate\Filesystem\FilesystemServiceProvider and found out how $app[&lsquo;files&rsquo;] is being assigned. Here&rsquo;s it&rsquo;s contents</p>
+
+<pre><code class="php Service Provider">
+class FilesystemServiceProvider extends ServiceProvider {
+
+ /**
+ * Register the service provider.
+ *
+ * @return void
+ */
+  public function register()
+   {
+      $this-&amp;gt;app['files'] = $this-&amp;gt;app-&amp;gt;share(function() { return new Filesystem; });
+   }
+}
+</code></pre>
+
+<p>So $app[&lsquo;files&rsquo;] is actually being assigned to a instance of FileSystem class.
+Laravel uses that register method to add that service in the $app container.
+So File::domeSomething() is actually somewhat equivalent to</p>
+
+<pre><code class="php Original Filesystem Class">
+$fileSystem = new Filesystem;
+$fileSystem-&gt;doSomething();
+</code></pre>
+
+<p>And I did find a public get() method in the FileSystem Class. You can check here at
+<a href="https://github.com/illuminate/filesystem/blob/master/Filesystem.php#L27">https://github.com/illuminate/filesystem/blob/master/Filesystem.php#L27</a></p>
+
+<p>So, a simple call like File::get() which just works, have a lot more going on under the hood.</p>
+
+<p>The word File is actually an alias to the Facade at &lsquo;Illuminate\Support\Facades\File&rsquo; which you can find at /app/config/app.php in alias block.</p>
+
+<p>Thats true for most if not all(well I havent checked all, but lets hope so) static expressive API&rsquo;s Laravel 4 Provide.</p>
+
+<p>A quick way to check which Class is being mapped for a Facade by using a special route in the route file as follows</p>
+
+<pre><code class="php Getting Facade Accessor">
+Route::get('/',function(){
+  $root = get_class(File::getFacadeRoot());
+  // using other Facade in place of 'File' works too
+  var_dump($root);
+});
+</code></pre>
+
+<p>It will print the original Class that&rsquo;s being used for the Facade.</p>
+
+<p>I dont know why but finding the whole thing was a great joy for me. It always feels great to understand the inner working principle of a thing I am using. This is the most awesome thing I have learnt/known in a while.</p>
+
+<p>Hope you enjoyed it. :D</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How to Use the Same Config File Both in Localhost and in Live Server]]></title>
+    <link href="http://joycse06.github.io/blog/2012/04/how-to-use-the-same-config-file/"/>
+    <updated>2012-04-27T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2012/04/how-to-use-the-same-config-file</id>
+    <content type="html"><![CDATA[<p>Every projects have some kind of configuration such
+as database username, database password, database name blah blah
+no matter whats language it&rsquo;s been written in.</p>
+
+<p>But i will be primarily talking about php here.</p>
+
+<p>In past what I used to change the config file every time I had to push updates into the live server either by FTP or SFTP
+or  VCS(Version Control System) and that was painful.
+But thanks to the internet I found some tricks somewhere in the internet that I dont remember right now which I have been using since then which allows me to use the same config file both in localhost and in live server.</p>
+
+<p>Lets say we have the  following config values which are different when the code is running in Localhost and in server. Say for localhost they have the following values</p>
+
+<pre><code class="php">
+var $dbUsername = 'local';
+
+var $dbPassword = 'localpassword';
+
+var $dbname = 'local_db_name';
+</code></pre>
+
+<p>And in server the value is different as follows</p>
+
+<pre><code class="php">
+var $dbUsername = 'server';
+
+var $dbPassword = 'serverpassword';
+
+var $dbname = 'server_db_name';
+</code></pre>
+
+<p>Now as I have already said changing those before every push is a pain in the a**. The way we can have them both at the same time and both environment runs properly is as follows:</p>
+
+<pre><code class="php">
+if($_SERVER['REMOTE_ADDR']=='127.0.0.1'){
+
+//we are in localhost as the user's IP is 127.0.0.1
+
+var $dbUsername = 'local';
+
+var $dbPassword = 'localpassword';
+
+var $dbname = 'local_db_name';
+
+}else{
+
+// we are in server
+
+var $dbUsername = 'server';
+
+var $dbPassword = 'serverpassword';
+
+var $dbname = 'server_db_name';
+
+}
+</code></pre>
+
+<p>FYI, $_SERVER[&lsquo;REMOTE_ADDR&rsquo;] returns users IP address if the user is not using Proxy.</p>
+
+<p>If you are using Virtual host then you can use $_SERVER[&lsquo;SERVER_NAME&rsquo;]. Suppose I have a virtual host setup for all my office projects as d.noobis.com then we can use the following conditionals to determine the correct environment</p>
+
+<pre><code class="php">
+if($_SERVER['SERVER_NAME'] == 'd.noobis.com'){
+
+// my local config goes here
+
+}else if($_SERVER['SERVER_NAME'] == 'noobis.com'){
+
+// Live servers config
+
+}else if($_SERVER['SERVER_NAME'] == 'local.noobis.com'){
+
+//someone else's config who is working with me in the same project have a VHost set up as local.noobis.com
+
+}
+</code></pre>
+
+<p>Using this we can remove the burden of editing config file before every commit/upload of codebase into live server. This same technique can be used for frameworks which uses pure php variables for configuration options like Code Igniter.</p>
+
+<p>But if your framework uses special formats for config files like YML then there might be different ways to separate development and production environment settings.</p>
+
+<p>Hope you enjoyed the post. :)</p>
+
+<p>UPDATE: </p>
+
+<p>As Zaman-A-Piri-Pasa suggested in the comment, if you are on windows using XAMPP use</p>
+
+<pre><code class="php">
+if($_SERVER['REMOTE_ADDR']==’::1′)
+</code></pre>
+
+<p>instead to check for localhost.</p>
+]]></content>
+  </entry>
+  
+</feed>

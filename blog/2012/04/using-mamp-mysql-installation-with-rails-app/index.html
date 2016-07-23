@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Using MAMP&#8217;s Mysql Installation With Rails App - Prasenjit Kumar Nag a.k.a Joy</title>
+  <meta name="author" content="Joy Nag">
+
+  
+  <meta name="description" content="Being primarily a PHP developer I always have one AMP package installed in my machine no matter what platform I work with. Now-a-days as I work on my &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joycse06.github.io/blog/2012/04/using-mamp-mysql-installation-with-rails-app/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Prasenjit Kumar Nag a.k.a Joy" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58344400-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Prasenjit Kumar Nag a.k.a Joy</a></h1>
+  
+    <h2>A Developers Adventure in Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="joycse06.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories">Categories</a></li>
+  <li><a href="/about-me">About Me</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Using MAMP&#8217;s Mysql Installation With Rails App</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-27T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Being primarily a PHP developer I always have one AMP package installed in my machine no matter what platform I work with. Now-a-days as I work on my macbook I have MAMP installed.</p>
+
+<p>Few days back I was trying to install <em>mysql2 </em>gem to use in Rails app which acts as the interface between MySql engine and Rails(or Ruby) apps. But it was constantly failing every time I tried to. I even tried to install previous versions of mysql2 gem but no luck. Then I tried to have a closer look at the error the <strong><em>bundle install</em></strong> command was spitting out into the terminal.</p>
+
+<p>It was not being able to find mysql header files which are required to compile mysql2 gem. After searching in the internet I found out MAMP doesn&rsquo;t ship mysql headers by default.</p>
+
+<p>So The options I had was either recompile Mysql from source and add headers into proper MAMP Directory. Or manage another mysql installation only for rails which is a whole lot of pain. So I had to go for one, I searched through Stack Overflow and found some tutorials on how to do that. After studying some of those I finally took a backup of mamp and started the recompilation process. Here are the steps I followed:</p>
+
+<p>Take a backup of your whole MAMP directory if by any chance you mess it up. :) It&rsquo;s always safe.</p>
+
+<ol>
+<li>First you need to download the MAMP open source components from their source forge page here</li>
+</ol>
+
+
+<p><a href="http://sourceforge.net/projects/mamp/files/mamp/">http://sourceforge.net/projects/mamp/files/mamp/</a> download the components for mamp 2.0.2 that is the latest now.</p>
+
+<ol>
+<li>Recently MAMP have switched from MySql 5.1 to to MySQL 5.5. And MySQL, in turn, has switched from GNU Make (with <em>./configure</em>) to CMake (with <em>cmake .</em>). So you need to have cmake installed in you Mac. You can do that easily using <em>brew</em> or <em>macport</em> using the following command</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>brew install cmake
+</span><span class='line'>
+</span><span class='line'>or
+</span><span class='line'>
+</span><span class='line'>port install cmake
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>Suppose You have downloaded it into your desktop then Extract and put the mysql-5.5.9.tar.gz file into your desktop and type in the following command in your terminal.</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> /tmp
+</span><span class='line'> <span class="nv">$ </span>mv /Users/yourname/Desktop/mysql-5.5.9.tar.gz .
+</span><span class='line'> <span class="nv">$ </span>tar xf mysql-5.5.9.tar.gz
+</span><span class='line'> <span class="nv">$ </span><span class="nb">cd </span>mysql-5.5.9
+</span><span class='line'> <span class="nv">$ </span>cmake . -DMYSQL_UNIX_ADDR<span class="o">=</span>/Applications/MAMP/tmp/mysql/mysql.sock -DCMAKE_INSTALL_PREFIX<span class="o">=</span>/Applications/MAMP/Library
+</span><span class='line'> <span class="nv">$ </span>make -j  3
+</span><span class='line'> <span class="nv">$ </span>cp libmysql/*.dylib /Applications/MAMP/Library/lib/
+</span><span class='line'> <span class="nv">$ </span>mkdir -p /Applications/MAMP/Library/include/mysql
+</span><span class='line'> <span class="nv">$ </span>cp include/* /Applications/MAMP/Library/include/mysql
+</span><span class='line'> <span class="nv">$ </span>sudo env <span class="nv">ARCHFLAGS</span><span class="o">=</span><span class="p">&amp;</span>quot<span class="p">;</span>-arch x86_64<span class="p">&amp;</span>quot<span class="p">;</span> gem install mysql2 -- --with-mysql-config<span class="o">=</span>/Applications/MAMP/Library/bin/mysql_config
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>after this you should see 1 Gem installed successfully message into the termnal and you gem has been install successfully. Now you need to symlink a bundle from your mysql Library into /user/lib. Run the following command in the terminal.</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo ln -s /Applications/MAMP/Library/lib/libmysqlclient.16.dylib /usr/lib/libmysqlclient.16.dylib <span class="o">[</span>/bash<span class="o">]</span>
+</span><span class='line'>&lt;div&gt;&lt;/div&gt;
+</span><span class='line'>&lt;div&gt;5. Now clean up your temp directory&lt;/div&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> bash</p>
+
+<p> rm -rf /tmp/mysql-5.5.9 /tmp/mysql-5.5.9.tar.gz</p>
+
+<p>&#8220;`</p>
+
+<div>and you are done. Now you can try <strong>bundle install or </strong> <strong>rake db:create</strong></div>
+
+
+<div>and they should work fine. :)</div>
+
+
+<div>Happy reusing MAMP&#8217;s mysql with your rails applications :)</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Joy Nag</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2012-04-27T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/mysql/'>mysql</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/web/'>web</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://joycse06.github.io/blog/2012/04/using-mamp-mysql-installation-with-rails-app/" data-via="joycse06" data-counturl="http://joycse06.github.io/blog/2012/04/using-mamp-mysql-installation-with-rails-app/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/how-to-use-the-same-config-file/" title="Previous Post: How to Use the same Config file both in Localhost and in Live Server">&laquo; How to Use the same Config file both in Localhost and in Live Server</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/04/using-mamp-pro-vhosts/" title="Next Post: Using MAMP Pro's VHosts feature to run Rails app in a fancy domain name ">Using MAMP Pro&#8217;s VHosts feature to run Rails app in a fancy domain name  &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/laravel-view-presenters-from-scratch/">Laravel View Presenters From Scratch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/">Exploring Ruby&#8217;s Proc, Lambda and Blocks</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joycse06">@joycse06</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joycse06',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section>
+    <h1>Stack Overflow</h1>
+    <a href="http://stackoverflow.com/users/344304/Joy">
+        <img src="http://stackoverflow.com/users/flair/344304.png" width="208" height="58" alt="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+    </a>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Joy Nag -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joycse06';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joycse06.github.io/blog/2012/04/using-mamp-mysql-installation-with-rails-app/';
+        var disqus_url = 'http://joycse06.github.io/blog/2012/04/using-mamp-mysql-installation-with-rails-app/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

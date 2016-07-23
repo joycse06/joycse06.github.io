@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Rails | Prasenjit Kumar Nag a.k.a Joy]]></title>
+  <link href="http://joycse06.github.io/blog/categories/rails/atom.xml" rel="self"/>
+  <link href="http://joycse06.github.io/"/>
+  <updated>2016-07-23T20:49:45+10:00</updated>
+  <id>http://joycse06.github.io/</id>
+  <author>
+    <name><![CDATA[Joy Nag]]></name>
+    <email><![CDATA[joyruet06@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Setting Up the Environment and Running Your First Rails App in Mac OSX Snow Leopard]]></title>
+    <link href="http://joycse06.github.io/blog/2012/05/setting-up-the-environment-and-running-your-first-rails-app-in-mac-osx-snow-leopard/"/>
+    <updated>2012-05-02T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2012/05/setting-up-the-environment-and-running-your-first-rails-app-in-mac-osx-snow-leopard</id>
+    <content type="html"><![CDATA[<p>I have been into Rails recently and found out that configuring Rails Environment is easy in Mac. So I will be sharing the steps I followed to setup the environment and running my first rails app.</p>
+
+<p><strong>Installing a C compiler: </strong>Mac OSX&rsquo;s installation Disc comes with a set of developer tools which is not installed by default. So go ahead and install XCODE from the Installation DVD. It will install all necessary tools to compile and install packages from source. And we will need compiling source to install versions of ruby using RVM(Ruby version manager).</p>
+
+<p><strong>Installing RVM: </strong>Ruby Version Manager is a very handy tool while working with multiple version of Rubies. Snow Leopard comes with Ruby 1.8.7. And using RVM you can install Ruby 1.9.2 or the current stable version 1.9.3. And switching between version using RVM is very easy. So let&rsquo;s jump into installing RVM. Rvm&rsquo;s installation is very easy. The rvm <a title="RVM" href="https://rvm.io/rvm/install/" target="_blank">website</a> provides a one liner installation script to run in your terminal.</p>
+
+<pre><code class="bash">
+$ curl -L get.rvm.io | bash -s stable
+</code></pre>
+
+<p>Then to load the rvm you have to run the following command:</p>
+
+<pre><code class="bash">
+$ source ~/.rvm/scripts/rvm
+</code></pre>
+
+<p>But you are not going to load the rvm every time you start terminal. So its better to add the following file in your <em>~/.bashrc</em> or <em>~/.bash_profile</em> file and <em>~/.zshrc</em> if you are using zsh as your default shell.</p>
+
+<pre><code class="bash">
+# place in ~/.bash_profile or ~/.bashrc as the very last line
+[[ -s $HOME/.rvm/scripts/rvm ]] &amp;amp;&amp;amp; . $HOME/.rvm/scripts/rvm
+</code></pre>
+
+<p>After loading the rvm script file to check if rvm is properly installed in your system run the following command in terminal</p>
+
+<pre><code class="bash">
+$ type rvm | head -n1
+</code></pre>
+
+<p>If you it says &ldquo;<em>rvm is a shell function</em>&rdquo; or &ldquo;<em>rvm is a function</em>&rdquo; then it&rsquo;s fine and you are good to go.</p>
+
+<p>Now go ahead and install an updated ruby version like 1.9.2 or 1.9.3 using the command</p>
+
+<pre><code class="bash">
+$ rvm install 1.9.2
+# or
+$ rvm install 1.9.3
+</code></pre>
+
+<p>It will take some time and that specific ruby version will be installed automatically. Now to check which version of ruby is default in terminal you can try the following command</p>
+
+<pre><code class="bash">
+$ ruby -v
+</code></pre>
+
+<p>It&rsquo;s supposed to say 1.8.7  if you havent upgraded the default Ruby version. Now to use the newly installed Ruby you have to tell rvm to do so using the command</p>
+
+<pre><code class="bash">
+# Use which version you installed using rvm
+rvm use 1.9.2
+# The above command will load the environment in current terminal session
+# if you want to use this as the default version in terminal all the time use --default option instead
+$ rvm use 1.9.2 --default
+</code></pre>
+
+<p>now if you run <em>ruby -v </em>you will see your desired ruby version. Now let install rails gem using <em>gem install </em>command.</p>
+
+<pre><code class="bash">
+$ gem install rails
+</code></pre>
+
+<p>It will take some time and install latest <em>rails </em>system into your system. Now let&rsquo;s create a new rails project. Move to your desired directory and run the following command</p>
+
+<pre><code class="bash">
+$ rails new blog
+</code></pre>
+
+<p>It will create a new rails application named blog in current directory. Now move into the new blog directory. and then run following command for bundling the gems :</p>
+
+<pre><code class="bash">
+$ cd blog
+$ bundle install
+</code></pre>
+
+<p>It will take some time and install all gems required to run the application. Now start the app using the follwoing command</p>
+
+<pre><code class="bash">
+$ rails server
+</code></pre>
+
+<p>if you followed the previous steps properly you should see something like the following</p>
+
+<pre><code class="bash">
+Booting WEBrick
+Rails 3.2.3 application starting in development on http://0.0.0.0:3000
+Call with -d to detach
+Ctrl-C to shutdown server
+[2012-05-02 14:57:59] INFO WEBrick 1.3.1
+[2012-05-02 14:57:59] INFO ruby 1.9.2 (2012-02-14) [x86_64-darwin10.8.0]
+[2012-05-02 14:57:59] INFO WEBrick::HTTPServer#start: pid=81487 port=3000
+</code></pre>
+
+<p>It will start WEBrick (a simple  web server rails ships with itself ). And you can open your browser and point it to <a href="http://0.0.0.0:3000">http://0.0.0.0:3000</a> and you should see the following screen</p>
+
+<p><a href="http://blog.joynag.net/wp-content/uploads/2012/05/rails.png"><img class="aligncenter size-thumbnail wp-image-181" title="rails" src="http://blog.joynag.net/wp-content/uploads/2012/05/rails-150x150.png" alt="" width="150" height="150" /></a></p>
+
+<p>To test a full featured rails 3 app you can try this <a title="Invoice" href="https://github.com/linkworks/invoices" target="_blank">invoice</a> app from github. This app is quite complete and even have pdf invoice generation. To install and run it try the following command  in terminal, you will have to have GIT installed. If you dont have git installed on your machine follow instructions from this page <a title="Install Git" href="http://help.github.com/mac-set-up-git/" target="_blank"><a href="http://help.github.com/mac-set-up-git/">http://help.github.com/mac-set-up-git/</a></a> to install git.</p>
+
+<pre><code class="bash">
+$ git clone https://github.com/linkworks/invoices.git
+
+$ cd invoices
+
+$ bundle install
+
+$ rails server
+</code></pre>
+
+<p>and then check the app in your browser in the following url. <a href="http://0.0.0.0:3000">http://0.0.0.0:3000</a> you should see the app running. :) here is a screenshot of the app after you add register and add some data</p>
+
+<p><a href="http://blog.joynag.net/wp-content/uploads/2012/05/invoices1.png"><img class="aligncenter size-thumbnail wp-image-186" title="invoices" src="http://blog.joynag.net/wp-content/uploads/2012/05/invoices1-150x150.png" alt="" width="150" height="150" /></a></p>
+
+<p>Like me if you want to get fancy url&rsquo;s for you rails apps through virtual hosts then follow the steps in <a href="http://blog.joynag.net/2012/04/using-mamp-pro-vhosts/" target="_blank">this tutorials</a> .</p>
+
+<p>Rails by default uses sqlite as default database engine if you want to use mysql as default database then using the following command instead</p>
+
+<pre><code class="bash">
+$ rails -d mysql blog
+</code></pre>
+
+<p>Then configure your database access info in the file located at <em>config/database.yml  </em>and you are good to go. Though you have to have <strong>mysql2</strong> gem installed in your system. Add</p>
+
+<pre><code class="bash">
+gem 'mysql2'
+</code></pre>
+
+<p>in <em>Gemfile </em> in the root of your app directory and then run <em>bundle install </em>again</p>
+
+<pre><code class="bash">
+$ bundle install
+</code></pre>
+
+<p>If you have MAMP installed and want to know how you can reuse mamp&rsquo;s mysql installation with rail&rsquo;s apps then follow <a title="MySql" href="http://blog.joynag.net/2012/04/using-mamp-mysql-installation-with-rails-app/" target="_blank">this tutorial</a> I wrote earlier. :)</p>
+
+<p>If you are using ubuntu you may try this tutorial <a title="Rails on Ubuntu" href="http://blog.sudobits.com/2011/10/27/how-to-install-ruby-on-rails-in-ubuntu-11-10/" target="_blank"><a href="http://blog.sudobits.com/2011/10/27/how-to-install-ruby-on-rails-in-ubuntu-11-10/">http://blog.sudobits.com/2011/10/27/how-to-install-ruby-on-rails-in-ubuntu-11-10/</a></a></p>
+
+<p>or this <a href="http://www.web2linux.com/05/installing-rails-3-on-ubuntu-10-04-lucid-lynx/" target="_blank"><a href="http://www.web2linux.com/05/installing-rails-3-on-ubuntu-10-04-lucid-lynx/">http://www.web2linux.com/05/installing-rails-3-on-ubuntu-10-04-lucid-lynx/</a></a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using MAMP Pro's VHosts Feature to Run Rails App in a Fancy Domain Name]]></title>
+    <link href="http://joycse06.github.io/blog/2012/04/using-mamp-pro-vhosts/"/>
+    <updated>2012-04-27T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2012/04/using-mamp-pro-vhosts</id>
+    <content type="html"><![CDATA[<p>I have been playing with ROR(Ruby On Rails) from last few days. Those who of you have idea about the the nature of Rails apps know that, to run a rails app you have to run the following command in the terminal from inside the apps directory.</p>
+
+<pre><code class="bash">
+rails server
+</code></pre>
+
+<p>And the app will start running on <strong><a href="http://0.0.0.0:3000">http://0.0.0.0:3000</a></strong> or <strong><a href="http://localhost:3000">http://localhost:3000</a></strong> WEBrick LightWeight Web Server that Rails ships with by default.</p>
+
+<p>As I have left <strong><a href="http://localhost/">http://localhost/</a></strong> long ago and been using fancy local domain names for all my projects, so I was searching for a solution on how can I do that with rails apps to. You know it doesn&rsquo;t feel good to type in some thing like <strong><a href="http://0.0.0.0:3000">http://0.0.0.0:3000</a></strong> in browser . Instead I would love some domain name like <strong><a href="http://d.rails.dev">http://d.rails.dev</a></strong>  or something like that. It&rsquo;s just feels good typing that.</p>
+
+<p>And I found a solution. :) Here&rsquo;s how to do it. In Mamp pro&rsquo;s control panel in the host tab create a new host. Write <strong><a href="http://d.rails.dev">http://d.rails.dev</a></strong> as the server name. The disk location isn&rsquo;t important here but I have set it to my rails app directory. Now switch over to the advanced tab in right configuration panel and paste in the following code block in Customized Virtual Host General Settings option box:</p>
+
+<pre><code class="bash">
+ServerName rails
+ServerAlias *.dev
+
+ProxyPass / http://localhost:3000/
+ProxyPassReverse / http://localhost:3000/
+ProxyPreserveHost On
+</code></pre>
+
+<p>As you can see from the above code it&rsquo;s actually forwarding all traffic in / which is <strong><a href="http://d.rails.dev">http://d.rails.dev</a></strong> into <strong><a href="http://localhost:3000">http://localhost:3000</a></strong> (Where our actual rails app is running). Click apply and you are done.</p>
+
+<p>Now start the rails app using <strong><em>rails server  </em></strong>command from terminal from within the rails app directory and point your browser into <strong><a href="http://d.rails.dev">http://d.rails.dev</a></strong> and see your rails app is running there.</p>
+
+<p>Pretty easy huh! But it provides a good amount of self satisfaction, well, at least for me. I like seeing fancy domain names for my web apps.</p>
+
+<p>I haven&rsquo;t been able to test the process for MAMP but it shouldn&rsquo;t be much different, though you have to do everything manually from adding vhost entry into httpd.conf  and then add the host name entry into /etc/hosts file. (I will be writing another post on how to create a virtual host in mamp/lamp sometime soon).</p>
+
+<p>Thanks for taking the time to read up to this point. :)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using MAMP's Mysql Installation With Rails App]]></title>
+    <link href="http://joycse06.github.io/blog/2012/04/using-mamp-mysql-installation-with-rails-app/"/>
+    <updated>2012-04-27T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2012/04/using-mamp-mysql-installation-with-rails-app</id>
+    <content type="html"><![CDATA[<p>Being primarily a PHP developer I always have one AMP package installed in my machine no matter what platform I work with. Now-a-days as I work on my macbook I have MAMP installed.</p>
+
+<p>Few days back I was trying to install <em>mysql2 </em>gem to use in Rails app which acts as the interface between MySql engine and Rails(or Ruby) apps. But it was constantly failing every time I tried to. I even tried to install previous versions of mysql2 gem but no luck. Then I tried to have a closer look at the error the <strong><em>bundle install</em></strong> command was spitting out into the terminal.</p>
+
+<p>It was not being able to find mysql header files which are required to compile mysql2 gem. After searching in the internet I found out MAMP doesn&rsquo;t ship mysql headers by default.</p>
+
+<p>So The options I had was either recompile Mysql from source and add headers into proper MAMP Directory. Or manage another mysql installation only for rails which is a whole lot of pain. So I had to go for one, I searched through Stack Overflow and found some tutorials on how to do that. After studying some of those I finally took a backup of mamp and started the recompilation process. Here are the steps I followed:</p>
+
+<p>Take a backup of your whole MAMP directory if by any chance you mess it up. :) It&rsquo;s always safe.</p>
+
+<ol>
+<li>First you need to download the MAMP open source components from their source forge page here</li>
+</ol>
+
+
+<p><a href="http://sourceforge.net/projects/mamp/files/mamp/">http://sourceforge.net/projects/mamp/files/mamp/</a> download the components for mamp 2.0.2 that is the latest now.</p>
+
+<ol>
+<li>Recently MAMP have switched from MySql 5.1 to to MySQL 5.5. And MySQL, in turn, has switched from GNU Make (with <em>./configure</em>) to CMake (with <em>cmake .</em>). So you need to have cmake installed in you Mac. You can do that easily using <em>brew</em> or <em>macport</em> using the following command</li>
+</ol>
+
+
+<pre><code class="bash">
+brew install cmake
+
+or
+
+port install cmake
+</code></pre>
+
+<ol>
+<li>Suppose You have downloaded it into your desktop then Extract and put the mysql-5.5.9.tar.gz file into your desktop and type in the following command in your terminal.</li>
+</ol>
+
+
+<pre><code class="bash">
+$ cd /tmp
+ $ mv /Users/yourname/Desktop/mysql-5.5.9.tar.gz .
+ $ tar xf mysql-5.5.9.tar.gz
+ $ cd mysql-5.5.9
+ $ cmake . -DMYSQL_UNIX_ADDR=/Applications/MAMP/tmp/mysql/mysql.sock -DCMAKE_INSTALL_PREFIX=/Applications/MAMP/Library
+ $ make -j  3
+ $ cp libmysql/*.dylib /Applications/MAMP/Library/lib/
+ $ mkdir -p /Applications/MAMP/Library/include/mysql
+ $ cp include/* /Applications/MAMP/Library/include/mysql
+ $ sudo env ARCHFLAGS=&amp;quot;-arch x86_64&amp;quot; gem install mysql2 -- --with-mysql-config=/Applications/MAMP/Library/bin/mysql_config
+</code></pre>
+
+<ol>
+<li>after this you should see 1 Gem installed successfully message into the termnal and you gem has been install successfully. Now you need to symlink a bundle from your mysql Library into /user/lib. Run the following command in the terminal.</li>
+</ol>
+
+
+<p>&#8220;` bash
+sudo ln -s /Applications/MAMP/Library/lib/libmysqlclient.16.dylib /usr/lib/libmysqlclient.16.dylib [/bash]</p>
+
+<div></div>
+
+
+<div>5. Now clean up your temp directory</div>
+
+
+<pre><code class="bash">
+ rm -rf /tmp/mysql-5.5.9 /tmp/mysql-5.5.9.tar.gz
+</code></pre>
+
+<div>and you are done. Now you can try <strong>bundle install or </strong> <strong>rake db:create</strong></div>
+
+
+<div>and they should work fine. :)</div>
+
+
+<div>Happy reusing MAMP&#8217;s mysql with your rails applications :)</div>
+
+]]></content>
+  </entry>
+  
+</feed>

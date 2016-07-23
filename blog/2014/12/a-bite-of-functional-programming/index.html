@@ -1,0 +1,374 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>A Bite of Functional Programming - Prasenjit Kumar Nag a.k.a Joy</title>
+  <meta name="author" content="Joy Nag">
+
+  
+  <meta name="description" content="I love programming languages and trying a new one is always fun. A year or so ago I first heard the name of functional paradigm of programming. I &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joycse06.github.io/blog/2014/12/a-bite-of-functional-programming/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Prasenjit Kumar Nag a.k.a Joy" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58344400-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Prasenjit Kumar Nag a.k.a Joy</a></h1>
+  
+    <h2>A Developers Adventure in Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="joycse06.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories">Categories</a></li>
+  <li><a href="/about-me">About Me</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">A Bite of Functional Programming</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-12-15T03:25:02+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>3:25 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I love programming languages and trying a new one is always fun. A year or so ago I first heard the name of functional paradigm of programming. I have came across blog posts, saw people talking about functional programming in programming communities over the last year. I have seen countless veteran programmers referring <code>SICP</code> as a must read for anyone who wants to be really good in programming. When I went over to search for <code>SICP</code> found the videos of original lecture of <code>Hal Abelson</code> and I heard the name of <code>LISP</code> from him while checking the first lecture.</p>
+
+<p>From then on I have been cherishing a desire to learn a functional language and went ahead to try learning some like <code>Haskell</code>, <code>Clojure</code> and <code>Scala</code> though couldn&rsquo;t get too far with anyone of them. But after every few months something inside me pushes me to get back to learning a functional language well and I spend several days reading blogs, trying out simple things.</p>
+
+<!-- more -->
+
+
+<p>Enrolled in <code>Functional Programming in Scala</code> Course in <code>CourseEra</code> two times but couldn&rsquo;t or didn&rsquo;t finish in either of those enrolments. But while doing the exercise of first/second chapter of the scala course I did some trivial things like <code>finding factorial of a number</code> and <code>a parantheses matching program</code> which got me more interested into it.</p>
+
+<p>Though I am a know-nothing in functional programming, I decided I will be good enough in one of the functional languages someday. But I have a habit of digressing from the main target sometimes specially while learning something and over this very short period of time I have checked blogs/videos on many things related to functional paradigm like <code>monads</code>, <code>monoids</code>,  <code>STM(Software Transactional Memory</code>, <code>Programming without side effects</code>, <code>Code as data</code>, <code>Higher Order functions</code> and many more. Though most of the things went over my head, I understood they are much profound ideas or concepts and understanding those properly will definitely make me a better programming.</p>
+
+<p> Enough talking, lets do some trivial functional programming together maybe <code>finding the factorial of a number</code> . Lets do it in scala first.</p>
+
+<figure class='code'><figcaption><span>factorial.scala</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">factorial</span><span class="o">(</span><span class="n">n</span><span class="k">:</span><span class="kt">Int</span><span class="o">)</span><span class="k">:</span><span class="kt">Int</span> <span class="o">=</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">n</span><span class="o">==</span><span class="mi">0</span><span class="o">)</span>
+</span><span class='line'>        <span class="mi">1</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>        <span class="n">n</span> <span class="o">*</span> <span class="n">factorial</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This program is fairly straight forward for anyone with basic programming background. The syntax can seem alien to anyone like me who doesn&rsquo;t know <code>Scala</code> but the functional body is pretty simple for anyone who knows <code>recursion</code> . We know factorial of a number is defined as <code>factorial(n) = n*(n-1)*....*1</code> . So in terms of recursion from <code>Imperative Paradigm</code> we see the base case is when value of <code>n</code> reaches <code>zero</code> we return one otherwise we call the same function recursively.</p>
+
+<p>so the call stack for a call of <code>factorial(5)</code> would look like</p>
+
+<figure class='code'><figcaption><span>factorial.scala</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">factorial</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
+</span><span class='line'><span class="mi">5</span><span class="o">*(</span><span class="n">factorial</span><span class="o">(</span><span class="mi">4</span><span class="o">))</span>
+</span><span class='line'><span class="mi">5</span><span class="o">*(</span><span class="mi">4</span><span class="o">*(</span><span class="n">factorial</span><span class="o">(</span><span class="mi">3</span><span class="o">)))</span>
+</span><span class='line'><span class="mi">5</span><span class="o">*(</span><span class="mi">4</span><span class="o">*(</span><span class="mi">3</span><span class="o">*(</span><span class="n">factorial</span><span class="o">(</span><span class="mi">2</span><span class="o">))))</span>
+</span><span class='line'><span class="mi">5</span><span class="o">*(</span><span class="mi">4</span><span class="o">*(</span><span class="mi">3</span><span class="o">*(</span><span class="mi">2</span><span class="o">*(</span><span class="n">factorial</span><span class="o">(</span><span class="mi">1</span><span class="o">))))))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We see with each call we get more and more <code>*'s</code> and all steps stacks up in the call stack in memory which definitely have a limited amount of space. So if the number we want to calculate the factorial for is big enough we can get good old <code>Stack Overflow Error</code>. So whats the solution to this. Most good languages has a features called <code>Tail Recursion Optimization</code> which is, if the  <code>recursive</code> call is of the same form as the main function call then the compiler/interpreter will resuse the same call stack instead of creating a new one each time.</p>
+
+<p>But we cant just make the last call <code>factorial(n-1)</code> in that case we will lose the number n. So to make it tail recursive we can redefine the function like</p>
+
+<figure class='code'><figcaption><span>factorial</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">factorial</span><span class="o">(</span><span class="n">n</span><span class="k">:</span><span class="kt">Int</span><span class="o">,</span> <span class="n">accumulator</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span> <span class="n">n</span><span class="o">==</span><span class="mi">0</span> <span class="o">)</span>
+</span><span class='line'>        <span class="n">accumulator</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>        <span class="n">factorial</span><span class="o">((</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">),</span> <span class="n">n</span><span class="o">*</span><span class="n">accumulator</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now the last recursive call is of the same function signature and scala interpreter is design to optimize it with the feature called <code>Tail Recursion Optimization</code> . But this one also has one limitation, it requires the user of the function to pass 1 as the value of the <code>accumulator</code> which is a burden for the user and it wont return correct result if the user doesn&rsquo;t provide 1 as the value of the <code>accumulator</code> . To avoid this and provide user the same function signature like <code>factorial(number)</code> we can use a local function inside the main function. Such a function definition will look like</p>
+
+<figure class='code'><figcaption><span>factorial</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">factorial</span><span class="o">(</span><span class="n">number</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">def</span> <span class="n">factorialWithAccumulator</span><span class="o">(</span> <span class="n">number</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">accumulator</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">accumulator</span>
+</span><span class='line'>        <span class="k">else</span>
+</span><span class='line'>            <span class="n">factorialWithAccumulator</span><span class="o">(</span> <span class="n">number</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">accumulator</span> <span class="o">*</span> <span class="n">number</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">factorialWithAccumulator</span><span class="o">(</span><span class="n">number</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span>
+</span><span class='line'> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now this function can be called like  <code>factorial(5)</code> and we can use it to calculate factorial of much bigger number as it&rsquo;s optimized we wont get  <code>Stack Overflow</code> error. Another thing we can do is to use the  <code>@tailrec</code> annotation before any function you expect the compiler to optimize and in that case the compiler will warn you if it cant optimize that recursive function.</p>
+
+<p>That&rsquo;s all for today. I will be writing more about functional programming as I learn more about it.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Joy Nag</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-12-15T03:25:02+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>3:25 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/functional/'>functional</a>, <a class='category' href='/blog/categories/programming/'>programming</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://joycse06.github.io/blog/2014/12/a-bite-of-functional-programming/" data-via="joycse06" data-counturl="http://joycse06.github.io/blog/2014/12/a-bite-of-functional-programming/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/12/moving-magento-from-one-server-to-another-easily-using-ssh/" title="Previous Post: Moving magento Store from one server to another easily using ssh">&laquo; Moving magento Store from one server to another easily using ssh</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/12/functional-programming-my-intro-to-higher-order-functions/" title="Next Post: Functional Programming : My Intro to Higher Order Functions">Functional Programming : My Intro to Higher Order Functions &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/laravel-view-presenters-from-scratch/">Laravel View Presenters From Scratch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/">Exploring Ruby&#8217;s Proc, Lambda and Blocks</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joycse06">@joycse06</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joycse06',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section>
+    <h1>Stack Overflow</h1>
+    <a href="http://stackoverflow.com/users/344304/Joy">
+        <img src="http://stackoverflow.com/users/flair/344304.png" width="208" height="58" alt="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+    </a>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Joy Nag -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joycse06';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joycse06.github.io/blog/2014/12/a-bite-of-functional-programming/';
+        var disqus_url = 'http://joycse06.github.io/blog/2014/12/a-bite-of-functional-programming/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

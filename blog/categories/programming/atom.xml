@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Programming | Prasenjit Kumar Nag a.k.a Joy]]></title>
+  <link href="http://joycse06.github.io/blog/categories/programming/atom.xml" rel="self"/>
+  <link href="http://joycse06.github.io/"/>
+  <updated>2016-07-23T20:49:45+10:00</updated>
+  <id>http://joycse06.github.io/</id>
+  <author>
+    <name><![CDATA[Joy Nag]]></name>
+    <email><![CDATA[joyruet06@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Exploring Ruby's Proc, Lambda and Blocks]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/"/>
+    <updated>2014-12-30T18:56:59+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/exploring-rubys-proc-lambda-and-blocks</id>
+    <content type="html"><![CDATA[<p>I have a weakness for ROR(Ruby on Rails) partly due the reason I am always obsessed with learning to do things in better ways for a long time. I am still a noob but I want be a very good Software Architect someday, with deep knowledge and practical experience on software design and development following all the best practices.</p>
+
+<p>And what I have found, Rails projects are naturally more likely to follow better ways of doing things, and community is much more robust. Though the reason behind my this perception can be the fact that I started with CodeIgniter mainly and worked on some some CI projects at the early stage of my Career which were initially done by some Indian developer and they did mostly everything from controller in CodeIgniter, there were no models, not rules of where to put what. It was a pure mess. Anyway, these things pushed me towards my quest for searching for better ways of doing things, and I did some research on ROR and found the community around ROR is great. They do TDD( Test Driven Design ) and there were many great tools to help developers test their code, TDD in PHP community is gaining traction too recently. But still I see most PHP devs takes testing as optional and find excuses to not write automated tests. Projects I have worked on didn&rsquo;t have chance/scope to do TDD. I am a not-so-experienced avid follower of TDD and design patterns and wanna be good on them.</p>
+
+<!-- more -->
+
+
+<p>Anyway, things are changing and TDD is more common in PHP community too, with libraries like PHPUnit, PHPSpec and Behat things became easier too.</p>
+
+<p>I have always wanted to get involved into some ROR projects just to learn their ways of doing things and gather the framework-agnostic knowledge in it and hence improving my thinking process but that didn&rsquo;t happen for no good reason or lack of motivation. A month or so ago I was trying to get some knowledge on DDD( Domain Driven Design ) and Hexagonal Architecture but I found mostly ROR conference talks and my desire to learn ROR striked again. I was checking Ruby after a long time. And wanted to learn something new. Ruby has always amazed me for it&rsquo;s developer friendly syntax, &lsquo;Everything&rsquo;s object&rsquo; paradigm and specially for lots of awesomely-named methods on every objects.</p>
+
+<p>I would like to give example of a few like</p>
+
+<pre><code class="ruby times method">
+4.times { puts "Hello Ruby!" }
+</code></pre>
+
+<p>which amazes me every time. Most of the languages I tried have something called primitive types and values like integers, floats, strings are treated specially. But in Ruby almost everything is object. There&rsquo;s no notion of primitive types and surprisingly at least to me even <code>classes</code> are objects too. To prove that we can do something like following in any ruby REPL</p>
+
+<pre><code class="ruby"># Output from Pry
+
+Array.class # returns Class &lt; Module
+Array.class.superclass # returns Module &lt; Object
+Array.class.superclass.superclass # returns Object &lt; BasicObject
+</code></pre>
+
+<p>So the hierarchy for <code>Array</code> class is</p>
+
+<p>  <code>Array &lt; Class &lt; Module &lt; Object &lt; BasicObject</code></p>
+
+<p>So <code>BasicObject</code> is at the top of the Ruby object Model. And every class in ruby is a subclass of that. Lets stop here, i will write about the Ruby object model another day.</p>
+
+<p>The designer of the language have put a lot of thought on the syntax specially to make the code more readable, and make developer&rsquo;s life easier. Lets see some other syntactic awesomeness</p>
+
+<pre><code class="ruby">
+email = "Joy Nag &lt;joy@example.com&gt;"
+
+# you can apply regex just not the string object
+email[/&lt;(.*?)&gt;/, 1]  # returns =&gt; "joy@example.com"
+
+# you can do initialization and assignment of a
+# variable with a single liner
+
+(foo ||= []) &lt;&lt; 'Hello World' # Returns an array with the
+                              # string 'Hello World' appended
+
+# calculating sum of all elements of an array
+
+[1,2,3].inject(0) { |sum, num| sum + num } # returns 6
+
+# squaring all elements of a array
+
+[1,2,3].map { |n| n*n } # returns [ 1, 4, 9 ]
+
+# selecting only the even numbers from an array
+
+[1,2,3,4].select { |n| n % 2 == 0 } # returns [2,4]
+
+# and there's the very handy .each method on enumerables
+[1,2,4].each { |n| puts n } # prints 1 2 and 4 and returns
+                            # the original array
+</code></pre>
+
+<p>Well, lets get back to the topic of this post.</p>
+
+<p>blocks, procs and lambdas are all example of <code>closures</code> in <code>ruby</code>. In laymen term <strong>they are ways of grouping of code we want to run</strong>. Lets start with <code>Blocks</code>.</p>
+
+<h2>Blocks</h2>
+
+<p>Blocks are still the only thing I am aware of where the everything&rsquo;s a object rule is broken. blocks are language constructs and doesn&rsquo;t have any type. Block are handy small chunk of code which can be passed around easily to methods to change the way of how they will behave. Kind of like allowing the user of a function or method to inject behaviors to that method based on what the output of that function or method changes. Like if we see from our previous example</p>
+
+<pre><code class="ruby Block example">[1,2,3,4].select { |n| n % 2 == 0 }
+
+# { |n| n % 2 == 0 } is a block which takes one argument
+                    # and return true or false based on the condition
+</code></pre>
+
+<p> Block can be of two form. If the content of the block is small to fit in a line then you can just enclose that in <code>{}</code>. And if the content if larger you can use the <code>do end</code> construct to create the block. Lets re-implement a simple version of the <code>map</code> method of array class. Ohh, here&rsquo;s one catch, Ruby system classes are open and you can add or overwrite any method on any system class at your own risk. It&rsquo;s a great power and if not done carefully can cause mess in your program.</p>
+
+<pre><code class="ruby mymap method">
+class Array
+    def mymap
+        out = [] # where we will be collecting the transformed values
+                 # after passing them through the block
+        if block_given?
+            # a block has been passed, we are good
+            self.each { |elem| out &lt;&lt; yield(elem)
+        else
+            # block was not given, so return an enumerator like the
+            # original map method
+            out = to_enum :mymap
+
+        out # this returns the transformed array
+    end
+end
+
+# now we can use it like [1,2,3].mymap { |n| n*2 } to double
+# every element of the array
+</code></pre>
+
+<p>We can see several other things about blocks here in this example, like you can check if a block was passed with the <code>block_given?</code> method and decide what to do if block was not given. Another reason we need to do this defensive thing is if we call <code>yield</code> anyway and if the method is called without a block, then the execution will halt with a <code>LocalJumpError</code> which we probably dont want.</p>
+
+<p>So the way to execute a block is to is by call the system method <code>yield</code> and we can pass in any number of argument to it and  and it will return the output of the block. <code>yield</code> is magical because every object oriented rule in Ruby in suspended for this special mode of operation.</p>
+
+<p>Blocks are too mainstream in ruby programs and found almost everywhere. Due to this conveninece  and other ways to enumerate are rarely used. After seeing this when there&rsquo;s these awesome ways to loop though a list or array why would anyone use traditional  <code>for while do-while</code> if not absolutely necessary.</p>
+
+<p>Ok there lot more to block itself. Like you can&rsquo;t pass more than one block to a method. Blocks which are passed implicitly to a method can be converted to a explicit method parameter using <code>&amp;</code> . Like we can do the following</p>
+
+<pre><code class="ruby Converting Implicit blocks to Explicit named parameter">
+def calculate(a, b , &amp;block) # &amp;block is an explicit param
+    block.call(a, b)
+end
+
+# then you can call it like
+puts calculcate(5,5) { |a, b| a + b }
+</code></pre>
+
+<p>You can do the other way around too, like converting a lambda into a implicit block and pass it to a function which doesnt receive a explicit block.</p>
+
+<p>lets talk about lambdas.</p>
+
+<h2>Lambdas</h2>
+
+<p> <code>Lambdas</code> are actually <code>Proc</code> objects which slight differences. <code>lambda</code> is a keyword and not a function which return an instance of class <code>Proc</code>. We can check this using the following</p>
+
+<pre><code class="ruby Lambda and Procs">
+proc = Proc.new { puts "Hello world" }
+lam = lambda { puts "Hello World" }
+
+proc.class # returns 'Proc'
+lam.class  # returns 'Proc'
+</code></pre>
+
+<p>lambdas are kind of named blocks which can be passed around functions without conversions which is necessary for blocks.</p>
+
+<p>Lets look at a slightly complex exercise from Rubymonk which I had hard time understanding first. Understanding this will help clear many things about the conversions</p>
+
+<pre><code class="ruby Implicit Explicit conversions">
+Filter = lambda do |array, &amp;block|
+    array.select &amp;block
+end
+
+# now we can use this filter method like
+
+Filter.call([1, 2, 3, 4]) {|number| number.even? } # returns [2,4]
+# or
+Filter.call([1, 2.0, 3, 4.0]) {|number| number.integer? } returns [1, 3]
+# returns [1,3]
+</code></pre>
+
+<p>So lets break the Filter lambda down, that lambda takes two arguments first is an array and second is an explicit block so when we are calling it like</p>
+
+<p> <code>Filter.call([1, 2, 3, 4]) {|number| number.even? }</code> the block passed to the call method is implicit. But as our lambda takes an explicit block we are converting it while defining the arguments in the lambda like <code>&amp;block</code> which converts any implicit block passed to a method or lambda to a named parameter. Then we are calling <code>Array.select</code> method inside it which on the other hand takes an implicit block. So time to convert the named parameter again to pass it to the <code>Array.select</code> method. Thats why we are doing it like <code>array.select &amp;block</code>. So this two way conversion should have cleared your head around the conversion.</p>
+
+<h2>Proc</h2>
+
+<p> <code>Proc</code> is a short for <code>Procedure</code> and its a class in <code>Ruby</code>. We can define a proc like</p>
+
+<pre><code class="ruby Proc">p = Proc.new { puts "hello Proc" }
+
+# and then we can use p just like any other variable
+
+p.call  # prints hello Proc
+p.class # returns Proc
+a = p   # a now equals p
+p       # it returns the proc object
+</code></pre>
+
+<h2>Differences between Block, Proc and Lambda</h2>
+
+<p>Unlike block the other two are instances of the <code>Proc</code> class and they can have standalone existance. while block is just part of the <code>Syntax</code> of a method call. It doesn&rsquo;t mean anything on a standalone basis and can only appear in argument lists.</p>
+
+<p> Like both <code>{ puts "hello block" }</code> and <code>a = { puts "hello block" }</code> causes <code>Syntax Error</code>.</p>
+
+<p> At most only one block can be present in an argument list. In contrast you can pass around multiple procs to methods.</p>
+
+<p>Like I said earlier, <code>lambda</code> and <code>proc</code> are both instances of the <code>Proc</code> class. But the have slight differences. I will go over them briefly below:</p>
+
+<ol>
+<li>Lambdas check the number of arguments, while procs do not</li>
+</ol>
+
+
+<p>This one is fairly straight forward and doesn&rsquo;t require much of a explanation. Lambdas halts execution with <code>ArgumentError</code> if the number of argument mismatch. While <code>Proc</code> return nill if no argument is passed, or ignore extra arguments if more arguments are provided.</p>
+
+<ol>
+<li>Lambdas and procs treat the <code>return</code> keyword differently</li>
+</ol>
+
+
+<p> <code>return</code> inside of a lambda triggers the code right outside of the lambda code. Lets see an example:</p>
+
+<pre><code class="ruby">def lambda_test
+  lam = lambda { return }
+  lam.call
+  puts "Hello world"
+end
+
+lambda_test                 # calling lambda_test prints 'Hello World'
+</code></pre>
+
+<p>so we see the <code>return</code> statement inside the <code>lambda</code> return the control of the code right outside of the lambda code. and the <code>puts</code> call execute properly.</p>
+
+<p>while on the contrary</p>
+
+<p> <code>return</code> inside of a proc triggers the code outside of the method where the proc is being executed
+&#8220;` ruby</p>
+
+<p>def proc_test
+  proc = Proc.new { return }
+  proc.call
+  puts &ldquo;Hello world&rdquo;
+end</p>
+
+<p>proc_test                 # calling proc_test prints nothing</p>
+
+<p>&#8220;`</p>
+
+<p>so we see the <code>return</code> statement in the <code>proc</code> return from the <code>proc_test</code> function itself.</p>
+
+<p>So that&rsquo;s it for a single post. I have been following the courses at <a href="https://rubymonk.com/">Ruby Monk</a> and they are great with exercises and all. Using <code>Pry</code> for trying out different things instead of the bundled <code>irb</code> as <code>REPL</code>.</p>
+
+<p>Hope you enjoyed it! :)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Functional Programming : My Intro to Higher Order Functions]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/functional-programming-my-intro-to-higher-order-functions/"/>
+    <updated>2014-12-15T17:14:01+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/functional-programming-my-intro-to-higher-order-functions</id>
+    <content type="html"><![CDATA[<p>In University time, I was mainly acquainted to C/CPP programming with some Java. Then to me  <code>function</code> was something special and very different than other inhabitants of the my then programming world. In that time I couldn&rsquo;t even think of passing/returning functions to other functions.</p>
+
+<p>Then sometime at the end of 2009, while I was learning Javascript I saw different behaviors and JS seemed more liberal to me. Like I could declare functions without name, could also assign them to variables, It was like wow to me. I read about anonymous functions and IIFE( Immediately-Invoked Function Expression ) and they amazed me back then. I first learned from Hasin Hayder while working in Leevio that I can assign name of a function to a variable  and call them like any other function and could even play with their scope with <code>apply</code> and <code>call</code> <code>Prototype</code> methods.</p>
+
+<p> <!-- more --></p>
+
+<p> Then anonymous function and closure kind of became normal to me while working with <code>PHP</code> and found I could even respond to undefined method calls in <code>PHP</code> Using <code>__call()</code> and <code>_callStatic()</code> <code>magic methods</code> . I didn&rsquo;t know that there&rsquo;s more surprise waiting for me.</p>
+
+<p> While playing with <code>Scala</code> I found I can pass a function to another function and using that function argument that function can return new function with new behaviors. Like a generator function. It was amazing to me. I bet it might amaze you too if you are not already familiar with it.</p>
+
+<p> These kind of functions are called <code>Higher Order Functions</code>, functions which takes other functions as argument works on them and may return new functions. Functions are <code>First Class Citizens</code> in functional languages. <strong>That means function are just like any other value. They can be passed/returned to/from other functions.</strong></p>
+
+<p> Enough rambling. Lets define a higher order function in <code>Scala</code>.</p>
+
+<p> We want to define a function to find the sum of the a range of values, sum of their squares and sum of their cubes. In any imperative language we would just create three functions and calculate the sum using a loop. We can do the same in <code>scala</code> using recursion and three different function. But we dont want to do that.</p>
+
+<p>Lets see the higher order function definition first and then I will explain that.</p>
+
+<pre><code class="scala Higher Order Function">def sum(f: Int =&gt; Int): (Int, Int) =&gt; Int = {
+    def sumF(a: Int, b: Int): Int =
+        if (a &gt; b) 0
+        else f(a) + sumF(a + 1, b)
+    sumF
+}
+</code></pre>
+
+<p>The syntax can seem a bit odd to those not familiar with <code>scala</code> at all. The definition of the function tells that, the function <code>sum</code> takes another function as argument which is of signature <code>f: Int =&gt; Int</code> means that functions takes an integer and return an integer too. The part of the function definition after <code>:</code> which is <code>(Int, Int) =&gt; Int</code> tells the compiler that <code>sum</code> returns an function of type <code>(Int, Int) =&gt; Int</code> which means it takes two integers and return one as result.</p>
+
+<p>Then we define another function inside the main <code>sum</code> function which is recursive version of a loop which runs from <code>a to b</code> which is our range and calculate the sum by passing each integer to the input function. Then at the last line of the definition we just have <code>sumF</code> which is the name of the function we declared inside. And If you dont already know scala return the result of last statement as return value of the functions and explicit return is not necessary which is the case in other functional languages too.</p>
+
+<p>Now we can use this function to generate our desired functions like following,</p>
+
+<pre><code class="scala Derived functions">
+def sumInts         = sum(x =&gt; x)
+def sumSquares      = sum(x =&gt; x * x)
+def sumCubes        = sum(x =&gt; x * x * x)
+
+/*
+ x =&gt; x * x is just a syntactic sugar and  the short version of
+
+ def square(x: Int): Int = {
+    x * x
+ }
+
+ then we could just use
+ def sumSquares  = sum(square)
+*/
+</code></pre>
+
+<p>Here we are defining these functions by passing in an anonymous functions to the function <code>sum</code> . An anonymous function of the form <code>x =&gt; x * x</code> create an function which takes a single argument <code>x</code> and returns <code>x * x</code> which is the square of the argument.</p>
+
+<p>Other than this we could also use the <code>factorial</code> function from <a href="/blog/2014/12/a-bite-of-functional-programming/">my last blog post</a> and declare a sum of factorials function like</p>
+
+<pre><code class="scala Sum of factorials">
+def sumFactorials = sum(factorial)
+</code></pre>
+
+<p>and after these we can just use any of <code>sumInts(10, 20)</code> or <code>sumSquares(10 , 20)</code> etc to get the sum of the outputs of those functions.</p>
+
+<p>These are very trivial things for any good functional programmer or any great programmer in general but the concept of this amazed me a lot. And I am really happy that I can do this now.</p>
+
+<p>We could improve the declaration of our <code>sum</code> function to use <code>tail recursion</code> like I talked about in <a href="/blog/2014/12/a-bite-of-functional-programming/">my previous post</a>.</p>
+
+<p>Maybe thats all from me for <code>scala</code> for the time being, I decided to learn <code>Clojure</code> instead and will be writing on that as I learn new cool things.</p>
+
+<p>I am not a very good writer and not a very good programmer either. But I am trying to be good at both. You could always ask me things in comment and I will try my best to clarify things more if I can.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[A Bite of Functional Programming]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/a-bite-of-functional-programming/"/>
+    <updated>2014-12-15T03:25:02+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/a-bite-of-functional-programming</id>
+    <content type="html"><![CDATA[<p>I love programming languages and trying a new one is always fun. A year or so ago I first heard the name of functional paradigm of programming. I have came across blog posts, saw people talking about functional programming in programming communities over the last year. I have seen countless veteran programmers referring <code>SICP</code> as a must read for anyone who wants to be really good in programming. When I went over to search for <code>SICP</code> found the videos of original lecture of <code>Hal Abelson</code> and I heard the name of <code>LISP</code> from him while checking the first lecture.</p>
+
+<p>From then on I have been cherishing a desire to learn a functional language and went ahead to try learning some like <code>Haskell</code>, <code>Clojure</code> and <code>Scala</code> though couldn&rsquo;t get too far with anyone of them. But after every few months something inside me pushes me to get back to learning a functional language well and I spend several days reading blogs, trying out simple things.</p>
+
+<!-- more -->
+
+
+<p>Enrolled in <code>Functional Programming in Scala</code> Course in <code>CourseEra</code> two times but couldn&rsquo;t or didn&rsquo;t finish in either of those enrolments. But while doing the exercise of first/second chapter of the scala course I did some trivial things like <code>finding factorial of a number</code> and <code>a parantheses matching program</code> which got me more interested into it.</p>
+
+<p>Though I am a know-nothing in functional programming, I decided I will be good enough in one of the functional languages someday. But I have a habit of digressing from the main target sometimes specially while learning something and over this very short period of time I have checked blogs/videos on many things related to functional paradigm like <code>monads</code>, <code>monoids</code>,  <code>STM(Software Transactional Memory</code>, <code>Programming without side effects</code>, <code>Code as data</code>, <code>Higher Order functions</code> and many more. Though most of the things went over my head, I understood they are much profound ideas or concepts and understanding those properly will definitely make me a better programming.</p>
+
+<p> Enough talking, lets do some trivial functional programming together maybe <code>finding the factorial of a number</code> . Lets do it in scala first.</p>
+
+<pre><code class="scala factorial.scala">
+def factorial(n:Int):Int =
+    if (n==0)
+        1
+    else
+        n * factorial(n-1)
+</code></pre>
+
+<p>This program is fairly straight forward for anyone with basic programming background. The syntax can seem alien to anyone like me who doesn&rsquo;t know <code>Scala</code> but the functional body is pretty simple for anyone who knows <code>recursion</code> . We know factorial of a number is defined as <code>factorial(n) = n*(n-1)*....*1</code> . So in terms of recursion from <code>Imperative Paradigm</code> we see the base case is when value of <code>n</code> reaches <code>zero</code> we return one otherwise we call the same function recursively.</p>
+
+<p>so the call stack for a call of <code>factorial(5)</code> would look like</p>
+
+<pre><code>factorial(5)
+5*(factorial(4))
+5*(4*(factorial(3)))
+5*(4*(3*(factorial(2))))
+5*(4*(3*(2*(factorial(1))))))
+</code></pre>
+
+<p>We see with each call we get more and more <code>*'s</code> and all steps stacks up in the call stack in memory which definitely have a limited amount of space. So if the number we want to calculate the factorial for is big enough we can get good old <code>Stack Overflow Error</code>. So whats the solution to this. Most good languages has a features called <code>Tail Recursion Optimization</code> which is, if the  <code>recursive</code> call is of the same form as the main function call then the compiler/interpreter will resuse the same call stack instead of creating a new one each time.</p>
+
+<p>But we cant just make the last call <code>factorial(n-1)</code> in that case we will lose the number n. So to make it tail recursive we can redefine the function like</p>
+
+<pre><code class="scala factorial">
+def factorial(n:Int, accumulator: Int): Int =
+    if ( n==0 )
+        accumulator
+    else
+        factorial((n-1), n*accumulator)
+</code></pre>
+
+<p>Now the last recursive call is of the same function signature and scala interpreter is design to optimize it with the feature called <code>Tail Recursion Optimization</code> . But this one also has one limitation, it requires the user of the function to pass 1 as the value of the <code>accumulator</code> which is a burden for the user and it wont return correct result if the user doesn&rsquo;t provide 1 as the value of the <code>accumulator</code> . To avoid this and provide user the same function signature like <code>factorial(number)</code> we can use a local function inside the main function. Such a function definition will look like</p>
+
+<pre><code class="scala factorial">def factorial(number: Int) : Int = {
+    def factorialWithAccumulator( number: Int, accumulator: Int) : Int = {
+        if (number == 1)
+            return accumulator
+        else
+            factorialWithAccumulator( number - 1, accumulator * number)
+    }
+    factorialWithAccumulator(number, 1)
+ }
+</code></pre>
+
+<p>Now this function can be called like  <code>factorial(5)</code> and we can use it to calculate factorial of much bigger number as it&rsquo;s optimized we wont get  <code>Stack Overflow</code> error. Another thing we can do is to use the  <code>@tailrec</code> annotation before any function you expect the compiler to optimize and in that case the compiler will warn you if it cant optimize that recursive function.</p>
+
+<p>That&rsquo;s all for today. I will be writing more about functional programming as I learn more about it.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[How to Highlight the Search Term in Results in an Android App]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/how-to-highlight-the-search-term-in-results-in-an-android-app/"/>
+    <updated>2014-12-09T00:40:11+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/how-to-highlight-the-search-term-in-results-in-an-android-app</id>
+    <content type="html"><![CDATA[<p>Few months ago I created an Android app <a href="https://play.google.com/store/apps/details?id=quantum.org.quran">Al-Quran Bangla Mormobani</a> in several days with a quick deadline, so couldn&rsquo;t add much features to it. One such feature was the search terms were not highlighted in the results view so users couldn&rsquo;t use it effectively for reference. I got several requests from the users asking for this features. Few days ago I had couple of hours free to look into it and after searching for a while found a solution.</p>
+
+<!-- more -->
+
+
+<p>The data was coming from an Sqlite database and I am using a listview to present the results. As the adapter of the <code>ListView</code> I am using a <code>SimpleCursorAdapter</code> . Now to decorate specific terms in the <code>ListViewItems</code> I am using a <code>viewBinder</code> . The code is as follows,</p>
+
+<pre><code class="java ViewBinder">adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+       public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+           if (view.getId() == R.id.favorite_bangla_description) {
+               String description = cursor.getString(cursor.getColumnIndex("bangla_description"));
+               int startPos = description.indexOf(query);
+               int endPos = description.indexOf(" ", startPos);
+               if (startPos != -1) // This should always be true, just a sanity check
+               {
+                   Spannable spannable = new SpannableString(description);
+                   ColorStateList blueColor = new ColorStateList(new int[][] { new int[] {}}, new int[] { Color.BLUE });
+                   TextAppearanceSpan highlightSpan = new TextAppearanceSpan(null, Typeface.BOLD, -1, blueColor, null);
+                   spannable.setSpan(highlightSpan, startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                   ((TextView) view).setText(spannable);
+               }
+               else
+                   ((TextView) view).setText(description);
+               return true;
+           }
+           return false;
+       }
+});
+</code></pre>
+
+<p>I am not in a mood to explain the nitty gritty of the whole code above in this post, but the main part which is doing the highlighting is the use of <code>Spannable</code> String. Or more precisely the following code,</p>
+
+<pre><code class="java Highlighting Text">
+Spannable spannable = new SpannableString(description);
+ColorStateList blueColor = new ColorStateList(new int[][] { new int[] {}}, new int[] { Color.BLUE });
+TextAppearanceSpan highlightSpan = new TextAppearanceSpan(null, Typeface.BOLD, -1, blueColor, null);
+spannable.setSpan(highlightSpan, startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+</code></pre>
+
+<p>It&rsquo;s creating a highlight span, setting its color as <code>blue</code> and then setting that as a span of the original <code>Spannable</code> String using the start and end pos of the query string&rsquo;s occurence in the original string. And the result is a very good highlighted word.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Revisting Data Structure : Linked List Part 2]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/revisting-data-structure-linked-list-part-2/"/>
+    <updated>2014-12-08T14:57:17+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/revisting-data-structure-linked-list-part-2</id>
+    <content type="html"><![CDATA[<p> In previous part of the series We talked about Linked List in General and it&rsquo;s implementation details in C++ Programming language. We saw how to layout the structure of a Linked List and how to insert data into the list.</p>
+
+<p> In this episode we will be talking about how we can print all the nodes of a linked list. So we can assume from the nature of Linked list that we have to traverse the whole list and print each nodes value.</p>
+
+<h2>Printing Linked List through Iteration Method</h2>
+
+<p> The definition of the print function using iteration is as follows:</p>
+
+<pre><code class="cpp printList function">
+ void printList(struct Node* head){
+    struct Node* temp = head;
+    printf("\nList is: ");
+    while(temp != NULL) { // exit condition
+        printf(" %d", temp-&gt;data); // Print the value of the Current Node
+        temp = temp-&gt;next;        // Proceed to the next Node
+    }
+    printf("\n");
+ }
+</code></pre>
+
+<!-- more -->
+
+
+<p>The definition of the function is fairly straight forward. We take <code>head</code> of the list as argument and then using a while loop we traverse through the List and print the value at each node.</p>
+
+<p>Lets see how can we achieve the same using Recursion.</p>
+
+<h2>Printing Linked List through Recursion</h2>
+
+<p>We know when we use recursion in a function there must be two cases</p>
+
+<ol>
+<li><p>Base case or exit condition: If we dont define a exit condition while using recursion, then the recursion won&rsquo;t stop and the function call stack will overflow eventually terminating the program at some point.</p></li>
+<li><p>Recursive case : for all other general case we can call the same method recursively.</p></li>
+</ol>
+
+
+<pre><code class="cpp printListRecursive function">
+void printListRecursive(struct Node* p) {
+    if(p == NULL) return; // exit condition
+    printf("%d ", p-&gt;data);  // Print the value
+    printListRecursive(p-&gt;next); // Recursive call
+}
+</code></pre>
+
+<p>Recursion is a very powerful tool, but you have to be careful while designing it. Great Power comes with Great Responsibilities, it&rsquo;s very true for recursion too.</p>
+
+<p>What happens in this recursive version is we check if the pointer argument <code>p</code> is null, if it is NULL then we return from the function. If it&rsquo;s not that means we are not at the end of the list, then we print the data of current node and call the same function recursively.</p>
+
+<p> How recursion works internally requires knowledge of Function call stack which calls for another blog post, I will try to write a blog post on the simulation of recursion in memory.</p>
+
+<p> Thats all for today. We will talk about delete nodes from list and reversing a link list in next episodes. Stay tuned!</p>
+]]></content>
+  </entry>
+  
+</feed>

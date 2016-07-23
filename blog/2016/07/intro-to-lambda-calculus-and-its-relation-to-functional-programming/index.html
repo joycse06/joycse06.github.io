@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Prasenjit Kumar Nag a.k.a Joy</title>
+  <title>Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming - Prasenjit Kumar Nag a.k.a Joy</title>
   <meta name="author" content="Joy Nag">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://joycse06.github.io/">
+  <link rel="canonical" href="http://joycse06.github.io/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Prasenjit Kumar Nag a.k.a Joy" type="application/atom+xml">
@@ -78,15 +78,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</a></h1>
+      <h1 class="entry-title">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</h1>
     
     
       <p class="meta">
@@ -102,7 +99,7 @@
   </header>
 
 
-  <div class="entry-content"><p>This post is written based on the First Chapter (All you need is lambda) of the <a href="http://haskellbook.com/">HaskellBook</a> which is great book for learning Haskell. All the code examples in this post will be using Haskell but should be understandable to anyone having decent experience in any programming language.
+<div class="entry-content"><p>This post is written based on the First Chapter (All you need is lambda) of the <a href="http://haskellbook.com/">HaskellBook</a> which is great book for learning Haskell. All the code examples in this post will be using Haskell but should be understandable to anyone having decent experience in any programming language.
 Lambda calculus is a model of computation devised in the 1930s by Alanzo Church. It&rsquo;s one process for formalizing a method. Like Turing machines it formalizes the concept of effective computability, thus determining which problems or classes of problems, can be solved.
 You might be thinking but thats Calculus(Math), how is it related to functional programming or programming in general. It is indeed deeply related.</p>
 
@@ -265,358 +262,60 @@ You can type them in <code>ghci</code> repl and they should run fine.</p>
 
 <p>Enough for a single blog post. Hope you enjoyed it. Stay tuned for more Haskell and functional programming related posts.</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Joy Nag</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-07-23T17:38:18+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2016</span></span> <span class='time'>5:38 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/code/'>code</a>, <a class='category' href='/blog/categories/functional-programming/'>functional-programming,</a>
+  
+</span>
+
+
+    </p>
     
-      <h1 class="entry-title"><a href="/blog/2015/01/laravel-view-presenters-from-scratch/">Laravel View Presenters From Scratch</a></h1>
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://joycse06.github.io/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/" data-via="joycse06" data-counturl="http://joycse06.github.io/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
     
-    
-      <p class="meta">
-        
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/laravel-view-presenters-from-scratch/" title="Previous Post: Laravel View Presenters from Scratch">&laquo; Laravel View Presenters from Scratch</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-
-
-
-<time class='entry-date' datetime='2015-01-16T02:34:14+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:34 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>Why do We need View Presenters?</h2>
-
-<p>View should be dumb, they shouldn&rsquo;t do much other than showing data to the user. So where&rsquo;s the correct place to place your view specific logic in Laravel. Like you need the gravatar url of the user to see if the user already has a gravatar set to save the user from uplaoding a new one in your site. Or maybe you save user name as two field in db, as <code>first_name</code> and <code>last_name</code>, now you need to create user&rsquo;s full name, but you also want apply the function <code>ucfirst</code> first on them. Or maybe you have users profile pic&rsquo;s filename saved in database, now you need to create profile pic url from that by concatenating the upload directory.</p>
-
-<p>Where should we put this sorts of logic. Eloquent Model? This can seem a very tempting choice, but why should the Model handle View specific logics. Then where is the place to put this kind of things?</p>
-
-<p>Well maybe in their own class whose only responsibility will be to do all the logic needed in view using a specific model.</p>
-
-<p>In laravel, there&rsquo;s ins&rsquo;t any built in way to do 1-to-1 Model-Presenter mapping out of the box but it&rsquo;s incredibly easy to set up one.</p>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/01/laravel-view-presenters-from-scratch/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-01-06T05:04:18+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>5:04 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Command driven desing is quite a new buzzword in php world which the community is adopting quickly. Lets dive into some theoritical details of whats and whys of this desing patterns. Code examples will be based on <code>Laravel</code>.</p>
-
-<h2>Coming out from the CRUD mentality</h2>
-
-<p>We developer like to think in terms of CRUD(CREATE, READ, UPDATE, DELETE) like kind of one-to-one mapping with business needs and out models but all business needs doesn&rsquo;t go well with CRUD.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-01-03T15:05:35+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>3:05 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I was watching <a href="https://www.youtube.com/watch?v=WpkDN78P884">this talk</a> from <a href="https://sites.google.com/site/unclebobconsultingllc/">Uncle Bob</a> a while ago and been thinking a lot about the content. Though he primarily talked about Rails in a Ruby Conf, the content is framework agnostic and apply to all other MVCs/frameworks as well.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/">Exploring Ruby&#8217;s Proc, Lambda and Blocks</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-12-30T18:56:59+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>6:56 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have a weakness for ROR(Ruby on Rails) partly due the reason I am always obsessed with learning to do things in better ways for a long time. I am still a noob but I want be a very good Software Architect someday, with deep knowledge and practical experience on software design and development following all the best practices.</p>
-
-<p>And what I have found, Rails projects are naturally more likely to follow better ways of doing things, and community is much more robust. Though the reason behind my this perception can be the fact that I started with CodeIgniter mainly and worked on some some CI projects at the early stage of my Career which were initially done by some Indian developer and they did mostly everything from controller in CodeIgniter, there were no models, not rules of where to put what. It was a pure mess. Anyway, these things pushed me towards my quest for searching for better ways of doing things, and I did some research on ROR and found the community around ROR is great. They do TDD( Test Driven Design ) and there were many great tools to help developers test their code, TDD in PHP community is gaining traction too recently. But still I see most PHP devs takes testing as optional and find excuses to not write automated tests. Projects I have worked on didn&rsquo;t have chance/scope to do TDD. I am a not-so-experienced avid follower of TDD and design patterns and wanna be good on them.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/functional-programming-my-intro-to-higher-order-functions/">Functional Programming : My Intro to Higher Order Functions</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-12-15T17:14:01+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>5:14 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In University time, I was mainly acquainted to C/CPP programming with some Java. Then to me  <code>function</code> was something special and very different than other inhabitants of the my then programming world. In that time I couldn&rsquo;t even think of passing/returning functions to other functions.</p>
-
-<p>Then sometime at the end of 2009, while I was learning Javascript I saw different behaviors and JS seemed more liberal to me. Like I could declare functions without name, could also assign them to variables, It was like wow to me. I read about anonymous functions and IIFE( Immediately-Invoked Function Expression ) and they amazed me back then. I first learned from Hasin Hayder while working in Leevio that I can assign name of a function to a variable  and call them like any other function and could even play with their scope with <code>apply</code> and <code>call</code> <code>Prototype</code> methods.</p>
-
-<p> </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/12/functional-programming-my-intro-to-higher-order-functions/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/a-bite-of-functional-programming/">A Bite of Functional Programming</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-12-15T03:25:02+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>3:25 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I love programming languages and trying a new one is always fun. A year or so ago I first heard the name of functional paradigm of programming. I have came across blog posts, saw people talking about functional programming in programming communities over the last year. I have seen countless veteran programmers referring <code>SICP</code> as a must read for anyone who wants to be really good in programming. When I went over to search for <code>SICP</code> found the videos of original lecture of <code>Hal Abelson</code> and I heard the name of <code>LISP</code> from him while checking the first lecture.</p>
-
-<p>From then on I have been cherishing a desire to learn a functional language and went ahead to try learning some like <code>Haskell</code>, <code>Clojure</code> and <code>Scala</code> though couldn&rsquo;t get too far with anyone of them. But after every few months something inside me pushes me to get back to learning a functional language well and I spend several days reading blogs, trying out simple things.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/12/a-bite-of-functional-programming/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/moving-magento-from-one-server-to-another-easily-using-ssh/">Moving Magento Store From One Server to Another Easily Using Ssh</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-12-11T00:40:11+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:40 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When I first started working with Magento I thought moving a magento installation with lots of data from one server to another wont be easy considering the db size is very big and the codebase is not small either.</p>
-
-<p>I was a noob at linux server&rsquo;s stuff then, I am not good at all now, but I have become better than before. And after moving several Magento installations around, creating development sandboxes from live data with large databases like 4GB+ I do think with some terminal kungfu you can pretty easily move magento from one  server to another. The method I will show will required <code>ssh</code> access to both servers.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/12/moving-magento-from-one-server-to-another-easily-using-ssh/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/looking-for-occurrences-of-a-string-in-all-files-under-a-directory-using-grep/">Looking for Occurrences of a String in All Files Under a Directory Using Grep</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-12-10T20:52:18+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>8:52 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p> <code>grep</code> is a very simple command available on linux and OSX terminals which can do amazing things and can save a lot fo time. I was working on a Magento site this morning and on the checkout page I found the telephone field was using <code>&lt;input type="Number" ...</code> while it should use <code>&lt;input type="text" ...</code> or else phone number with dashes in them wont validate and customers wont be able to proceed with next step.</p>
-
-<p>I was thinking of how can I find the file which have this code, those who of you are familiar with Magento knows that magento has a very organized file structure and hierarchies of templates, and different templates gets loaded based on active theme and layout xml files. So I have to find out all the occurrences of <code>&lt;input type="number" ...</code> in the whole installation.</p>
-
-<p>I knew I can use <code>grep</code> to do this. I instantly looked at the man page of <code>grep</code> and reviewed the available options and got what I needed.</p>
-
-<p>The final command I wrote on the server&rsquo;s terminal was</p>
-
-<figure class='code'><figcaption><span>Grep</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>grep -R -i -n <span class="s1">&#39;type=&quot;number&quot;&#39;</span> public_html/app
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p> <code>-R</code> tells <code>grep</code> to search recursively into that directory, <code>-i</code> is for <code>ignore-case</code> and <code>-n</code> finds and outputs the line number along with file name too. As soon as I ran that command it searched the whole <code>app</code> directory and came back with all the place where <code>type="number"</code> occurred with line number too. Then I just edited those files and the issue was fixed.</p>
-
-<p> What took me several minutes would have taken hours to search and find those files manually. Thats one of many benefits of using command line. And you can do pretty amazing things using/combining only a handful of commands.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/taking-a-magento-site-into-maintenance-mode-for-everyone-except-you/">Taking a Magento Site Into Maintenance Mode for Everyone Except You</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-12-10T18:54:25+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>6:54 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Magento takes a dead simple approach for activating the maintanence mode for any site using it. You just get into servers&rsquo;s terminal via <code>ssh</code> , <code>cd</code> into the magento root folder and run the following command <code>touch maintenance.flag</code> or just crate a file named <code>maintenance.flag</code> in the root of the your magento installation and voila, you will see the maintenance mode message when you visit your store now.</p>
-
-<p>Now Its locked for everyone, but say you are updating somethings on the site and you would like to check how thats affecting the look of the store but you dont want anyone to view it before getting done. Fortunately thas easy too.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/12/taking-a-magento-site-into-maintenance-mode-for-everyone-except-you/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="/posts/2">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -689,6 +388,7 @@ You can type them in <code>ghci</code> repl and they should run fine.</p>
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -703,7 +403,10 @@ You can type them in <code>ghci</code> repl and they should run fine.</p>
       var disqus_shortname = 'joycse06';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joycse06.github.io/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/';
+        var disqus_url = 'http://joycse06.github.io/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

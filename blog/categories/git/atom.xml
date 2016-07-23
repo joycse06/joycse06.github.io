@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Git | Prasenjit Kumar Nag a.k.a Joy]]></title>
+  <link href="http://joycse06.github.io/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://joycse06.github.io/"/>
+  <updated>2016-07-23T20:49:45+10:00</updated>
+  <id>http://joycse06.github.io/</id>
+  <author>
+    <name><![CDATA[Joy Nag]]></name>
+    <email><![CDATA[joyruet06@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Gits Stash - a Very Handy Git Feature in Some Scenario]]></title>
+    <link href="http://joycse06.github.io/blog/2012/04/gits-stash-a-very-handy-git-feature-in-some-scenario/"/>
+    <updated>2012-04-28T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2012/04/gits-stash-a-very-handy-git-feature-in-some-scenario</id>
+    <content type="html"><![CDATA[<p>I have started using <strong>git</strong>(a DVCS) from last month and I am liking it much. Some days back I came across the <strong>git stash</strong> command in a Stack Overflow question and was glad that git have this feature which svn doesn&rsquo;t. I will be describing a scenario when <strong>git stash</strong> is very helpful.</p>
+
+<p><strong>Scenario:</strong> If you are using <strong>git </strong>it can be assumed that you are working in a team and there are other developers working on the same team. Let&rsquo;s say at some point one of your team mate At some knock you on skype and ask to test a feature he just pushed into the repo. After hearing the name of the feature you find out that you two are working on the same source file and you are in the middle of something. Now you have two immediate solutions:</p>
+
+<ol>
+    <li>Try committing your broken code which git wont allow as the remote branch is one step ahead and have updates on the same file, it will ask you to do <strong>git pull</strong> first.</li>
+    <li>Try git pull which will trigger conflict too.</li>
+</ol>
+
+
+<p>While I was working with svn I used to copy the file somewhere else and then try <strong>svn up</strong> and then accepting server&rsquo;s version of the code using <strong>tf</strong>(their full). After checking the feature I would have copied the new things back from the file I copied earlier.</p>
+
+<p>Using</p>
+
+<pre><code class="bash">
+git stash
+</code></pre>
+
+<p>we can push all current changes into git staging area temporarily. Then doing a git pull would work fine. Now we can check the new featured our peer coder added. After that we can use</p>
+
+<pre><code class="bash">
+git stash pop
+</code></pre>
+
+<p>to pull back the changes we previously pushed into the staging area, completing what we were doing and then commit the final changes later.</p>
+
+<p>It&rsquo;s one of the features of git I am liking very much. A very handy feature in some scenarios. :)</p>
+]]></content>
+  </entry>
+  
+</feed>

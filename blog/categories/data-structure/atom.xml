@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Data-structure | Prasenjit Kumar Nag a.k.a Joy]]></title>
+  <link href="http://joycse06.github.io/blog/categories/data-structure/atom.xml" rel="self"/>
+  <link href="http://joycse06.github.io/"/>
+  <updated>2016-07-23T20:49:45+10:00</updated>
+  <id>http://joycse06.github.io/</id>
+  <author>
+    <name><![CDATA[Joy Nag]]></name>
+    <email><![CDATA[joyruet06@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Revisting Data Structure : Linked List Part 2]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/revisting-data-structure-linked-list-part-2/"/>
+    <updated>2014-12-08T14:57:17+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/revisting-data-structure-linked-list-part-2</id>
+    <content type="html"><![CDATA[<p> In previous part of the series We talked about Linked List in General and it&rsquo;s implementation details in C++ Programming language. We saw how to layout the structure of a Linked List and how to insert data into the list.</p>
+
+<p> In this episode we will be talking about how we can print all the nodes of a linked list. So we can assume from the nature of Linked list that we have to traverse the whole list and print each nodes value.</p>
+
+<h2>Printing Linked List through Iteration Method</h2>
+
+<p> The definition of the print function using iteration is as follows:</p>
+
+<pre><code class="cpp printList function">
+ void printList(struct Node* head){
+    struct Node* temp = head;
+    printf("\nList is: ");
+    while(temp != NULL) { // exit condition
+        printf(" %d", temp-&gt;data); // Print the value of the Current Node
+        temp = temp-&gt;next;        // Proceed to the next Node
+    }
+    printf("\n");
+ }
+</code></pre>
+
+<!-- more -->
+
+
+<p>The definition of the function is fairly straight forward. We take <code>head</code> of the list as argument and then using a while loop we traverse through the List and print the value at each node.</p>
+
+<p>Lets see how can we achieve the same using Recursion.</p>
+
+<h2>Printing Linked List through Recursion</h2>
+
+<p>We know when we use recursion in a function there must be two cases</p>
+
+<ol>
+<li><p>Base case or exit condition: If we dont define a exit condition while using recursion, then the recursion won&rsquo;t stop and the function call stack will overflow eventually terminating the program at some point.</p></li>
+<li><p>Recursive case : for all other general case we can call the same method recursively.</p></li>
+</ol>
+
+
+<pre><code class="cpp printListRecursive function">
+void printListRecursive(struct Node* p) {
+    if(p == NULL) return; // exit condition
+    printf("%d ", p-&gt;data);  // Print the value
+    printListRecursive(p-&gt;next); // Recursive call
+}
+</code></pre>
+
+<p>Recursion is a very powerful tool, but you have to be careful while designing it. Great Power comes with Great Responsibilities, it&rsquo;s very true for recursion too.</p>
+
+<p>What happens in this recursive version is we check if the pointer argument <code>p</code> is null, if it is NULL then we return from the function. If it&rsquo;s not that means we are not at the end of the list, then we print the data of current node and call the same function recursively.</p>
+
+<p> How recursion works internally requires knowledge of Function call stack which calls for another blog post, I will try to write a blog post on the simulation of recursion in memory.</p>
+
+<p> Thats all for today. We will talk about delete nodes from list and reversing a link list in next episodes. Stay tuned!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Revisting Data Structure : Linked List Part 1]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/revisting-data-structure-linked-list-part-1/"/>
+    <updated>2014-12-07T13:27:38+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/revisting-data-structure-linked-list-part-1</id>
+    <content type="html"><![CDATA[<p>Linked List is a very important data structure in terms of the concepts required to understand it&rsquo;s inner working and the operation that can be performed on it.</p>
+
+<p>In this post we will be exploring structure of Linked List and operations that can be performed on Linked list.</p>
+
+<p>So without further ado lets dive into the details.</p>
+
+<!-- more -->
+
+
+<p>For the sake of simplicity our linked list will be holding only a integer and an next link filed. We will be using a structure to accomplish this.</p>
+
+<pre><code class="cpp Linked List Structure">
+struct Node {
+    int data;
+    struct Node* next;
+}
+</code></pre>
+
+<p>So it&rsquo;s a simple structure which only has a int member and a next pointer of the same struct type to hold the address of the next item in the linked list.</p>
+
+<p>As we have the template ready now, how can we create an instance of the structure? It&rsquo;s simple we can either use C style <code>malloc()</code> or CPP style <code>new</code> operator. We will use malloc for this post. So creating an instance of structure is like</p>
+
+<pre><code class="cpp Malloc">struct Node* temp = (struct Node*) malloc(sizeof(struct Node));
+</code></pre>
+
+<p>In this line what we are doing is declaring and defining an pointer of type struct Node and dynamically allocating memory for it using malloc. <code>Malloc</code> takes the size of the data type, allocate that amount of memory dynamically at runtime in the heap( Head is the free memory from where every application can request memory from Operating system using function calls).</p>
+
+<p>after this we can use this instance instance with pointer dereferencing or using the pointer operator like follows:</p>
+
+<pre><code class="cpp accessing properties of the instance of struct">
+(*temp).data = 10;
+// or we can simple use
+temp-&gt;data = 10;
+</code></pre>
+
+<h1>Inserting data into Linked list</h1>
+
+<p>Data can be inserted at different points of the linked list like at the</p>
+
+<ul>
+<li>at the start of the List</li>
+<li>at the end of the List</li>
+<li>at nth position</li>
+</ul>
+
+
+<h2>Insertion at the front of the list</h2>
+
+<p>Lets write a function which takes the head of the list and an integer and inserts that number at the front of the list. An example implementation is follows</p>
+
+<pre><code class="cpp InsertAtFront Function">
+struct Node* InsertAtFront(struct Node* head, int data){
+    struct Node * temp = (struct Node * ) malloc(sizeof(struct Node));
+    (*temp).data = data; // or temp-&gt;data = x;
+    (*temp).next = head; // or temp-&gt;next = head;
+    head = temp;
+    return head; // Return the new head
+}
+</code></pre>
+
+<p>The function is pretty straight forward. We create a new node, add the data, point it the current head, change head to point to the new node and return the new head.</p>
+
+<h2>Inserting at the end of the list</h2>
+
+<p>Insert at the end function will look like</p>
+
+<pre><code class="cpp InsertAtEnd function">
+struct Node* InsertAtEnd(struct Node* head, int data) {
+    struct node* temp = (struct Node * ) malloc(sizeof(struct Node));
+    temp-&gt;data = data;
+    temp-&gt;next = NULL;
+    if(head == NULL){
+        // the List is empty
+        head = temp;
+    }else {
+        struct Node* last = head;
+        while(last-&gt;next != NULL)
+            last = last-&gt;next;
+        last-&gt;next = temp;
+    }
+    return head;
+}
+</code></pre>
+
+<p>In this function we first create a new node with the data and next pointer as NULL; Then we check if the list is currently empty we just make this new node the head of the list.</p>
+
+<p>If the list is not empty we have first traverse the list to go to the last element of the list and then just add the newly created node in the next link of the last element;</p>
+
+<h2>Inserting at the Nth Position in the list</h2>
+
+<p>for the sake of simplicity we will assume that the position argument will always be within the list and wont do out of bounds handling in this version.</p>
+
+<pre><code class="cpp InsertAtNthPosition function">
+struct Node* InsertAtNthPosition(struct Node* head, int data, int pos){
+    // Lets do it CPP style this time
+    Node* temp1 = new Node();
+    temp1-&gt;data = data;
+    temp1-&gt;next = NULL;
+    if( pos == 1 ) {
+        temp1-&gt;next = head;
+        head = temp1;
+        return head;
+    }else {
+        Node* temp2 = head;
+        for ( int iter = 0; iter &lt; pos - 2; iter++) {
+            temp2 = temp2-&gt;next;
+        }
+        temp1-&gt;next = temp2-&gt;next;
+        temp2-&gt;next = temp1;
+    }
+}
+</code></pre>
+
+<p>Thats all for today. We will be talking about other operations on linked list like printing, deleting etc in future posts. Enjoy!</p>
+]]></content>
+  </entry>
+  
+</feed>

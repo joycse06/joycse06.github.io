@@ -1,0 +1,611 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Exploring Ruby&#8217;s Proc, Lambda and Blocks - Prasenjit Kumar Nag a.k.a Joy</title>
+  <meta name="author" content="Joy Nag">
+
+  
+  <meta name="description" content="I have a weakness for ROR(Ruby on Rails) partly due the reason I am always obsessed with learning to do things in better ways for a long time. I am &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joycse06.github.io/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Prasenjit Kumar Nag a.k.a Joy" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58344400-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Prasenjit Kumar Nag a.k.a Joy</a></h1>
+  
+    <h2>A Developers Adventure in Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="joycse06.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories">Categories</a></li>
+  <li><a href="/about-me">About Me</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Exploring Ruby&#8217;s Proc, Lambda and Blocks</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-12-30T18:56:59+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>6:56 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I have a weakness for ROR(Ruby on Rails) partly due the reason I am always obsessed with learning to do things in better ways for a long time. I am still a noob but I want be a very good Software Architect someday, with deep knowledge and practical experience on software design and development following all the best practices.</p>
+
+<p>And what I have found, Rails projects are naturally more likely to follow better ways of doing things, and community is much more robust. Though the reason behind my this perception can be the fact that I started with CodeIgniter mainly and worked on some some CI projects at the early stage of my Career which were initially done by some Indian developer and they did mostly everything from controller in CodeIgniter, there were no models, not rules of where to put what. It was a pure mess. Anyway, these things pushed me towards my quest for searching for better ways of doing things, and I did some research on ROR and found the community around ROR is great. They do TDD( Test Driven Design ) and there were many great tools to help developers test their code, TDD in PHP community is gaining traction too recently. But still I see most PHP devs takes testing as optional and find excuses to not write automated tests. Projects I have worked on didn&rsquo;t have chance/scope to do TDD. I am a not-so-experienced avid follower of TDD and design patterns and wanna be good on them.</p>
+
+<!-- more -->
+
+
+<p>Anyway, things are changing and TDD is more common in PHP community too, with libraries like PHPUnit, PHPSpec and Behat things became easier too.</p>
+
+<p>I have always wanted to get involved into some ROR projects just to learn their ways of doing things and gather the framework-agnostic knowledge in it and hence improving my thinking process but that didn&rsquo;t happen for no good reason or lack of motivation. A month or so ago I was trying to get some knowledge on DDD( Domain Driven Design ) and Hexagonal Architecture but I found mostly ROR conference talks and my desire to learn ROR striked again. I was checking Ruby after a long time. And wanted to learn something new. Ruby has always amazed me for it&rsquo;s developer friendly syntax, &lsquo;Everything&rsquo;s object&rsquo; paradigm and specially for lots of awesomely-named methods on every objects.</p>
+
+<p>I would like to give example of a few like</p>
+
+<figure class='code'><figcaption><span>times method</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="mi">4</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="nb">puts</span> <span class="s2">&quot;Hello Ruby!&quot;</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>which amazes me every time. Most of the languages I tried have something called primitive types and values like integers, floats, strings are treated specially. But in Ruby almost everything is object. There&rsquo;s no notion of primitive types and surprisingly at least to me even <code>classes</code> are objects too. To prove that we can do something like following in any ruby REPL</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Output from Pry</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">Array</span><span class="o">.</span><span class="n">class</span> <span class="c1"># returns Class &lt; Module</span>
+</span><span class='line'><span class="nb">Array</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># returns Module &lt; Object</span>
+</span><span class='line'><span class="nb">Array</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span> <span class="c1"># returns Object &lt; BasicObject</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So the hierarchy for <code>Array</code> class is</p>
+
+<p>  <code>Array &lt; Class &lt; Module &lt; Object &lt; BasicObject</code></p>
+
+<p>So <code>BasicObject</code> is at the top of the Ruby object Model. And every class in ruby is a subclass of that. Lets stop here, i will write about the Ruby object model another day.</p>
+
+<p>The designer of the language have put a lot of thought on the syntax specially to make the code more readable, and make developer&rsquo;s life easier. Lets see some other syntactic awesomeness</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">email</span> <span class="o">=</span> <span class="s2">&quot;Joy Nag &lt;joy@example.com&gt;&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># you can apply regex just not the string object</span>
+</span><span class='line'><span class="n">email</span><span class="o">[</span><span class="sr">/&lt;(.*?)&gt;/</span><span class="p">,</span> <span class="mi">1</span><span class="o">]</span>  <span class="c1"># returns =&gt; &quot;joy@example.com&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># you can do initialization and assignment of a</span>
+</span><span class='line'><span class="c1"># variable with a single liner</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="n">foo</span> <span class="o">||=</span> <span class="o">[]</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;Hello World&#39;</span> <span class="c1"># Returns an array with the</span>
+</span><span class='line'>                              <span class="c1"># string &#39;Hello World&#39; appended</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># calculating sum of all elements of an array</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">sum</span><span class="p">,</span> <span class="n">num</span><span class="o">|</span> <span class="n">sum</span> <span class="o">+</span> <span class="n">num</span> <span class="p">}</span> <span class="c1"># returns 6</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># squaring all elements of a array</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">*</span><span class="n">n</span> <span class="p">}</span> <span class="c1"># returns [ 1, 4, 9 ]</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># selecting only the even numbers from an array</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="o">].</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">}</span> <span class="c1"># returns [2,4]</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># and there&#39;s the very handy .each method on enumerables</span>
+</span><span class='line'><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="o">].</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">n</span> <span class="p">}</span> <span class="c1"># prints 1 2 and 4 and returns</span>
+</span><span class='line'>                            <span class="c1"># the original array</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Well, lets get back to the topic of this post.</p>
+
+<p>blocks, procs and lambdas are all example of <code>closures</code> in <code>ruby</code>. In laymen term <strong>they are ways of grouping of code we want to run</strong>. Lets start with <code>Blocks</code>.</p>
+
+<h2>Blocks</h2>
+
+<p>Blocks are still the only thing I am aware of where the everything&rsquo;s a object rule is broken. blocks are language constructs and doesn&rsquo;t have any type. Block are handy small chunk of code which can be passed around easily to methods to change the way of how they will behave. Kind of like allowing the user of a function or method to inject behaviors to that method based on what the output of that function or method changes. Like if we see from our previous example</p>
+
+<figure class='code'><figcaption><span>Block example</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="o">].</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># { |n| n % 2 == 0 } is a block which takes one argument</span>
+</span><span class='line'>                    <span class="c1"># and return true or false based on the condition</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> Block can be of two form. If the content of the block is small to fit in a line then you can just enclose that in <code>{}</code>. And if the content if larger you can use the <code>do end</code> construct to create the block. Lets re-implement a simple version of the <code>map</code> method of array class. Ohh, here&rsquo;s one catch, Ruby system classes are open and you can add or overwrite any method on any system class at your own risk. It&rsquo;s a great power and if not done carefully can cause mess in your program.</p>
+
+<figure class='code'><figcaption><span>mymap method</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Array</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">mymap</span>
+</span><span class='line'>        <span class="n">out</span> <span class="o">=</span> <span class="o">[]</span> <span class="c1"># where we will be collecting the transformed values</span>
+</span><span class='line'>                 <span class="c1"># after passing them through the block</span>
+</span><span class='line'>        <span class="k">if</span> <span class="nb">block_given?</span>
+</span><span class='line'>            <span class="c1"># a block has been passed, we are good</span>
+</span><span class='line'>            <span class="nb">self</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">elem</span><span class="o">|</span> <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="k">yield</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">else</span>
+</span><span class='line'>            <span class="c1"># block was not given, so return an enumerator like the</span>
+</span><span class='line'>            <span class="c1"># original map method</span>
+</span><span class='line'>            <span class="n">out</span> <span class="o">=</span> <span class="n">to_enum</span> <span class="ss">:mymap</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">out</span> <span class="c1"># this returns the transformed array</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># now we can use it like [1,2,3].mymap { |n| n*2 } to double</span>
+</span><span class='line'><span class="c1"># every element of the array</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We can see several other things about blocks here in this example, like you can check if a block was passed with the <code>block_given?</code> method and decide what to do if block was not given. Another reason we need to do this defensive thing is if we call <code>yield</code> anyway and if the method is called without a block, then the execution will halt with a <code>LocalJumpError</code> which we probably dont want.</p>
+
+<p>So the way to execute a block is to is by call the system method <code>yield</code> and we can pass in any number of argument to it and  and it will return the output of the block. <code>yield</code> is magical because every object oriented rule in Ruby in suspended for this special mode of operation.</p>
+
+<p>Blocks are too mainstream in ruby programs and found almost everywhere. Due to this conveninece  and other ways to enumerate are rarely used. After seeing this when there&rsquo;s these awesome ways to loop though a list or array why would anyone use traditional  <code>for while do-while</code> if not absolutely necessary.</p>
+
+<p>Ok there lot more to block itself. Like you can&rsquo;t pass more than one block to a method. Blocks which are passed implicitly to a method can be converted to a explicit method parameter using <code>&amp;</code> . Like we can do the following</p>
+
+<figure class='code'><figcaption><span>Converting Implicit blocks to Explicit named parameter</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span> <span class="c1"># &amp;block is an explicit param</span>
+</span><span class='line'>    <span class="n">block</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># then you can call it like</span>
+</span><span class='line'><span class="nb">puts</span> <span class="n">calculcate</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">|</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can do the other way around too, like converting a lambda into a implicit block and pass it to a function which doesnt receive a explicit block.</p>
+
+<p>lets talk about lambdas.</p>
+
+<h2>Lambdas</h2>
+
+<p> <code>Lambdas</code> are actually <code>Proc</code> objects which slight differences. <code>lambda</code> is a keyword and not a function which return an instance of class <code>Proc</code>. We can check this using the following</p>
+
+<figure class='code'><figcaption><span>Lambda and Procs</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">proc</span> <span class="o">=</span> <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="nb">puts</span> <span class="s2">&quot;Hello world&quot;</span> <span class="p">}</span>
+</span><span class='line'><span class="n">lam</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="nb">puts</span> <span class="s2">&quot;Hello World&quot;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">proc</span><span class="o">.</span><span class="n">class</span> <span class="c1"># returns &#39;Proc&#39;</span>
+</span><span class='line'><span class="n">lam</span><span class="o">.</span><span class="n">class</span>  <span class="c1"># returns &#39;Proc&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>lambdas are kind of named blocks which can be passed around functions without conversions which is necessary for blocks.</p>
+
+<p>Lets look at a slightly complex exercise from Rubymonk which I had hard time understanding first. Understanding this will help clear many things about the conversions</p>
+
+<figure class='code'><figcaption><span>Implicit Explicit conversions</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Filter</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="k">do</span> <span class="o">|</span><span class="n">array</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">array</span><span class="o">.</span><span class="n">select</span> <span class="o">&amp;</span><span class="n">block</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># now we can use this filter method like</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Filter</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="o">]</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">number</span><span class="o">|</span> <span class="n">number</span><span class="o">.</span><span class="n">even?</span> <span class="p">}</span> <span class="c1"># returns [2,4]</span>
+</span><span class='line'><span class="c1"># or</span>
+</span><span class='line'><span class="no">Filter</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">number</span><span class="o">|</span> <span class="n">number</span><span class="o">.</span><span class="n">integer?</span> <span class="p">}</span> <span class="n">returns</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="o">]</span>
+</span><span class='line'><span class="c1"># returns [1,3]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So lets break the Filter lambda down, that lambda takes two arguments first is an array and second is an explicit block so when we are calling it like</p>
+
+<p> <code>Filter.call([1, 2, 3, 4]) {|number| number.even? }</code> the block passed to the call method is implicit. But as our lambda takes an explicit block we are converting it while defining the arguments in the lambda like <code>&amp;block</code> which converts any implicit block passed to a method or lambda to a named parameter. Then we are calling <code>Array.select</code> method inside it which on the other hand takes an implicit block. So time to convert the named parameter again to pass it to the <code>Array.select</code> method. Thats why we are doing it like <code>array.select &amp;block</code>. So this two way conversion should have cleared your head around the conversion.</p>
+
+<h2>Proc</h2>
+
+<p> <code>Proc</code> is a short for <code>Procedure</code> and its a class in <code>Ruby</code>. We can define a proc like</p>
+
+<figure class='code'><figcaption><span>Proc</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">p</span> <span class="o">=</span> <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="nb">puts</span> <span class="s2">&quot;hello Proc&quot;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># and then we can use p just like any other variable</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">p</span><span class="o">.</span><span class="n">call</span>  <span class="c1"># prints hello Proc</span>
+</span><span class='line'><span class="nb">p</span><span class="o">.</span><span class="n">class</span> <span class="c1"># returns Proc</span>
+</span><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="nb">p</span>   <span class="c1"># a now equals p</span>
+</span><span class='line'><span class="nb">p</span>       <span class="c1"># it returns the proc object</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Differences between Block, Proc and Lambda</h2>
+
+<p>Unlike block the other two are instances of the <code>Proc</code> class and they can have standalone existance. while block is just part of the <code>Syntax</code> of a method call. It doesn&rsquo;t mean anything on a standalone basis and can only appear in argument lists.</p>
+
+<p> Like both <code>{ puts "hello block" }</code> and <code>a = { puts "hello block" }</code> causes <code>Syntax Error</code>.</p>
+
+<p> At most only one block can be present in an argument list. In contrast you can pass around multiple procs to methods.</p>
+
+<p>Like I said earlier, <code>lambda</code> and <code>proc</code> are both instances of the <code>Proc</code> class. But the have slight differences. I will go over them briefly below:</p>
+
+<ol>
+<li>Lambdas check the number of arguments, while procs do not</li>
+</ol>
+
+
+<p>This one is fairly straight forward and doesn&rsquo;t require much of a explanation. Lambdas halts execution with <code>ArgumentError</code> if the number of argument mismatch. While <code>Proc</code> return nill if no argument is passed, or ignore extra arguments if more arguments are provided.</p>
+
+<ol>
+<li>Lambdas and procs treat the <code>return</code> keyword differently</li>
+</ol>
+
+
+<p> <code>return</code> inside of a lambda triggers the code right outside of the lambda code. Lets see an example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">lambda_test</span>
+</span><span class='line'>  <span class="n">lam</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">lam</span><span class="o">.</span><span class="n">call</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;Hello world&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">lambda_test</span>                 <span class="c1"># calling lambda_test prints &#39;Hello World&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>so we see the <code>return</code> statement inside the <code>lambda</code> return the control of the code right outside of the lambda code. and the <code>puts</code> call execute properly.</p>
+
+<p>while on the contrary</p>
+
+<p> <code>return</code> inside of a proc triggers the code outside of the method where the proc is being executed</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">proc_test</span>
+</span><span class='line'>  <span class="nb">proc</span> <span class="o">=</span> <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+</span><span class='line'>  <span class="nb">proc</span><span class="o">.</span><span class="n">call</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;Hello world&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">proc_test</span>                 <span class="c1"># calling proc_test prints nothing</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>so we see the <code>return</code> statement in the <code>proc</code> return from the <code>proc_test</code> function itself.</p>
+
+<p>So that&rsquo;s it for a single post. I have been following the courses at <a href="https://rubymonk.com/">Ruby Monk</a> and they are great with exercises and all. Using <code>Pry</code> for trying out different things instead of the bundled <code>irb</code> as <code>REPL</code>.</p>
+
+<p>Hope you enjoyed it! :)</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Joy Nag</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-12-30T18:56:59+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>6:56 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/programming/'>programming</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://joycse06.github.io/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/" data-via="joycse06" data-counturl="http://joycse06.github.io/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/12/functional-programming-my-intro-to-higher-order-functions/" title="Previous Post: Functional Programming : My Intro to Higher Order Functions">&laquo; Functional Programming : My Intro to Higher Order Functions</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/" title="Next Post: What I learned from the 'Architecture, the Lost years' Talk by Uncle Bob">What I learned from the &#8216;Architecture, the Lost years&#8217; Talk by Uncle Bob &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/laravel-view-presenters-from-scratch/">Laravel View Presenters From Scratch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/">Exploring Ruby&#8217;s Proc, Lambda and Blocks</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joycse06">@joycse06</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joycse06',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section>
+    <h1>Stack Overflow</h1>
+    <a href="http://stackoverflow.com/users/344304/Joy">
+        <img src="http://stackoverflow.com/users/flair/344304.png" width="208" height="58" alt="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+    </a>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Joy Nag -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joycse06';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joycse06.github.io/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/';
+        var disqus_url = 'http://joycse06.github.io/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,1318 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Prasenjit Kumar Nag a.k.a Joy</title>
+  <meta name="author" content="Joy Nag">
+
+  
+  <meta name="description" content="I have been into Rails recently and found out that configuring Rails Environment is easy in Mac. So I will be sharing the steps I followed to setup &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joycse06.github.io/posts/3/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Prasenjit Kumar Nag a.k.a Joy" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58344400-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Prasenjit Kumar Nag a.k.a Joy</a></h1>
+  
+    <h2>A Developers Adventure in Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="joycse06.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories">Categories</a></li>
+  <li><a href="/about-me">About Me</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/setting-up-the-environment-and-running-your-first-rails-app-in-mac-osx-snow-leopard/">Setting Up the Environment and Running Your First Rails App in Mac OSX Snow Leopard</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-05-02T00:00:00+10:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have been into Rails recently and found out that configuring Rails Environment is easy in Mac. So I will be sharing the steps I followed to setup the environment and running my first rails app.</p>
+
+<p><strong>Installing a C compiler: </strong>Mac OSX&rsquo;s installation Disc comes with a set of developer tools which is not installed by default. So go ahead and install XCODE from the Installation DVD. It will install all necessary tools to compile and install packages from source. And we will need compiling source to install versions of ruby using RVM(Ruby version manager).</p>
+
+<p><strong>Installing RVM: </strong>Ruby Version Manager is a very handy tool while working with multiple version of Rubies. Snow Leopard comes with Ruby 1.8.7. And using RVM you can install Ruby 1.9.2 or the current stable version 1.9.3. And switching between version using RVM is very easy. So let&rsquo;s jump into installing RVM. Rvm&rsquo;s installation is very easy. The rvm <a title="RVM" href="https://rvm.io/rvm/install/" target="_blank">website</a> provides a one liner installation script to run in your terminal.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>curl -L get.rvm.io <span class="p">|</span> bash -s stable
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then to load the rvm you have to run the following command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">source</span> ~/.rvm/scripts/rvm
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But you are not going to load the rvm every time you start terminal. So its better to add the following file in your <em>~/.bashrc</em> or <em>~/.bash_profile</em> file and <em>~/.zshrc</em> if you are using zsh as your default shell.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># place in ~/.bash_profile or ~/.bashrc as the very last line</span>
+</span><span class='line'><span class="o">[[</span> -s <span class="nv">$HOME</span>/.rvm/scripts/rvm <span class="o">]]</span> <span class="p">&amp;</span>amp<span class="p">;&amp;</span>amp<span class="p">;</span> . <span class="nv">$HOME</span>/.rvm/scripts/rvm
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After loading the rvm script file to check if rvm is properly installed in your system run the following command in terminal</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">type </span>rvm <span class="p">|</span> head -n1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you it says &ldquo;<em>rvm is a shell function</em>&rdquo; or &ldquo;<em>rvm is a function</em>&rdquo; then it&rsquo;s fine and you are good to go.</p>
+
+<p>Now go ahead and install an updated ruby version like 1.9.2 or 1.9.3 using the command</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>rvm install 1.9.2
+</span><span class='line'><span class="c"># or</span>
+</span><span class='line'><span class="nv">$ </span>rvm install 1.9.3
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It will take some time and that specific ruby version will be installed automatically. Now to check which version of ruby is default in terminal you can try the following command</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>ruby -v
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s supposed to say 1.8.7  if you havent upgraded the default Ruby version. Now to use the newly installed Ruby you have to tell rvm to do so using the command</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Use which version you installed using rvm</span>
+</span><span class='line'>rvm use 1.9.2
+</span><span class='line'><span class="c"># The above command will load the environment in current terminal session</span>
+</span><span class='line'><span class="c"># if you want to use this as the default version in terminal all the time use --default option instead</span>
+</span><span class='line'><span class="nv">$ </span>rvm use 1.9.2 --default
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>now if you run <em>ruby -v </em>you will see your desired ruby version. Now let install rails gem using <em>gem install </em>command.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>gem install rails
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It will take some time and install latest <em>rails </em>system into your system. Now let&rsquo;s create a new rails project. Move to your desired directory and run the following command</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>rails new blog
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It will create a new rails application named blog in current directory. Now move into the new blog directory. and then run following command for bundling the gems :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>blog
+</span><span class='line'><span class="nv">$ </span>bundle install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It will take some time and install all gems required to run the application. Now start the app using the follwoing command</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>rails server
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>if you followed the previous steps properly you should see something like the following</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Booting WEBrick
+</span><span class='line'>Rails 3.2.3 application starting in development on http://0.0.0.0:3000
+</span><span class='line'>Call with -d to detach
+</span><span class='line'>Ctrl-C to shutdown server
+</span><span class='line'><span class="o">[</span>2012-05-02 14:57:59<span class="o">]</span> INFO WEBrick 1.3.1
+</span><span class='line'><span class="o">[</span>2012-05-02 14:57:59<span class="o">]</span> INFO ruby 1.9.2 <span class="o">(</span>2012-02-14<span class="o">)</span> <span class="o">[</span>x86_64-darwin10.8.0<span class="o">]</span>
+</span><span class='line'><span class="o">[</span>2012-05-02 14:57:59<span class="o">]</span> INFO WEBrick::HTTPServer#start: <span class="nv">pid</span><span class="o">=</span><span class="m">81487</span> <span class="nv">port</span><span class="o">=</span>3000
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It will start WEBrick (a simple  web server rails ships with itself ). And you can open your browser and point it to <a href="http://0.0.0.0:3000">http://0.0.0.0:3000</a> and you should see the following screen</p>
+
+<p><a href="http://blog.joynag.net/wp-content/uploads/2012/05/rails.png"><img class="aligncenter size-thumbnail wp-image-181" title="rails" src="http://blog.joynag.net/wp-content/uploads/2012/05/rails-150x150.png" alt="" width="150" height="150" /></a></p>
+
+<p>To test a full featured rails 3 app you can try this <a title="Invoice" href="https://github.com/linkworks/invoices" target="_blank">invoice</a> app from github. This app is quite complete and even have pdf invoice generation. To install and run it try the following command  in terminal, you will have to have GIT installed. If you dont have git installed on your machine follow instructions from this page <a title="Install Git" href="http://help.github.com/mac-set-up-git/" target="_blank"><a href="http://help.github.com/mac-set-up-git/">http://help.github.com/mac-set-up-git/</a></a> to install git.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git clone https://github.com/linkworks/invoices.git
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>invoices
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span>bundle install
+</span><span class='line'>
+</span><span class='line'><span class="nv">$ </span>rails server
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and then check the app in your browser in the following url. <a href="http://0.0.0.0:3000">http://0.0.0.0:3000</a> you should see the app running. :) here is a screenshot of the app after you add register and add some data</p>
+
+<p><a href="http://blog.joynag.net/wp-content/uploads/2012/05/invoices1.png"><img class="aligncenter size-thumbnail wp-image-186" title="invoices" src="http://blog.joynag.net/wp-content/uploads/2012/05/invoices1-150x150.png" alt="" width="150" height="150" /></a></p>
+
+<p>Like me if you want to get fancy url&rsquo;s for you rails apps through virtual hosts then follow the steps in <a href="http://blog.joynag.net/2012/04/using-mamp-pro-vhosts/" target="_blank">this tutorials</a> .</p>
+
+<p>Rails by default uses sqlite as default database engine if you want to use mysql as default database then using the following command instead</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>rails -d mysql blog
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then configure your database access info in the file located at <em>config/database.yml  </em>and you are good to go. Though you have to have <strong>mysql2</strong> gem installed in your system. Add</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>gem <span class="s1">&#39;mysql2&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>in <em>Gemfile </em> in the root of your app directory and then run <em>bundle install </em>again</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>bundle install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you have MAMP installed and want to know how you can reuse mamp&rsquo;s mysql installation with rail&rsquo;s apps then follow <a title="MySql" href="http://blog.joynag.net/2012/04/using-mamp-mysql-installation-with-rails-app/" target="_blank">this tutorial</a> I wrote earlier. :)</p>
+
+<p>If you are using ubuntu you may try this tutorial <a title="Rails on Ubuntu" href="http://blog.sudobits.com/2011/10/27/how-to-install-ruby-on-rails-in-ubuntu-11-10/" target="_blank"><a href="http://blog.sudobits.com/2011/10/27/how-to-install-ruby-on-rails-in-ubuntu-11-10/">http://blog.sudobits.com/2011/10/27/how-to-install-ruby-on-rails-in-ubuntu-11-10/</a></a></p>
+
+<p>or this <a href="http://www.web2linux.com/05/installing-rails-3-on-ubuntu-10-04-lucid-lynx/" target="_blank"><a href="http://www.web2linux.com/05/installing-rails-3-on-ubuntu-10-04-lucid-lynx/">http://www.web2linux.com/05/installing-rails-3-on-ubuntu-10-04-lucid-lynx/</a></a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/some-sources-of-english-word-list/">Some Sources of English Word List</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-30T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I was in need of a english word list for a application and I was searching for a complete list.
+First and formost What they are saying around the internet that there&rsquo;s no such thing as a complete list. English Language has lots of words and the count increases when you add slangs or science terms or other categories.</p>
+
+<p>So I will be sharing some of the sources I have found which can save you some time if you need it at some point.</p>
+
+<p><strong>Finding one from within your <em>nix/mac OS</strong>: If you are on a mac or any other </em>nix distro, chances are that you already have a word list in you os. You can find it out by browsing the <em>/usr/share/dict/  </em>directory. In my mac which is 10.6.8 I have the following files in my <em>/usr/share/dict/ </em>directory:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ls /usr/share/dict/
+</span><span class='line'>README  connectives  propernames  web2  web2a  words
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So to check I just ran a</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>cat words
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and the <em>cat </em>command showed the full word list in the terminal. If you are sure that you dont need more than this then you can insert these words into a mysql table easily.</p>
+
+<p>Login into mysql from your terminal window and select the desired database and run the following command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">LOAD</span> <span class="k">DATA</span> <span class="k">LOCAL</span> <span class="n">INFILE</span> <span class="s1">&#39;/usr/share/dict/words&#39;</span> <span class="k">INTO</span> <span class="k">TABLE</span> <span class="n">words</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I am supposing that you have a table named words. If you want the words to be inserted into a multicolumn table the run this one instead</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">LOAD</span> <span class="k">DATA</span> <span class="k">LOCAL</span> <span class="n">INFILE</span> <span class="s1">&#39;/usr/share/dict/words&#39;</span> <span class="k">INTO</span> <span class="k">TABLE</span> <span class="n">words</span><span class="p">(</span><span class="k">column</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Replace <em>column</em> with your column name which is of type VARCHAR.</p>
+
+<p>I have found some other online datases too. Most of them are in excel format. You can convert excel files easily into a mysql database. The steps are:</p>
+
+<p>Save the sql file in csv format(you can do that from excel save as dialogue) and then insert this into your table. I have used <em>Sequel Pro </em>to insert the csv into the table. If you face any problem doing this you can ask for details in comment.</p>
+
+<p>And here are some other links where you can find word databases(xls,csv or sql format) too.</p>
+
+<p><a title="Wordnet" href="http://androidtech.com/html/wordnet-mysql-20.php" target="_blank">Wordnet</a></p>
+
+<p><a title="Source Forge" href="http://wordlist.sourceforge.net/" target="_blank">Wordlist in source forge</a></p>
+
+<p><a title="Puzzler" href="http://www.puzzlers.org/dokuwiki/doku.php?id=solving:wordlists:about:start" target="_blank">Puzzlers.org sources</a></p>
+
+<p><a title="Info Chimps" href="http://www.infochimps.com/datasets/word-list-100000-official-crossword-words-excel-readable" target="_blank">InfoChimps</a></p>
+
+<p><a title="Info Chimps" href="http://www.infochimps.com/datasets/word-list-350000-simple-english-words-excel-readable" target="_blank">Infochimps 350000 Words</a></p>
+
+<p>And guess what? They are all free. Try all of them to find the one thats suit&rsquo;s your need. :)</p>
+
+<p>English Words list are needed if you are building applications like <em>Dictionaries</em> or <em>crosswords</em> <em>puzzle</em> or any kind of <em>word games</em>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/on-and-off-jquerys-new-event-binding-awesomeness/">On and Off jQuery&#8217;s New Event Binding Awesomeness</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-29T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have been using jQuery for quite a while and have used all of jQuery&rsquo;s event handlers like <em>$.bind $.live $delegate $.click etc. </em></p>
+
+<p>Along with the release of jQuery 1.7 , jQuery introduced two new methods for event handling. They are $.on and $.off and in jQuery.com they encouraged use of these two methods for event binding. Because no mater what other method you use like <em>$bind , $live, $delegate</em> jQuery is using $.on for all these under the hood. For a proof of these lets take a look at <em>$bind , $live, $delegate</em> definition in jQuery&rsquo;s source.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">bind</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">unbind</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">live</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">jQuery</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">context</span> <span class="p">).</span><span class="nx">on</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">selector</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">},</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">die</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">jQuery</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">context</span> <span class="p">).</span><span class="nx">off</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">selector</span> <span class="o">||</span> <span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="o">**&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">fn</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">delegate</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">undelegate</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// ( namespace ) or ( selector, types [, fn] )</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">1</span><span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="o">**&amp;</span><span class="nx">quot</span><span class="p">;</span> <span class="p">)</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you can see that jQuery itself is using <em>$.on</em> and <em>$.off</em> for all event handling. So it&rsquo;s good time to start using these new functions for event handling.</p>
+
+<p>Let&rsquo;s take a look at the syntax of <strong>$.on </strong> and how we can use it as a replacement for $.live, $bind and $delegate. Here is the function definition for $.on from jQuery.com.</p>
+
+<blockquote>
+<h4>.on( events [, selector] [, data], handler(eventObject) )</h4>
+<strong>events </strong>One or more space-separated event types and optional namespaces, such as &#8220;click&#8221; or &#8220;keydown.myPlugin&#8221;.
+
+<strong>selector </strong>A selector string to filter the descendants of the selected elements that trigger the event. If the selector is <span style="font-family: Monaco, Consolas, 'Andale Mono', 'DejaVu Sans Mono', monospace; font-size: x-small;"><span style="line-height: normal;">null</span></span> or omitted, the event is always triggered when it reaches the selected element.
+
+<strong>data </strong>Data to be passed to the handler in <em>event.data</em> when an event is triggered.
+
+<strong>handler(eventObject) </strong>A function to execute when the event is triggered. The value <em><span style="font-family: Monaco, Consolas, 'Andale Mono', 'DejaVu Sans Mono', monospace; font-size: x-small;"><span style="line-height: normal;">false</span></span></em> is also allowed as a shorthand for a function that simply does <span style="font-family: Monaco, Consolas, 'Andale Mono', 'DejaVu Sans Mono', monospace; font-size: x-small;"><span style="line-height: normal;">return false</span></span></blockquote>
+
+
+<p>seeing all these arguments it may seems a bit scary at first glance but you dont need to remember all of this. You just need to remember two basic scenarios we need most of the time.</p>
+
+<p>If you need a simple event binding which doesn&rsquo;t need to persist to elements dynamically added to DOM(Document Object Model) through ajax or jQuery codes then you can use on directly on the target element using the syntax</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nx">selector</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span><span class="nx">handler</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//example</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;a.simple&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;I was clicked&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will be added to all anchor elements with a class of <em><strong>simple. <em>But if you add new elements after the DOM is loaded this event binding wont work.</em></strong></em></p>
+
+<p><em><strong><em></em></strong></em>Now if you want the event binding persist to new elements added to the dom then the syntax is a bit different</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span><span class="s1">&#39;a.complex&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;I was clicked&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>now I am attaching the click event to document instead of the target element. Why is that? Because I want the event binding works for new elements too.</p>
+
+<p>So what will happen when user click on an element?</p>
+
+<p>If you have idea about event bubbles in JS then you know that any events triggering travels from source element to its parents unless you specify other wise.</p>
+
+<p>So when user will click on any element document object will get a click event and on method will check if the source of the event is &lsquo;<em>a.complex</em>&rsquo; if it&rsquo;s true then it will fire the handler function. Check this in the following fiddle</p>
+
+<p>[jsfiddle url=&ldquo;<a href="http://jsfiddle.net/GhbZv/6/">http://jsfiddle.net/GhbZv/6/</a>&rdquo; height=&ldquo;400px&rdquo; include=&ldquo;result,html,js,css&rdquo;]</p>
+
+<p>Now as we are attaching the event with document as document will always exist in DOM it will work for all matching elements no matter when they are added to the DOM.</p>
+
+<p>The syntax for $.off is simple</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nx">selector</span><span class="p">).</span><span class="nx">off</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// to turn off a specific handler the syntax will be</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nx">selector</span><span class="p">).</span><span class="nx">off</span><span class="p">(</span><span class="nx">handler</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Though jQuery still supports previous event binding method&rsquo;s, it&rsquo;s good to write new event handlers using this two new methods, at least you can save a function call with this.  :)</p>
+
+<p><strong>Update:</strong></p>
+
+<p>And here goes some examples how you can convert previous $.bind, $.delegate or $.live calls</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="cm">/* for $.bind to $.on */</span>
+</span><span class='line'><span class="cm">/* Old: */</span> <span class="nx">$</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;.</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;).</span><span class="nx">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="nx">click</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">handler</span><span class="p">);</span>
+</span><span class='line'><span class="cm">/* New: */</span> <span class="nx">$</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;.</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;).</span><span class="nx">on</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="nx">click</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">handler</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* for $.delegate to $.on */</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* Old: */</span> <span class="nx">$</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="err">#</span><span class="nx">container</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;).</span><span class="nx">delegate</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;.</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="nx">click</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">handler</span><span class="p">);</span>
+</span><span class='line'><span class="cm">/* New: */</span> <span class="nx">$</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="err">#</span><span class="nx">container</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;).</span><span class="nx">on</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="nx">click</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">quot</span><span class="p">;.</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">handler</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* for $.live to $.on */</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* Old: */</span> <span class="nx">$</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;.</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;).</span><span class="nx">live</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="nx">click</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">handler</span><span class="p">);</span>
+</span><span class='line'><span class="cm">/* New: */</span> <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="nx">click</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">quot</span><span class="p">;.</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">handler</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/making-your-terminal-more-intuitive-with-oh-my-zsh-and-other-tools/">Making Your Terminal More Intuitive With Oh-my-zsh and Other Tools</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-28T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have started using Terminal massively since I got my Macbook back in 2010. I used it in Ubuntu but not that much. So I have always been searching for way about how to be more productive in Terminal and at the same time make it look beautiful as pass a great amount of time everyday. So I will be sharing some of the cool things I found in the internet which made my Macbook&rsquo;s Terminal far better than it was before. Here is a screenshot of my current terminal window.</p>
+
+<p><a href="http://blog.joynag.net/wp-content/uploads/2012/04/terminal.png"><img class="size-medium wp-image-118 aligncenter" title="terminal" src="http://blog.joynag.net/wp-content/uploads/2012/04/terminal-300x187.png" alt="" width="300" height="187" /></a></p>
+
+<p>As you can see in the screenshot it&rsquo;s looking pretty good(well at least to me). It has detected that the directory I am currently in is a GIT repo and I am in master branch. And the arrows you see in the prompt is batttery strength indicator. Pretty interesting Huh! I am using the some tools which made it so. They are:</p>
+
+<ol>
+    <li><strong>Solarized Dark Ansi Theme</strong>: It&#8217;s(<a title="Solarized Theme" href="http://ethanschoonover.com/solarized" target="_blank">link</a>) a very popular theme and have a port for many popular editors. You can it&#8217;s homepage to check screenshots.</li>
+    <li><strong>Adding colors</strong>: Mac&#8217;s Terminal App doesn&#8217;t natively support various colors for texts. But following <a title="Terminal Color" href="https://github.com/altercation/solarized/tree/master/osx-terminal.app-colors-solarized" target="_blank">this</a>  you can add more colors into Terminal.</li>
+    <li><strong>System wide Terminal</strong>: As I had to launch terminal very frequently I was searching for a solution which will allow me to fire the terminal using a keyboard Hotkey and terminal will appear above all applications. And found <a title="Total Terminal" href="http://totalterminal.binaryage.com/" target="_blank">Totalterminal</a> as a rescue. Now I just press CTRL(you can configure the triggering key to you preference) two times and the terminal appears immediately. And you have <a title="iTerm2" href="http://www.iterm2.com/" target="_blank">iTerm2</a> as an alternative with other useful features. Try any of them and stick with the one you like.</li>
+    <li><strong>oh-my-zsh</strong> : I have been using <strong>bash</strong> as my login(default) shell until I came to know about this project. Mac osx comes with a number of shells like <strong>bash</strong>, <strong>csh</strong>, <strong>tcsh</strong>, <strong>ksh</strong>, <strong>sh</strong> and <strong>zsh . </strong>And bash is the default shell which starts if you dont change it to something else. <a title="oh-my-zsh" href="https://github.com/robbyrussell/oh-my-zsh" target="_blank">oh-my-zsh</a> is a very popular project by Robby Russel. I has a magic one line installer found  in it&#8217;s github(follow the above link) page. Some of the features I like about oh-my-zsh are more intuitive <strong>command completion</strong>, <strong>command auto correction prompts, git repo branch detection, battery strength indication and many others. </strong>I found it a month ago and never looked back. :)</li>
+</ol>
+
+
+<p>So based on my experience I can say that you can try oh-my-zsh. You wont be disappointed.</p>
+
+<p>If you are using Mac try the more organized write up <a title="Terminal" href="http://net.tutsplus.com/tutorials/tools-and-tips/how-to-customize-your-command-prompt/" target="_blank">here</a> on nettuts. If you are using Ubuntu check this <a title="Ubuntu" href="https://gist.github.com/1498393" target="_blank">Gist</a> on how to install oh-my-zsh in Ubuntu. :)</p>
+
+<p>&nbsp;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/gits-stash-a-very-handy-git-feature-in-some-scenario/">Gits Stash - a Very Handy Git Feature in Some Scenario</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-28T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have started using <strong>git</strong>(a DVCS) from last month and I am liking it much. Some days back I came across the <strong>git stash</strong> command in a Stack Overflow question and was glad that git have this feature which svn doesn&rsquo;t. I will be describing a scenario when <strong>git stash</strong> is very helpful.</p>
+
+<p><strong>Scenario:</strong> If you are using <strong>git </strong>it can be assumed that you are working in a team and there are other developers working on the same team. Let&rsquo;s say at some point one of your team mate At some knock you on skype and ask to test a feature he just pushed into the repo. After hearing the name of the feature you find out that you two are working on the same source file and you are in the middle of something. Now you have two immediate solutions:</p>
+
+<ol>
+    <li>Try committing your broken code which git wont allow as the remote branch is one step ahead and have updates on the same file, it will ask you to do <strong>git pull</strong> first.</li>
+    <li>Try git pull which will trigger conflict too.</li>
+</ol>
+
+
+<p>While I was working with svn I used to copy the file somewhere else and then try <strong>svn up</strong> and then accepting server&rsquo;s version of the code using <strong>tf</strong>(their full). After checking the feature I would have copied the new things back from the file I copied earlier.</p>
+
+<p>Using</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git stash
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>we can push all current changes into git staging area temporarily. Then doing a git pull would work fine. Now we can check the new featured our peer coder added. After that we can use</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git stash pop
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>to pull back the changes we previously pushed into the staging area, completing what we were doing and then commit the final changes later.</p>
+
+<p>It&rsquo;s one of the features of git I am liking very much. A very handy feature in some scenarios. :)</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/using-mamp-pro-vhosts/">Using MAMP Pro&#8217;s VHosts Feature to Run Rails App in a Fancy Domain Name</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-27T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have been playing with ROR(Ruby On Rails) from last few days. Those who of you have idea about the the nature of Rails apps know that, to run a rails app you have to run the following command in the terminal from inside the apps directory.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rails server
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And the app will start running on <strong><a href="http://0.0.0.0:3000">http://0.0.0.0:3000</a></strong> or <strong><a href="http://localhost:3000">http://localhost:3000</a></strong> WEBrick LightWeight Web Server that Rails ships with by default.</p>
+
+<p>As I have left <strong><a href="http://localhost/">http://localhost/</a></strong> long ago and been using fancy local domain names for all my projects, so I was searching for a solution on how can I do that with rails apps to. You know it doesn&rsquo;t feel good to type in some thing like <strong><a href="http://0.0.0.0:3000">http://0.0.0.0:3000</a></strong> in browser . Instead I would love some domain name like <strong><a href="http://d.rails.dev">http://d.rails.dev</a></strong>  or something like that. It&rsquo;s just feels good typing that.</p>
+
+<p>And I found a solution. :) Here&rsquo;s how to do it. In Mamp pro&rsquo;s control panel in the host tab create a new host. Write <strong><a href="http://d.rails.dev">http://d.rails.dev</a></strong> as the server name. The disk location isn&rsquo;t important here but I have set it to my rails app directory. Now switch over to the advanced tab in right configuration panel and paste in the following code block in Customized Virtual Host General Settings option box:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ServerName rails
+</span><span class='line'>ServerAlias *.dev
+</span><span class='line'>
+</span><span class='line'>ProxyPass / http://localhost:3000/
+</span><span class='line'>ProxyPassReverse / http://localhost:3000/
+</span><span class='line'>ProxyPreserveHost On
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see from the above code it&rsquo;s actually forwarding all traffic in / which is <strong><a href="http://d.rails.dev">http://d.rails.dev</a></strong> into <strong><a href="http://localhost:3000">http://localhost:3000</a></strong> (Where our actual rails app is running). Click apply and you are done.</p>
+
+<p>Now start the rails app using <strong><em>rails server  </em></strong>command from terminal from within the rails app directory and point your browser into <strong><a href="http://d.rails.dev">http://d.rails.dev</a></strong> and see your rails app is running there.</p>
+
+<p>Pretty easy huh! But it provides a good amount of self satisfaction, well, at least for me. I like seeing fancy domain names for my web apps.</p>
+
+<p>I haven&rsquo;t been able to test the process for MAMP but it shouldn&rsquo;t be much different, though you have to do everything manually from adding vhost entry into httpd.conf  and then add the host name entry into /etc/hosts file. (I will be writing another post on how to create a virtual host in mamp/lamp sometime soon).</p>
+
+<p>Thanks for taking the time to read up to this point. :)</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/using-mamp-mysql-installation-with-rails-app/">Using MAMP&#8217;s Mysql Installation With Rails App</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-27T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Being primarily a PHP developer I always have one AMP package installed in my machine no matter what platform I work with. Now-a-days as I work on my macbook I have MAMP installed.</p>
+
+<p>Few days back I was trying to install <em>mysql2 </em>gem to use in Rails app which acts as the interface between MySql engine and Rails(or Ruby) apps. But it was constantly failing every time I tried to. I even tried to install previous versions of mysql2 gem but no luck. Then I tried to have a closer look at the error the <strong><em>bundle install</em></strong> command was spitting out into the terminal.</p>
+
+<p>It was not being able to find mysql header files which are required to compile mysql2 gem. After searching in the internet I found out MAMP doesn&rsquo;t ship mysql headers by default.</p>
+
+<p>So The options I had was either recompile Mysql from source and add headers into proper MAMP Directory. Or manage another mysql installation only for rails which is a whole lot of pain. So I had to go for one, I searched through Stack Overflow and found some tutorials on how to do that. After studying some of those I finally took a backup of mamp and started the recompilation process. Here are the steps I followed:</p>
+
+<p>Take a backup of your whole MAMP directory if by any chance you mess it up. :) It&rsquo;s always safe.</p>
+
+<ol>
+<li>First you need to download the MAMP open source components from their source forge page here</li>
+</ol>
+
+
+<p><a href="http://sourceforge.net/projects/mamp/files/mamp/">http://sourceforge.net/projects/mamp/files/mamp/</a> download the components for mamp 2.0.2 that is the latest now.</p>
+
+<ol>
+<li>Recently MAMP have switched from MySql 5.1 to to MySQL 5.5. And MySQL, in turn, has switched from GNU Make (with <em>./configure</em>) to CMake (with <em>cmake .</em>). So you need to have cmake installed in you Mac. You can do that easily using <em>brew</em> or <em>macport</em> using the following command</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>brew install cmake
+</span><span class='line'>
+</span><span class='line'>or
+</span><span class='line'>
+</span><span class='line'>port install cmake
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>Suppose You have downloaded it into your desktop then Extract and put the mysql-5.5.9.tar.gz file into your desktop and type in the following command in your terminal.</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> /tmp
+</span><span class='line'> <span class="nv">$ </span>mv /Users/yourname/Desktop/mysql-5.5.9.tar.gz .
+</span><span class='line'> <span class="nv">$ </span>tar xf mysql-5.5.9.tar.gz
+</span><span class='line'> <span class="nv">$ </span><span class="nb">cd </span>mysql-5.5.9
+</span><span class='line'> <span class="nv">$ </span>cmake . -DMYSQL_UNIX_ADDR<span class="o">=</span>/Applications/MAMP/tmp/mysql/mysql.sock -DCMAKE_INSTALL_PREFIX<span class="o">=</span>/Applications/MAMP/Library
+</span><span class='line'> <span class="nv">$ </span>make -j  3
+</span><span class='line'> <span class="nv">$ </span>cp libmysql/*.dylib /Applications/MAMP/Library/lib/
+</span><span class='line'> <span class="nv">$ </span>mkdir -p /Applications/MAMP/Library/include/mysql
+</span><span class='line'> <span class="nv">$ </span>cp include/* /Applications/MAMP/Library/include/mysql
+</span><span class='line'> <span class="nv">$ </span>sudo env <span class="nv">ARCHFLAGS</span><span class="o">=</span><span class="p">&amp;</span>quot<span class="p">;</span>-arch x86_64<span class="p">&amp;</span>quot<span class="p">;</span> gem install mysql2 -- --with-mysql-config<span class="o">=</span>/Applications/MAMP/Library/bin/mysql_config
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>after this you should see 1 Gem installed successfully message into the termnal and you gem has been install successfully. Now you need to symlink a bundle from your mysql Library into /user/lib. Run the following command in the terminal.</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo ln -s /Applications/MAMP/Library/lib/libmysqlclient.16.dylib /usr/lib/libmysqlclient.16.dylib <span class="o">[</span>/bash<span class="o">]</span>
+</span><span class='line'>&lt;div&gt;&lt;/div&gt;
+</span><span class='line'>&lt;div&gt;5. Now clean up your temp directory&lt;/div&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> bash</p>
+
+<p> rm -rf /tmp/mysql-5.5.9 /tmp/mysql-5.5.9.tar.gz</p>
+
+<p>&#8220;`</p>
+
+<div>and you are done. Now you can try <strong>bundle install or </strong> <strong>rake db:create</strong></div>
+
+
+<div>and they should work fine. :)</div>
+
+
+<div>Happy reusing MAMP&#8217;s mysql with your rails applications :)</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/how-to-use-the-same-config-file/">How to Use the Same Config File Both in Localhost and in Live Server</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-27T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Every projects have some kind of configuration such
+as database username, database password, database name blah blah
+no matter whats language it&rsquo;s been written in.</p>
+
+<p>But i will be primarily talking about php here.</p>
+
+<p>In past what I used to change the config file every time I had to push updates into the live server either by FTP or SFTP
+or  VCS(Version Control System) and that was painful.
+But thanks to the internet I found some tricks somewhere in the internet that I dont remember right now which I have been using since then which allows me to use the same config file both in localhost and in live server.</p>
+
+<p>Lets say we have the  following config values which are different when the code is running in Localhost and in server. Say for localhost they have the following values</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">var</span> <span class="nv">$dbUsername</span> <span class="o">=</span> <span class="s1">&#39;local&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbPassword</span> <span class="o">=</span> <span class="s1">&#39;localpassword&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbname</span> <span class="o">=</span> <span class="s1">&#39;local_db_name&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And in server the value is different as follows</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">var</span> <span class="nv">$dbUsername</span> <span class="o">=</span> <span class="s1">&#39;server&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbPassword</span> <span class="o">=</span> <span class="s1">&#39;serverpassword&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbname</span> <span class="o">=</span> <span class="s1">&#39;server_db_name&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now as I have already said changing those before every push is a pain in the a**. The way we can have them both at the same time and both environment runs properly is as follows:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">if</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;REMOTE_ADDR&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">){</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//we are in localhost as the user&#39;s IP is 127.0.0.1</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbUsername</span> <span class="o">=</span> <span class="s1">&#39;local&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbPassword</span> <span class="o">=</span> <span class="s1">&#39;localpassword&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbname</span> <span class="o">=</span> <span class="s1">&#39;local_db_name&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// we are in server</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbUsername</span> <span class="o">=</span> <span class="s1">&#39;server&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbPassword</span> <span class="o">=</span> <span class="s1">&#39;serverpassword&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbname</span> <span class="o">=</span> <span class="s1">&#39;server_db_name&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>FYI, $_SERVER[&lsquo;REMOTE_ADDR&rsquo;] returns users IP address if the user is not using Proxy.</p>
+
+<p>If you are using Virtual host then you can use $_SERVER[&lsquo;SERVER_NAME&rsquo;]. Suppose I have a virtual host setup for all my office projects as d.noobis.com then we can use the following conditionals to determine the correct environment</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">if</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;SERVER_NAME&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;d.noobis.com&#39;</span><span class="p">){</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// my local config goes here</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;SERVER_NAME&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;noobis.com&#39;</span><span class="p">){</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Live servers config</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;SERVER_NAME&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;local.noobis.com&#39;</span><span class="p">){</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//someone else&#39;s config who is working with me in the same project have a VHost set up as local.noobis.com</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Using this we can remove the burden of editing config file before every commit/upload of codebase into live server. This same technique can be used for frameworks which uses pure php variables for configuration options like Code Igniter.</p>
+
+<p>But if your framework uses special formats for config files like YML then there might be different ways to separate development and production environment settings.</p>
+
+<p>Hope you enjoyed the post. :)</p>
+
+<p>UPDATE: </p>
+
+<p>As Zaman-A-Piri-Pasa suggested in the comment, if you are on windows using XAMPP use</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">if</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;REMOTE_ADDR&#39;</span><span class="p">]</span><span class="o">==</span><span class="nx">’</span><span class="o">::</span><span class="mi">1</span><span class="nx">′</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>instead to check for localhost.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/01/responding-to-orientation-changes-in-iphone-apps-titaniu/">Responding to Orientation Changes in Iphone Application Using Titanium</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-01-27T00:00:00+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I am learning Titanium and Just Loving it. Earlier I thought i wont be able to do many things using titanium and started learning Obj-C and Cocoa-touch framework. And that path needs lots of study and learning before someone can build something really productive.</p>
+
+<p>But the Scenario is different in case of Titanium. If you have basic programming concepts and have some experience with JavaScript you can start right away after a couple hours of study. And Titanium creates the native Obj-C codes for you. So there is basically no difference in an Iphone App made with Obj-C using UIKit framework with one built using Titanium. And even better is that you can deploy your Iphone App code In Andriod Platform with few changes. Supports for Blackberry is coming. So Titanium is a very good Parser itself, it takes you code written in JavaScript And Creates the Obj-C code for Iphone and Java Code for Android for you. As Titanium acquired Aptana few days ago We can expect that we will get a very good IDE for developing Titanium Apps with code Sense, debugging features and who know what else, lets wait and see what they brings.</p>
+
+<p>And the amazing thing is that it&rsquo;s open source. They have an example app which have all the features Available in Iphone ranging from simple TableViews to 3D animations.</p>
+
+<p>Anyway, let&rsquo;s talk about the Title of this post. You know Iphone,Ipod Touch, IPad have accelerometers built-in. That means it can detect orientation changes. Now responding to orientation changes Is a very important feature that every Iphone Apps should have. Doing it is not tough with Titanium. Here is a code block, which will respond to device orientation changes by changing the UI orientation. Place it anywhere in you app.js file.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">Ti</span><span class="p">.</span><span class="nx">Gesture</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span>
+</span><span class='line'><span class="s1">&#39;orientationchange&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="c1">// alert(&quot;Called&quot;);</span>
+</span><span class='line'><span class="nx">win</span><span class="p">.</span><span class="nx">orientationModes</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_LEFT</span><span class="p">,</span>
+</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_RIGHT</span><span class="p">,</span>
+</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">PORTRAIT</span><span class="p">,</span>
+</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">UPSIDE_PORTRAIT</span>
+</span><span class='line'><span class="p">];</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">orientation</span> <span class="o">==</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_LEFT</span> <span class="o">||</span>
+</span><span class='line'><span class="nx">e</span><span class="p">.</span><span class="nx">orientation</span> <span class="o">==</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_RIGHT</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="c1">// Do anything you wanna do when user changes the orientation to LandScape</span>
+</span><span class='line'><span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">orientation</span> <span class="o">=</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_RIGHT</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'><span class="c1">// Revert the changes you made, the user is back to portrait mode</span>
+</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">orientation</span> <span class="o">=</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">PORTRAIT</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The code is pretty straightforward. We are attaching an event listener into the Ti.Gesture and once the orientation of the device changes this callback is fired and we can do anything we want into that callback. I will try to write small posts on titanium as i go along learning Titanium.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/10/got-a-new-apple-macbook/">Got a New Apple Macbook</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2009-10-07T00:00:00+11:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2009</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Hi Guys,
+I got my new macbook a few days ago. It&rsquo;s new but refurbished. One of my friend bought me this from the US. And those who of you are planning to buy a laptop or macbook it&rsquo;s better to buy it from abroad if you have the chance. Because It costs much less then it will usually cost here in Bangladesh.
+Let me tell you something about the Refurbished apple products. I bought  <a href="http://store.apple.com/us/product/FC240LL/A?mco=MTA4MzIxNjk">this model</a>.
+[caption id=&ldquo;attachment_22&rdquo; align=&ldquo;aligncenter&rdquo; width=&ldquo;200&rdquo; caption=&ldquo;Macbook&rdquo;]<img src="http://blog.joynag.net/wp-content/uploads/2009/10/mymacbook.jpg" alt="Macbook" title="mymacbook" width="200" height="170" class="size-full wp-image-22" />[/caption]
+This is originally $999 now. But the refurb is only $849 now. And it changes depending on the availabiliy of refurbs. SO a product is considered refurbished when it&rsquo;s back to apple store in either of these ways:
+The shippers don&rsquo;t get anyone&rsquo;s order.
+    Someone return the products as there is returning facilities.
+    The products had some very simple problem and the buyer returned it</p>
+
+<p>And the list goes on&hellip;&hellip;&hellip;..</p>
+
+<p>After a product is back Apple engineers, the test it fully replace(no repair) the defective parts and run the product cycle and after fully ensuring Apples quality it makes the product available in the refurb section. Though there are also bad experience about refurb mac products and you can find those if you google it for a while.</p>
+
+<p>Anyway it&rsquo;s your game whether u will buy refurb or a brand new product. But the refurb can save u as much as $200 in some models.</p>
+
+<p>The one i bought from US is avaiable in Bangladesh in ComputerSource and they costs 120000BDT. So it&rsquo;s only around 60000BDT more. My macbook costs $849 and US charged $74 maybe as TAX.</p>
+
+<p>So if you think u need a macbook with a affordable price , i would suggest you to buy macbooks from abroad and you can risk refurbished (<a href="http://hasin.wordpress.com/">Hasin vie</a> is using a refurb iMac for one year, not a single problem ) and he suggested me to a refurb mac.
+And it&rsquo;s better if you buy it from a country other than US, they chargesd me almost a $100 tax.You can search for a country where the tax is less.</p>
+
+<p>Anyway, I am happy with my macbook and enjoying time with it. Whatever guys says Apple is this Apple is that there are some special things about Apple products and you will feel that if you use those.</p>
+
+<p>That&rsquo;s all for now. if you need to know anything more you can drop a comment and you can also bug in IM anytime.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/4">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/2">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/laravel-view-presenters-from-scratch/">Laravel View Presenters From Scratch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/">Exploring Ruby&#8217;s Proc, Lambda and Blocks</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joycse06">@joycse06</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joycse06',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section>
+    <h1>Stack Overflow</h1>
+    <a href="http://stackoverflow.com/users/344304/Joy">
+        <img src="http://stackoverflow.com/users/flair/344304.png" width="208" height="58" alt="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+    </a>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Joy Nag -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joycse06';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Tools | Prasenjit Kumar Nag a.k.a Joy]]></title>
+  <link href="http://joycse06.github.io/blog/categories/tools/atom.xml" rel="self"/>
+  <link href="http://joycse06.github.io/"/>
+  <updated>2016-07-23T20:49:45+10:00</updated>
+  <id>http://joycse06.github.io/</id>
+  <author>
+    <name><![CDATA[Joy Nag]]></name>
+    <email><![CDATA[joyruet06@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[The Unix Tar Pipe : Lots of Unix Knowledge in a Simple One Liner]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/the-unix-tar-pipe-lots-of-unix-knowledge-in-a-simple-one-liner/"/>
+    <updated>2014-12-06T19:22:15+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/the-unix-tar-pipe-lots-of-unix-knowledge-in-a-simple-one-liner</id>
+    <content type="html"><![CDATA[<p>I have recently been introduced to the Tar Pipe. It&rsquo;s not a command to run in the shell but a pattern which I liked very much.</p>
+
+<p>It uses some primitive unix command and couple features of the shell to solve a problem. Let me talk a bit about the problem it solves. Suppose you have a directory called src and you want to clone it to a destination folder named dst preserving metadata like owners, groups and permissions of files and directories. In modern systems there are command like</p>
+
+<pre><code class="bash Copy Command">cp -rp
+
+# or
+
+rsync -a
+</code></pre>
+
+<p> using which you can clone contents of one directory to another preserving permissions and other metadata easily. But in the days when rsync -a was not there or the cp implementation didn&rsquo;t have the permissions preserving flag there was a tar pipe which did the same thing using unix tar command. The Tar Pipe looks like this</p>
+
+<pre><code class="bash Tar Pipe">
+ (cd src &amp;&amp; tar -c .) | (cd dst &amp;&amp; tar -xp)
+</code></pre>
+
+<!-- more -->
+
+
+<p>So why I liked a command very much considering its obsolete now. The reason is if we look closely there&rsquo;s lot of Unixy stuff in this one line.</p>
+
+<p>Looking from the outside we see two subshells [ (cd src &amp;&amp; tar -c .) and (cd dst &amp;&amp; tar -xp) ] joined by the pipe. A subshell basically tells bash or zsh to fork itself the execute the code inside the parantheses in a new process. And this actuallly isotates the subshell&rsquo;s current working directory, its variables and other options.</p>
+
+<p>So the left part of the Tar pipe change the directory into src and tar the contents of that directory and output the stream into standard output. And on the other side of the pipe we have a blocking process with is waiting to be feed from the left side.</p>
+
+<p>When the left side starts outputting, the right side change current directory into dst and starts reading from the other side of the pipe and untar it preserving permissions.</p>
+
+<p> On either side &amp;&amp;  ensures that if the directory doesn&rsquo;t exist tar command on the right won&rsquo;t fire at all.</p>
+
+<p> That all for today. I will be talking more about fork and tar in another post. Hope you enjoyed it.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Lets Build a Terminal One-liner to Add All New Files Into a Subversion Repository]]></title>
+    <link href="http://joycse06.github.io/blog/2012/05/lets-build-a-terminal-one-liner-to-add-all-new-files-into-a-subversion-repository/"/>
+    <updated>2012-05-03T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2012/05/lets-build-a-terminal-one-liner-to-add-all-new-files-into-a-subversion-repository</id>
+    <content type="html"><![CDATA[<p>Those who of you have been working with subversion for a while may have noticed that when you add a number of files in different directories into an existing subversion repository you have to add each one of them from command line which is a pain.</p>
+
+<p>Though the following command adds all new files recursively into the repo but it also add <strong>svn:ignored</strong> files back into the tree which is bad.</p>
+
+<pre><code class="bash">
+svn add --force *
+</code></pre>
+
+<p>So I was searching for a good solution today and found What I needed. In this tutorial I will to walking through the steps with explanation and finally we will have a ready-to-use one-liner, running which will add all new(untracked) files into a svn repo.</p>
+
+<p><strong>Using svn stat(or st) to check the status:  </strong>If you run the</p>
+
+<pre><code class="bash">
+svn status
+
+#or
+
+svn st
+</code></pre>
+
+<p>command from within your repo directory it will show you a list of new and modified files, I ran the command in one of my repo and the output was like this</p>
+
+<pre><code class="bash">
+?  .idea
+?  application/models/book_model.php
+?  application/views/find-books.php
+M application/views/splash.php
+?  application/controllers/books.php
+</code></pre>
+
+<p>The entries which have ? mark at the start are new files yet to be added into the svn repo. Lines starting with M means there are changes to be committed but the file is already in the repo. We are interested with the lines which start with ? So let&rsquo;s filter the output of <strong>svn stat </strong>to find the lines which start with ? .We can use grep to do this using syntax like</p>
+
+<pre><code class="bash">
+svn status | grep &amp;quot;^?&amp;quot;
+</code></pre>
+
+<p>Which is telling grep to find lines which start with the character ?.  So this will out something like this for my repo</p>
+
+<pre><code class="bash">
+?  .idea
+?  application/models/book_model.php
+?  application/views/find-books.php
+?  application/controllers/books.php
+</code></pre>
+
+<p>Now we have got the list of new files which we can add to svn repo using svn add command. But we need to remove the ? from the starting of these lines to use them as arguments of svn add . We can do this easily using the command line scripting language <strong><a title="Awk" href="http://en.wikipedia.org/wiki/Awk" target="_blank">awk</a> </strong>using the following  syntax</p>
+
+<pre><code class="bash">
+svn status | grep &amp;quot;^?&amp;quot; | awk '{print $2}'
+</code></pre>
+
+<p>we saw after using <strong>grep</strong> we had lines of this structure</p>
+
+<pre><code class="bash">
+?  application/models/book_model.php
+</code></pre>
+
+<p>As we are using <strong>|</strong> awk, so <strong>awk</strong> is getting two arguments first one is ? and second one is file path. So as <strong>awk </strong>is printing $2 which means the second argument, the file path. So after adding awk block we will have the following output</p>
+
+<pre><code class="bash">application/models/book_model.php
+application/views/find-books.php
+application/controllers/books.php
+</code></pre>
+
+<p>Which is exactly what we need to pass to svn add. Now using <a title="Xarg" href="http://en.wikipedia.org/wiki/Xargs" target="_blank">xarg</a> we can pass this argument set into<em> svn add</em> command with this syntax</p>
+
+<pre><code class="bash">
+svn status | grep &amp;quot;^?&amp;quot; | awk '{print $2}' | xargs svn add
+</code></pre>
+
+<p>If you run this in your terminal all new files will be added to svn you can check that using <strong>svn stat </strong>again. Which will show that the files has been added for inclusion in remote repo in next commit.</p>
+
+<p>We can make it a bit better though. Most of us use some kind of IDE&rsquo;s and those IDE&rsquo;s leave hidden files  for indexing and saving project specific settings. Or we may have hidden system files which we dont want to include in the repo. We can filter out the hidden files using another grep, the syntax is something like</p>
+
+<pre><code class="bash">
+svn status | grep -v &amp;quot;^.[ \t]*\..*&amp;quot;
+</code></pre>
+
+<p>So what is <strong>grep -v &ldquo;^.[ \t]<em>..</em>&rdquo; </strong>doing here. The pattern <strong>&ldquo;^.[ \t]<em>..</em>&rdquo; </strong> is matching <strong>svn status </strong>entries which have hidden files in it. If you have some idea about regular expression you can figure that out yourself, if you cant you can comment in this post and I will explain in details. And the <strong>-v </strong>option is an <strong>invert-match</strong> switch which tells grep to output <strong>non-matching</strong> files, that means files which are <strong>not hidden</strong>.</p>
+
+<p>So we have got this by far</p>
+
+<pre><code class="bash">
+svn status | grep -v &amp;quot;^.[ \t]*\..*&amp;quot; | grep &amp;quot;^?&amp;quot; | awk '{print $2}' | xargs svn add
+</code></pre>
+
+<p>After that you can use svn stat again to make sure you are not committing anything you dont want to. Because it will add any non-hidden files in the repo. If you see that you have added a file you dont want to you can user the following command to remove that from next commit list</p>
+
+<pre><code class="bash">
+svn revert filename
+
+#or this if you wan to remove a directory
+
+svn revert --recursive path/to/directory/
+</code></pre>
+
+<p>And if you want to add any hidden file like a <strong>.htaccess </strong>then after running this command you can always use another svn add command to add that specific file or if you want you can even remove the hidden file removing grep block from the command chain.</p>
+
+<p>So the one-liner you can use from now on is</p>
+
+<pre><code class="bash">
+svn status | grep -v &amp;quot;^.[ \t]*\..*&amp;quot; | grep &amp;quot;^?&amp;quot; | awk '{print $2}' | xargs svn add
+</code></pre>
+
+<p>This comes in handy When you add a lot of file in different directories and saves you time.</p>
+
+<p>I am not very good at terminal things yet and found this snippet <a title="Snipplr" href="http://snipplr.com/view/15471/" target="_blank">here</a>.</p>
+
+<p>This post is just an effort to better understand whats magic is going on in that one line.</p>
+
+<p>Hope you enjoyed it. :)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Some Sources of English Word List]]></title>
+    <link href="http://joycse06.github.io/blog/2012/04/some-sources-of-english-word-list/"/>
+    <updated>2012-04-30T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2012/04/some-sources-of-english-word-list</id>
+    <content type="html"><![CDATA[<p>I was in need of a english word list for a application and I was searching for a complete list.
+First and formost What they are saying around the internet that there&rsquo;s no such thing as a complete list. English Language has lots of words and the count increases when you add slangs or science terms or other categories.</p>
+
+<p>So I will be sharing some of the sources I have found which can save you some time if you need it at some point.</p>
+
+<p><strong>Finding one from within your <em>nix/mac OS</strong>: If you are on a mac or any other </em>nix distro, chances are that you already have a word list in you os. You can find it out by browsing the <em>/usr/share/dict/  </em>directory. In my mac which is 10.6.8 I have the following files in my <em>/usr/share/dict/ </em>directory:</p>
+
+<pre><code class="bash">
+ls /usr/share/dict/
+README  connectives  propernames  web2  web2a  words
+</code></pre>
+
+<p>So to check I just ran a</p>
+
+<pre><code class="bash">
+cat words
+</code></pre>
+
+<p>and the <em>cat </em>command showed the full word list in the terminal. If you are sure that you dont need more than this then you can insert these words into a mysql table easily.</p>
+
+<p>Login into mysql from your terminal window and select the desired database and run the following command:</p>
+
+<pre><code class="sql">
+LOAD DATA LOCAL INFILE '/usr/share/dict/words' INTO TABLE words;
+</code></pre>
+
+<p>I am supposing that you have a table named words. If you want the words to be inserted into a multicolumn table the run this one instead</p>
+
+<pre><code class="sql">
+LOAD DATA LOCAL INFILE '/usr/share/dict/words' INTO TABLE words(column);
+</code></pre>
+
+<p>Replace <em>column</em> with your column name which is of type VARCHAR.</p>
+
+<p>I have found some other online datases too. Most of them are in excel format. You can convert excel files easily into a mysql database. The steps are:</p>
+
+<p>Save the sql file in csv format(you can do that from excel save as dialogue) and then insert this into your table. I have used <em>Sequel Pro </em>to insert the csv into the table. If you face any problem doing this you can ask for details in comment.</p>
+
+<p>And here are some other links where you can find word databases(xls,csv or sql format) too.</p>
+
+<p><a title="Wordnet" href="http://androidtech.com/html/wordnet-mysql-20.php" target="_blank">Wordnet</a></p>
+
+<p><a title="Source Forge" href="http://wordlist.sourceforge.net/" target="_blank">Wordlist in source forge</a></p>
+
+<p><a title="Puzzler" href="http://www.puzzlers.org/dokuwiki/doku.php?id=solving:wordlists:about:start" target="_blank">Puzzlers.org sources</a></p>
+
+<p><a title="Info Chimps" href="http://www.infochimps.com/datasets/word-list-100000-official-crossword-words-excel-readable" target="_blank">InfoChimps</a></p>
+
+<p><a title="Info Chimps" href="http://www.infochimps.com/datasets/word-list-350000-simple-english-words-excel-readable" target="_blank">Infochimps 350000 Words</a></p>
+
+<p>And guess what? They are all free. Try all of them to find the one thats suit&rsquo;s your need. :)</p>
+
+<p>English Words list are needed if you are building applications like <em>Dictionaries</em> or <em>crosswords</em> <em>puzzle</em> or any kind of <em>word games</em>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Making Your Terminal More Intuitive With Oh-my-zsh and Other Tools]]></title>
+    <link href="http://joycse06.github.io/blog/2012/04/making-your-terminal-more-intuitive-with-oh-my-zsh-and-other-tools/"/>
+    <updated>2012-04-28T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2012/04/making-your-terminal-more-intuitive-with-oh-my-zsh-and-other-tools</id>
+    <content type="html"><![CDATA[<p>I have started using Terminal massively since I got my Macbook back in 2010. I used it in Ubuntu but not that much. So I have always been searching for way about how to be more productive in Terminal and at the same time make it look beautiful as pass a great amount of time everyday. So I will be sharing some of the cool things I found in the internet which made my Macbook&rsquo;s Terminal far better than it was before. Here is a screenshot of my current terminal window.</p>
+
+<p><a href="http://blog.joynag.net/wp-content/uploads/2012/04/terminal.png"><img class="size-medium wp-image-118 aligncenter" title="terminal" src="http://blog.joynag.net/wp-content/uploads/2012/04/terminal-300x187.png" alt="" width="300" height="187" /></a></p>
+
+<p>As you can see in the screenshot it&rsquo;s looking pretty good(well at least to me). It has detected that the directory I am currently in is a GIT repo and I am in master branch. And the arrows you see in the prompt is batttery strength indicator. Pretty interesting Huh! I am using the some tools which made it so. They are:</p>
+
+<ol>
+    <li><strong>Solarized Dark Ansi Theme</strong>: It&#8217;s(<a title="Solarized Theme" href="http://ethanschoonover.com/solarized" target="_blank">link</a>) a very popular theme and have a port for many popular editors. You can it&#8217;s homepage to check screenshots.</li>
+    <li><strong>Adding colors</strong>: Mac&#8217;s Terminal App doesn&#8217;t natively support various colors for texts. But following <a title="Terminal Color" href="https://github.com/altercation/solarized/tree/master/osx-terminal.app-colors-solarized" target="_blank">this</a>  you can add more colors into Terminal.</li>
+    <li><strong>System wide Terminal</strong>: As I had to launch terminal very frequently I was searching for a solution which will allow me to fire the terminal using a keyboard Hotkey and terminal will appear above all applications. And found <a title="Total Terminal" href="http://totalterminal.binaryage.com/" target="_blank">Totalterminal</a> as a rescue. Now I just press CTRL(you can configure the triggering key to you preference) two times and the terminal appears immediately. And you have <a title="iTerm2" href="http://www.iterm2.com/" target="_blank">iTerm2</a> as an alternative with other useful features. Try any of them and stick with the one you like.</li>
+    <li><strong>oh-my-zsh</strong> : I have been using <strong>bash</strong> as my login(default) shell until I came to know about this project. Mac osx comes with a number of shells like <strong>bash</strong>, <strong>csh</strong>, <strong>tcsh</strong>, <strong>ksh</strong>, <strong>sh</strong> and <strong>zsh . </strong>And bash is the default shell which starts if you dont change it to something else. <a title="oh-my-zsh" href="https://github.com/robbyrussell/oh-my-zsh" target="_blank">oh-my-zsh</a> is a very popular project by Robby Russel. I has a magic one line installer found  in it&#8217;s github(follow the above link) page. Some of the features I like about oh-my-zsh are more intuitive <strong>command completion</strong>, <strong>command auto correction prompts, git repo branch detection, battery strength indication and many others. </strong>I found it a month ago and never looked back. :)</li>
+</ol>
+
+
+<p>So based on my experience I can say that you can try oh-my-zsh. You wont be disappointed.</p>
+
+<p>If you are using Mac try the more organized write up <a title="Terminal" href="http://net.tutsplus.com/tutorials/tools-and-tips/how-to-customize-your-command-prompt/" target="_blank">here</a> on nettuts. If you are using Ubuntu check this <a title="Ubuntu" href="https://gist.github.com/1498393" target="_blank">Gist</a> on how to install oh-my-zsh in Ubuntu. :)</p>
+
+<p>&nbsp;</p>
+]]></content>
+  </entry>
+  
+</feed>

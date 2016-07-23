@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Architecture | Prasenjit Kumar Nag a.k.a Joy]]></title>
+  <link href="http://joycse06.github.io/blog/categories/architecture/atom.xml" rel="self"/>
+  <link href="http://joycse06.github.io/"/>
+  <updated>2016-07-23T20:49:45+10:00</updated>
+  <id>http://joycse06.github.io/</id>
+  <author>
+    <name><![CDATA[Joy Nag]]></name>
+    <email><![CDATA[joyruet06@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Command Driven Design: The World of DTOs, Handlers and Domain Events]]></title>
+    <link href="http://joycse06.github.io/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/"/>
+    <updated>2015-01-06T05:04:18+11:00</updated>
+    <id>http://joycse06.github.io/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events</id>
+    <content type="html"><![CDATA[<p>Command driven desing is quite a new buzzword in php world which the community is adopting quickly. Lets dive into some theoritical details of whats and whys of this desing patterns. Code examples will be based on <code>Laravel</code>.</p>
+
+<h2>Coming out from the CRUD mentality</h2>
+
+<p>We developer like to think in terms of CRUD(CREATE, READ, UPDATE, DELETE) like kind of one-to-one mapping with business needs and out models but all business needs doesn&rsquo;t go well with CRUD.</p>
+
+<!-- more -->
+
+
+<p>Like there&rsquo;s a task named <strong>Charge client</strong> for some kind of service. This action is not easily mappable to CRUD with any model. And there can be tasks which affects more than one model in complex ways. Bending the tasks or the client to think in terms of CRUD is not the solution, rather this bending should be the opposite. We developers should look for patterns to bend to our thinking process to align more with the complex business needs. Command driven design is a solution to this problem where you can have commands like <code>RegisterUserCommand</code> , <code>PublishJobCommand</code>, <code>UpdateUserProfileCommand</code>, <code>SubscribeUserToSilverPlanCommand</code> and any others use cases you have in your application.</p>
+
+<p>There are several benefits of this using this pattern:</p>
+
+<ol>
+<li><p>You can have really skinny controllers. HTTP itself is very simple and controllers are just gateways to your application, it&rsquo;s better not do all kinds of business things in your controllers. That breaks the <code>Single Responsibility</code> principle of <code>SOLID</code>. Using commands you can easily achieve this.</p></li>
+<li><p>You can have better seperation of concerns in your application. With all your busiess entities seperated from others parts of the application, command from all kinds of business tasks and unified command pipeline for handling command.</p></li>
+</ol>
+
+
+<p>Let me give you an example, With everything properly set up, lets see how a <code>user register</code> action method of registration controller will look like,</p>
+
+<pre><code class="php RegistrationController@register">
+pubic function register()
+{
+
+    $this-&gt;exectute(RegisterUserCommand::class);
+
+    Redirect::home();
+}   
+</code></pre>
+
+<p>Just see how clean it looks. Dont think it doesnt perform validation or other tasks required for user registration.</p>
+
+<p>Lets list the tasks the above action is doing under the hood.</p>
+
+<ul>
+<li>Firstly the execute command might be coming from a <code>Trait</code> which does all the heavy lifting. It creates a DTO(Data Transfer Object) with required constructor parameters required for user registration like username, email etc from the POST data.</li>
+<li>Then it call the proper vaidator for that command, you can determine yourself how the command bus will determine the FQN(Fully Qualified Name) of the vaidator class. After determining that the command bus will pass the command object to the Validator for input validation and checking business constraints. If the input from user doesnt pass the validation then it might throw a <code>FormValidationException</code> for which we can set up a global exception handler and just send a response to client from that handler without returning the control to the controller action at all.</li>
+<li>And if the validation passes, the command bus then determine the <code>handler</code> class for the command call maybe the <code>handle()</code> method on that class and that method create the <code>user</code> save it to database of any kind which is also decoupled from the <code>handler</code> itself.</li>
+<li>After creating user the handler dispatch <code>UserHasRegistered</code> event, for which we can listen for using another listener class. Once that listener class has been invoked it can do all sorts of background tasks like, sending welcome email, adding users to a mailing list, sending confirmation email and anything else your business require. And all of that can go into the queue without keeping user waiting for this tasks.</li>
+</ul>
+
+
+<p>From the face of all sorts of tasks it&rsquo;s doing, it may seem intimidating at first glance. But once you have basic command bus and event dispatching system set up then just by following some convetions you can work pretty fast.</p>
+
+<p>The real benefit of it maintanence. If you have application with a lifecycle of several years, if you don&rsquo;t follow best practices it can soon become  your headace. Even as the sole developer you will fear to touch it after sometime when its already a mess with controller actions doing all sort of things which necessarily controllers concern.</p>
+
+<p>Another benefit of this approach is you can expose API for your project pretty easily as you have everything conatained already, exposting is just setting up new <code>routes</code> for it and You are done. Because you are doing all your heavy lifting in their self contained objects.</p>
+
+<p>Lets clarify some terms:</p>
+
+<h2>DTO</h2>
+
+<p> <code>Data Transfer Objects</code> are instances of simple classes with public properties to pass between different componets of your application. A simple <code>RegisterUserCommand</code> DTO can look like (Taken from one of my personal project)</p>
+
+<pre><code class="php Saphira/Users/Commands/RegisterUserCommand.php">
+&lt;?php namespace Saphira\Users\Commands;
+
+use Saphira\Core\CommandBus\CommandInterface;
+
+class RegisterUserCommand implements CommandInterface{
+
+    public $email;
+
+    public $password;
+
+    public $password_confirmation;
+
+
+    public $username;
+
+    public $confirmation_code;
+
+    public function __construct($username, $email, $password, $password_confirmation){
+
+        $this-&gt;email = $email;
+        $this-&gt;password = $password;
+        $this-&gt;username = $username;
+        $this-&gt;confirmation_code = bin2hex(openssl_random_pseudo_bytes(16));
+        $this-&gt;password_confirmation = $password_confirmation;
+    }
+
+}
+</code></pre>
+
+<p>as you see it has everything I need for user registration. And the cool thing is that the parameter on the the constructor of this class is auto-magically resolved form <code>laravel's Input::all()</code> store where all get and post variables are stored.</p>
+
+<p>Likewise, A sample <code>RegisterUserHandler</code> can look like,</p>
+
+<pre><code class="php Saphira/Users/Handlers/RegisterUserHandler.php">
+&lt;?php namespace Saphira\Users\Handlers;
+
+
+use Saphira\Core\CommandBus\CommandInterface;
+use Saphira\Core\CommandBus\CommandHandlerInterface;
+use Saphira\Core\Events\DispatchableTrait;
+use Saphira\Users\User;
+use Saphira\Users\UserRepository;
+
+class RegisterUserHandler implements CommandHandlerInterface{
+
+    use DispatchableTrait;
+
+    protected $repository;
+
+    public function __construct(UserRepository $repository)
+    {
+
+        $this-&gt;repository = $repository;
+    }
+
+    public function handle(CommandInterface $command)
+    {
+
+        $user = User::register(
+            $command-&gt;username, $command-&gt;email, $command-&gt;password,
+            $command-&gt;confirmation_code
+        );
+
+        $this-&gt;repository-&gt;save($user);
+
+        $this-&gt;dispatchEventsFor($user);
+
+        return $user;
+    }
+}
+</code></pre>
+
+<p>And with these two and some other classes( like <code>EventListener</code>, <code>RegisterUserValidator</code> etc) placed in proper directories my <code>RegistrationController@store</code> method is as simple as following</p>
+
+<pre><code class="php RegistrationController.php">
+public function store()
+{
+        $user = $this-&gt;execute(RegisterUserCommand::class);
+
+        Auth::login($user);
+
+        Flash::success('Your registration has been successful. You are logged in now.');
+
+        return Redirect::home();
+}
+</code></pre>
+
+<p>I dont have any input validation or anything in this action as they are all done in the command pipeline.</p>
+
+<h2>Conclusion</h2>
+
+<p>This kinda patterns takes some time to sink your head in them, but once you have the core set up then its really feels much better working on the project and you feel confident and better about it&rsquo;s long term maintenance. I have learned most of it from this <a href="https://laracasts.com/series/commands-and-domain-events">Laracasts</a> series and from many other sources. I will be writting more about it. Stay tuned!</p>
+
+<p>Hope you enjoyed it!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[What I Learned From the 'Architecture, the Lost Years' Talk by Uncle Bob]]></title>
+    <link href="http://joycse06.github.io/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/"/>
+    <updated>2015-01-03T15:05:35+11:00</updated>
+    <id>http://joycse06.github.io/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob</id>
+    <content type="html"><![CDATA[<p>I was watching <a href="https://www.youtube.com/watch?v=WpkDN78P884">this talk</a> from <a href="https://sites.google.com/site/unclebobconsultingllc/">Uncle Bob</a> a while ago and been thinking a lot about the content. Though he primarily talked about Rails in a Ruby Conf, the content is framework agnostic and apply to all other MVCs/frameworks as well.</p>
+
+<!-- more -->
+
+
+<p>I will be writing a summary of what I have understood so far of it.</p>
+
+<p>Firstly, <strong>the top level directory structure of an application should not communicate any information about the tools being used to build the app.</strong></p>
+
+<p>Like in any MVC, when we look at the top level directory of any MVC framework based app we see directories like Controllers, Models, Views etc which gives us idea about the MVC pattern which is not related to the intent of the application being developed.</p>
+
+<p>He told that WEB is a delivery mechanism and tools are just detail of the project. The application itself should be decoupled from the tools so it&rsquo;s framework agnostic.</p>
+
+<p>He was talking about slow tests, and told Cucumber is not slow, it&rsquo;s a nice little library. What is slow is to boot up whole Rails to run the tests? Because the application is so coupled with the tools.</p>
+
+<p>He talked about interactors, kind of the bridge between your domain level entities and business logic with the delivery mechanism.</p>
+
+<p>If an application can be developed that way then the domain entities/business logic could be packaged as a gem or jar and can be completly decoupled from the delivery mechanism.</p>
+
+<p>He also told views should not be aware of business objects/entities, instead one should use some kind of bridge like viewmodel/presenters to communicate those information into views so the views are so stupid that you don&rsquo;t have to test it.</p>
+
+<p>He was talking about a use case architecture of a project he built, where they used TDD(Red-Green-Refactor cycle) to do the whole app. It was a WiKi app. They started building it with TDD without any persistance layer, and they were storing objects in memory to do testing. Then at some point, when they were in need a persistent data store they wrote a new plugin to replace the in memory store with a file based storage. They developed the whole thing and deployed it to clients without any kind of database.</p>
+
+<p>Then one day one client came and they need a real database due to some business policy restrictions. To fullfil that request they wrote a real database storage plugin to replace the filesytem storage with a DBMS in one day.</p>
+
+<p>He told it as an example architecture of how a decoupled component-based can help refactor things so easily and the project was fully unit tested they could refactor and deploy it within days without worrying about breaking something.</p>
+
+<p>Got this elements summary in <a href="http://hugo.ferreira.cc/post/28240089877/keynote-architecture-the-lost-years-by-robert">this post</a></p>
+
+<blockquote><p>Entities — Generic application agnostic data and business rules (e.g. Order, Customer).</p>
+
+<p>Interactors — Application specific business rules; Manipulates the relevant data from the Request Model and interacts with the Entities.</p>
+
+<p>Boundaries / Gateways — Protocols or Interfaces.</p>
+
+<p>Models — Dumb data structures, without methods.</p>
+
+<p>Request Model
+Response Model
+View Model</p>
+
+<p>Controllers — Convert the stuff submitted by the delivery mechanism into a delivery agnostic Request Model.</p>
+
+<p>Presenters — Turns the delivery agnostic Response Model into a prepared “viewbified” data structure ready for easy manipulation by the view.</p>
+
+<p>&ldquo;… so the view is so stupid that you don’t have to test it!&rdquo;</p></blockquote>
+
+<p>Here are some good things he told in the talk:</p>
+
+<ul>
+<li><h3>Web is a delivery Mecahnism</h3></li>
+<li><h3>Database is a detail and not any integral part of the intent of the applicaiton itself</h3></li>
+<li><h3>A good architecture allows major decisions to be deferred, like choosing a persistance storage</h3></li>
+<li><h3>A good architecture maximizes the number of decisions not made, so you can decide those later and plug them in to fit business needs or respond to changes in business logic</h3></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Laravel | Prasenjit Kumar Nag a.k.a Joy]]></title>
+  <link href="http://joycse06.github.io/blog/categories/laravel/atom.xml" rel="self"/>
+  <link href="http://joycse06.github.io/"/>
+  <updated>2016-07-23T20:49:45+10:00</updated>
+  <id>http://joycse06.github.io/</id>
+  <author>
+    <name><![CDATA[Joy Nag]]></name>
+    <email><![CDATA[joyruet06@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Laravel View Presenters From Scratch]]></title>
+    <link href="http://joycse06.github.io/blog/2015/01/laravel-view-presenters-from-scratch/"/>
+    <updated>2015-01-16T02:34:14+11:00</updated>
+    <id>http://joycse06.github.io/blog/2015/01/laravel-view-presenters-from-scratch</id>
+    <content type="html"><![CDATA[<h2>Why do We need View Presenters?</h2>
+
+<p>View should be dumb, they shouldn&rsquo;t do much other than showing data to the user. So where&rsquo;s the correct place to place your view specific logic in Laravel. Like you need the gravatar url of the user to see if the user already has a gravatar set to save the user from uplaoding a new one in your site. Or maybe you save user name as two field in db, as <code>first_name</code> and <code>last_name</code>, now you need to create user&rsquo;s full name, but you also want apply the function <code>ucfirst</code> first on them. Or maybe you have users profile pic&rsquo;s filename saved in database, now you need to create profile pic url from that by concatenating the upload directory.</p>
+
+<p>Where should we put this sorts of logic. Eloquent Model? This can seem a very tempting choice, but why should the Model handle View specific logics. Then where is the place to put this kind of things?</p>
+
+<p>Well maybe in their own class whose only responsibility will be to do all the logic needed in view using a specific model.</p>
+
+<p>In laravel, there&rsquo;s ins&rsquo;t any built in way to do 1-to-1 Model-Presenter mapping out of the box but it&rsquo;s incredibly easy to set up one.</p>
+
+<!-- more -->
+
+
+<h2>So what do we need</h2>
+
+<ul>
+<li>define a present mentod or any method in every Eloquent model which will return a presenter instance for that model and if you use anything like <code>$model-&gt;present()-&gt;gravatar_url()</code> or <code>$model-&gt;present-&gt;gravatar_url</code> both will actually call a function named <code>gravatar_url</code>on the <code>Presenter</code> class.</li>
+<li>make it easy for the view to use it, like view shouldn&rsquo;t be requried to know where that url is coming from.</li>
+<li>and finally maybe hide away some common Presenter functionality into an abstract class so every presenter class wont have to implement those</li>
+</ul>
+
+
+<h2>Implementing the present() method in every Eloquent Model</h2>
+
+<p>The responsiblity of the <code>present()</code> method will be to</p>
+
+<ul>
+<li>first somehow dertermine the FQN(Fully Qualified Name) of the Presenter class so we can instantiate them</li>
+<li>After we get that class name, we check if that class exists, and if they doesnt exist they you can either throw an exception( which is better ) or fail silently if you want. And if it&rsquo;s there then just instantiate it and return the instance.</li>
+</ul>
+
+
+<h3>How to determine the FQN of the Presenter Class</h3>
+
+<p>There are several ways we can do that, it entirely depends on how we want to desing our app. We can find the Current Model&rsquo;s class name append <code>Presenter</code> in their name and search in the same directory or in a separate <code>Presenters</code> directory which is on a different namespace to find the presenter class.</p>
+
+<p>But it&rsquo;s better not to hard code that logic inside a function and make it more flexible. Like we can look for a <code>$presenter</code> variable in the Model where we will save the Presenters full path so our funciton can use it. That way we can save the Presenter anywhere we want.</p>
+
+<h3>Creating a Presentable Trait</h3>
+
+<p>The functions of the <code>present()</code> method seems to be same for every models, so we could just use a trait for it and use it in every model. Lets see a reference implementation of the trait,</p>
+
+<pre><code class="php PresentableTrait">
+&lt;?php namespace Acme\Core\Presenter;
+
+
+trait PresentableTrait {
+
+    /* This is where we will save the presenterInstance so use later on the same model object */
+    protected $presenterInstance;
+
+    public function present()
+    {
+        // Check if the preserneter property has been declared on the model and 
+        // the class exists
+
+        if( ! $this-&gt;presenter or ! class_exists($this-&gt;presenter)){
+
+              // We didn't find a presenter class, throw an exception
+              // I am assuming we have a PresenterException defined already
+            throw new PresenterException('Please set the Presenter path to your Presenter FQN');
+        }
+
+          // The good old Singleton pattern
+        if( ! $this-&gt;presenterInstance )
+        {
+            $this-&gt;presenterInstance = new $this-&gt;presenter($this);
+        }
+
+        return $this-&gt;presenterInstance;
+    }
+}
+</code></pre>
+
+<p>The functionality of the trait is fairly straight forward. We have a variable called <code>$persenterInterface</code> to save the <code>Presenter Instance</code> for further use. I have added comments on the code to make it easier to understand.</p>
+
+<h3>Creating a base Presenter class</h3>
+
+<p>We can ignore this if we want, just adding the <code>Presenter Class</code> is enough for the functionality. But lets add some sytactic sugar using the <code>__get()</code> magic method so when you do something like <code>$user-&gt;present()-&gt;gravatar_url</code> it actually calls the method with that name. Though <code>gravatar_url</code> is actually a method on the presenter we will be able to use it like a property.</p>
+
+<p>Lets check the following abstract Presenter class</p>
+
+<pre><code class="php Base Presenter Class">&lt;?php namespace Acme\Core\Presenter;
+
+
+abstract class Presenter {
+
+    protected $entity; // This is to store the original model instance
+
+    function __construct($entity)
+    {
+        $this-&gt;entity = $entity;
+    }
+
+    // Call the function if that exsits, or return the property on the original model
+    public function __get($property){
+        if(method_exists($this, $property))
+        {
+            return $this-&gt;{$property}();
+        }
+
+        return $this-&gt;entity-&gt;{$property};
+    }
+}
+</code></pre>
+
+<p>In the above trait we actually passed the model instance to the presenter while instantiating that. And hence we have received that in the constructor of the base class.</p>
+
+<h2>Usage</h2>
+
+<p>Lets see how can we use this in a project with an Eloquent Model.</p>
+
+<p>Lets do it for the <code>User</code> model. First we will define the <code>Presenter</code> class.</p>
+
+<pre><code class="php Acme\Users\UserPresenter.php">
+&lt;?php namespace Acme\Users;
+
+use Acme\Core\Presenter\Presenter;
+
+class UserPresenter extends Presenter {
+
+    // return users gravatar url
+    public function gravatar($size = 30)
+    {
+        $email = md5($this-&gt;email);
+
+        return "//www.gravatar.com/avatar/{$email}?s={$size}";
+    }
+
+    public function fullname()
+    {
+        return ucfirst($this-&gt;first_name). ' '.ucfirst($this-&gt;last_name);
+
+    }
+}
+</code></pre>
+
+<p>We see in the user Presenter we used <code>$this-&gt;email</code>, <code>$this-&gt;first_name</code> and <code>$this-&gt;last_name</code>. We are being able to do that due the magic getter method we defined which automatically returns the property on the associated model if a function with that name doesn&rsquo;t exist in the <code>Presenter</code> itself.</p>
+
+<p>Now lets create an <code>User</code> model.</p>
+
+<pre><code class="php Acme\Users\User.php">
+&lt;?php namespace Acme\Users;
+
+use Acme\Core\Presenter\PresentableTrait;
+
+class User extends \Eloquent {
+
+    use PresentableTrait;
+
+    protected $presenter = 'Acme\Users\UserPresenter';
+
+}
+</code></pre>
+
+<p>And we are done. We can now use it like,</p>
+
+<pre><code class="php Presenter Usage">
+$user = User::find(1);
+
+// now we can use
+$user-&gt;present()-&gt;gravatar_url; // this returns users gravatar url
+
+// or 
+
+$user-&gt;present()-&gt;fullname; // This will return users full name
+</code></pre>
+
+<p>You can use those methods anywhere on any <code>model</code> instance which has the <code>Presenter</code> implemented. Be it inside your controller or in your bade templates.</p>
+
+<p><strong><em>So now you have a clean way to place all your presentation specific logic. As they are in a single class it&rsquo;s easier to maintain and you can refactor any method&rsquo;s body anytime without worrying about breaking anything on other parts of your application.</em></strong></p>
+
+<p>Hope you enjoyed it.</p>
+
+<p><strong>N. B. This post is inspired by Jeffrey Way&rsquo;s View presenter related lessons on Laracasts.</strong></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating a Very Simple Artisan Startover Command in Laravel]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/creating-a-very-simple-artisan-startover-command-in-laravel/"/>
+    <updated>2014-12-08T18:40:12+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/creating-a-very-simple-artisan-startover-command-in-laravel</id>
+    <content type="html"><![CDATA[<p>While working on a recent project using Laravel I felt the need for a quick startover command, as we were brainstorming with <code>domain</code> objects and <code>businees logic</code> our migrations were changing frequently. So after each pull/change in migration I needed to reset the migrations, remigrate, seed database with updated seeder classes.</p>
+
+<p>So I looked into creating a simple artisan command. The command is fairly straight forward, I am including the code for the command below.</p>
+
+<!-- more -->
+
+
+<pre><code class="php StartOverCommand.php">
+&lt;?php
+
+use Illuminate\Console\Command;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
+
+class StartOverCommand extends Command {
+
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'appname:startover';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Reset Migration, remigrate, seed and Start Over';
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function fire()
+    {
+        $this-&gt;info("Resetting the Migration.....");
+        $this-&gt;call('migrate:reset');
+        $this-&gt;info("Recreating schemas....");
+        $this-&gt;call('migrate');
+        $this-&gt;info('Seeding data.....');
+        $this-&gt;call('db:seed');
+
+    }
+}
+</code></pre>
+
+<p>Only the relevant parts of the file is included here. BTW, you can create a boiler plate command using the <code>php artisan command:make StartOverCommand</code> command from terminal.</p>
+
+<p>the name you set above will be the actual command, I have set it like <code>appname:startover</code> Its always a good practice to namespace things whenever possible.</p>
+
+<p>Then the method that gets fired when the command is exectuted from terminal is <code>fire()</code> method. It does the same things I stated above which I did manually earlier.</p>
+
+<p>After you add this file in <code>app/commands/</code> directory of your <code>laravel</code> installation, you have to add the command by adding the line  <code>Artisan::add(new StartOverCommand);</code> on your <code>app/start/artisan.php</code> file.</p>
+
+<p>After all the above steps are done you can use it like <code>php artisan appname:startover</code>  and it will reset migration, migrate migrations and then seed the tables.</p>
+
+<p>Thanks for bearing with me. Hope you enjoyed it!</p>
+
+<p><a href="https://gist.github.com/joycse06/c03da3aaa31e416cfb0f">Complete command file code</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Seeding Data in Laravel Using Faker Maintaining Foreign Key Relationship]]></title>
+    <link href="http://joycse06.github.io/blog/2014/11/seeding-data-in-laravel-using-faker-maintaining-foreign-key-relationship/"/>
+    <updated>2014-11-08T17:42:32+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/11/seeding-data-in-laravel-using-faker-maintaining-foreign-key-relationship</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/fzaninotto/Faker">Faker</a> is a great composer package for generating random data which can be used for seeding database tables for testing purposes in Laravel and other frameworks.</p>
+
+<p>Suppose we have a users table and a companies table with the following structure.</p>
+
+<pre><code># Table Structure
+users:
+    id
+    username
+    password
+companies:
+    id
+    user_id
+    name
+</code></pre>
+
+<!-- more -->
+
+
+<p>For the sake of simplicity lets assume we dont have any other fields in those tables.</p>
+
+<p>Now if we want to insert seed data in those two tables how would we do that in laravel. We would need two seeders one for <code>users</code> table and another for <code>companies</code> table.</p>
+
+<p>Suppose we have Models corresponding to those two entities are already there as <code>User</code> and <code>Company</code> in Laravel.</p>
+
+<!-- more -->
+
+
+<p>adding seed users in users table is pretty straight forward. We can do it like</p>
+
+<pre><code class="php UsersTableSeeder.php">
+&lt;?php
+use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+class UsersTableSeeder extends Seeder{
+    public function run()
+    {
+        $faker = Faker::create();
+        $candidates = Candidate::lists('id');
+        foreach(range(1, 50) as $index)
+        {
+            User::create([
+                'username' =&gt; $faker-&gt;userName(),
+                'password' =&gt; 'secret'
+            ]);
+        }
+    }
+}
+</code></pre>
+
+<p>The above seeder will create 50 users for us in database. Now comes the real problem which is the purpose of this blog post. In <code>companies</code> table we have a field named <code>user_id</code> we can just use random integers into that field as that will break relationships between tables. Whatever we want to put in this field that user has to be present in the database already for the models relationships to work properly.</p>
+
+<p>Fortunately, with Laravel thats easy too. Lets have a look at the companies seeder.</p>
+
+<pre><code class="php CompaniesTableSeeder">
+&lt;?php
+
+use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
+
+class CompaniesTableSeeder extends Seeder{
+    public function run(){
+        $faker = Faker::create();
+        // following line retrieve all the user_ids from DB
+        $users = User::all()-&gt;lists('id');
+        foreach(range(1,50) as $index){
+            $company = Company::create([
+                'name' =&gt; $faker-&gt;company,
+                'user_id' =&gt; $faker-&gt;randomElement($users),
+            ]);
+        }
+    }
+}
+</code></pre>
+
+<p>So first step is to retrieve all the users&rsquo;s id we inserted in <code>UsersTableSeeder</code> then randomly assign those in the <code>user_id</code> field of companies table.</p>
+
+<p>We can get the value of any column of a table using <code>lists(COLUMN_NAME)</code> Eloquent method. Here we need the value of <code>id</code> column. Now after executing <code>$users = User::all()-&gt;lists('id');</code> we will have an array filled with all current users IDs from DB, so in that time those are all valid users.</p>
+
+<p>Faker has a method named <code>randomElement()</code> which takes an array and randomly returns value from that array. So the <code>user_id</code> column of the <code>companies</code> table will be filled with real user id from DB. And after proper relationships are set we will be able to do things like</p>
+
+<pre><code class="php">
+$company = Company::find(1);
+$company_owner = $company-&gt;user(); // return a User object
+</code></pre>
+
+<p>Thats how you can seed your database using <code>Faker</code> maintaining model relationships.</p>
+
+<p>One thing remember, for this case you must have to run <code>UsersTableSeeder</code> before running <code>CompaniesTableSeeder</code>.</p>
+
+<p>Thats all for today. Hope you enjoyed it.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Facades in Laravel 4 and Static Methods Resolution]]></title>
+    <link href="http://joycse06.github.io/blog/2013/05/facades-in-laravel-4-and-static-methods-resolution/"/>
+    <updated>2013-05-28T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2013/05/facades-in-laravel-4-and-static-methods-resolution</id>
+    <content type="html"><![CDATA[<p>Several months ago in a blog post I saw people complaining about Laravel3&rsquo;s Static methods stating Static methods are very difficult to Unit Test with and Laravel is a pile of Static API&rsquo;s rather than a framework. I dont remember the Link. It said Laravel 3 is not architecturally “pure”, but it has super clean syntax.</p>
+
+<p>But Laravel 4 combines both of those things. It’s extremely architecturally pure, yet maintains the same terse, expressive syntax.</p>
+
+<p>Last weekend I was checking a video on Laravel 4 which was discussing about facades in Laravel 4 and I was truly amazed to see how the fancy looking static API&rsquo;s are mapped into their original Classes. Laravel 4 takes advantage of Facade Design Pattern[ <a href="http://en.wikipedia.org/wiki/Facade_pattern"><a href="http://en.wikipedia.org/wiki/Facade_pattern">http://en.wikipedia.org/wiki/Facade_pattern</a></a> ] which allows it to provide expressive syntax through static API&rsquo;s but still keep it testable under the hood.</p>
+
+<!-- more -->
+
+
+<p>So, back to the main point of the post, how a static method like</p>
+
+<pre><code class="php Facade Examples">
+File:get(),View::make, Redirect::to, Cache::put
+</code></pre>
+
+<p>is resolved under the hood. Let&rsquo;s take File:get() and see how that maps to it&rsquo;s original class. Seeing File:: I first though there must be a File.php some where where the static method will be available. Searched for that and found one at /vendor/laravel/framework/src/Illuminate/Support/Facades/File.php surprisingly it barely has any content in it.
+<a href="https://github.com/illuminate/support/blob/master/Facades/File.php"><a href="https://github.com/illuminate/support/blob/master/Facades/File.php">https://github.com/illuminate/support/blob/master/Facades/File.php</a></a></p>
+
+<pre><code class="php File Facade">
+&lt;?php namespace Illuminate\Support\Facades;
+
+class File extends Facade {
+
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor() { return 'files'; }
+
+}
+</code></pre>
+
+<p>As I didn&rsquo;t find a static get method there my second target was to search in the Facade Base class as File class was extending it. But there wasn&rsquo;t any static get method either. But I did find a __callStatic magic method and became sure thats handling the call dynamically. You can check the contents of Facade.php here at <a href="https://github.com/illuminate/support/blob/master/Facades/Facade.php#L167"><a href="https://github.com/illuminate/support/blob/master/Facades/Facade.php#L167">https://github.com/illuminate/support/blob/master/Facades/Facade.php#L167</a></a></p>
+
+<p>The first line in __callStatic method is</p>
+
+<pre><code class="php Resolving Facade">
+$instance = static::resolveFacadeInstance(static::getFacadeAccessor());
+</code></pre>
+
+<p>Where&rsquo;s its calling the static resolveFacadeInstance() method and passing child class&rsquo;s static method&rsquo;s static::getFacadeAccessor() return value as a argument. Which is in above you can see returns the string &lsquo;files&rsquo;. Now lets look at the definition of resolveFacadeInstance()</p>
+
+<pre><code class="php resolveFacadeInstance function">
+protected static function resolveFacadeInstance($name)
+{
+    if (is_object($name)) return $name;
+
+    if (isset(static::$resolvedInstance[$name]))
+    {
+        return static::$resolvedInstance[$name];
+    }
+
+    return static::$resolvedInstance[$name] = static::$app[$name];
+}
+</code></pre>
+
+<p>First two conditions wont work for us. So it will return static::$app[$name]. What does $app[&lsquo;file&rsquo;] have in it. Must be an instance of a class. To check this I was studying about the bootstrapping of Laravel 4 and found that at some point in booting up, Laravel 4 registers the service providers passed into it via /app/config/app.php file. And checking that I found a serviceproviders as follows</p>
+
+<pre><code class="php Service Provider">
+'Illuminate\Filesystem\FilesystemServiceProvider'
+</code></pre>
+
+<p>Then I checked the file Illuminate\Filesystem\FilesystemServiceProvider and found out how $app[&lsquo;files&rsquo;] is being assigned. Here&rsquo;s it&rsquo;s contents</p>
+
+<pre><code class="php Service Provider">
+class FilesystemServiceProvider extends ServiceProvider {
+
+ /**
+ * Register the service provider.
+ *
+ * @return void
+ */
+  public function register()
+   {
+      $this-&amp;gt;app['files'] = $this-&amp;gt;app-&amp;gt;share(function() { return new Filesystem; });
+   }
+}
+</code></pre>
+
+<p>So $app[&lsquo;files&rsquo;] is actually being assigned to a instance of FileSystem class.
+Laravel uses that register method to add that service in the $app container.
+So File::domeSomething() is actually somewhat equivalent to</p>
+
+<pre><code class="php Original Filesystem Class">
+$fileSystem = new Filesystem;
+$fileSystem-&gt;doSomething();
+</code></pre>
+
+<p>And I did find a public get() method in the FileSystem Class. You can check here at
+<a href="https://github.com/illuminate/filesystem/blob/master/Filesystem.php#L27">https://github.com/illuminate/filesystem/blob/master/Filesystem.php#L27</a></p>
+
+<p>So, a simple call like File::get() which just works, have a lot more going on under the hood.</p>
+
+<p>The word File is actually an alias to the Facade at &lsquo;Illuminate\Support\Facades\File&rsquo; which you can find at /app/config/app.php in alias block.</p>
+
+<p>Thats true for most if not all(well I havent checked all, but lets hope so) static expressive API&rsquo;s Laravel 4 Provide.</p>
+
+<p>A quick way to check which Class is being mapped for a Facade by using a special route in the route file as follows</p>
+
+<pre><code class="php Getting Facade Accessor">
+Route::get('/',function(){
+  $root = get_class(File::getFacadeRoot());
+  // using other Facade in place of 'File' works too
+  var_dump($root);
+});
+</code></pre>
+
+<p>It will print the original Class that&rsquo;s being used for the Facade.</p>
+
+<p>I dont know why but finding the whole thing was a great joy for me. It always feels great to understand the inner working principle of a thing I am using. This is the most awesome thing I have learnt/known in a while.</p>
+
+<p>Hope you enjoyed it. :D</p>
+]]></content>
+  </entry>
+  
+</feed>

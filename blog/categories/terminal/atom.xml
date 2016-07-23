@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Terminal | Prasenjit Kumar Nag a.k.a Joy]]></title>
+  <link href="http://joycse06.github.io/blog/categories/terminal/atom.xml" rel="self"/>
+  <link href="http://joycse06.github.io/"/>
+  <updated>2016-07-23T20:49:45+10:00</updated>
+  <id>http://joycse06.github.io/</id>
+  <author>
+    <name><![CDATA[Joy Nag]]></name>
+    <email><![CDATA[joyruet06@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Looking for Occurrences of a String in All Files Under a Directory Using Grep]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/looking-for-occurrences-of-a-string-in-all-files-under-a-directory-using-grep/"/>
+    <updated>2014-12-10T20:52:18+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/looking-for-occurrences-of-a-string-in-all-files-under-a-directory-using-grep</id>
+    <content type="html"><![CDATA[<p> <code>grep</code> is a very simple command available on linux and OSX terminals which can do amazing things and can save a lot fo time. I was working on a Magento site this morning and on the checkout page I found the telephone field was using <code>&lt;input type="Number" ...</code> while it should use <code>&lt;input type="text" ...</code> or else phone number with dashes in them wont validate and customers wont be able to proceed with next step.</p>
+
+<p>I was thinking of how can I find the file which have this code, those who of you are familiar with Magento knows that magento has a very organized file structure and hierarchies of templates, and different templates gets loaded based on active theme and layout xml files. So I have to find out all the occurrences of <code>&lt;input type="number" ...</code> in the whole installation.</p>
+
+<p>I knew I can use <code>grep</code> to do this. I instantly looked at the man page of <code>grep</code> and reviewed the available options and got what I needed.</p>
+
+<p>The final command I wrote on the server&rsquo;s terminal was</p>
+
+<pre><code class="bash Grep">
+grep -R -i -n 'type="number"' public_html/app
+</code></pre>
+
+<p> <code>-R</code> tells <code>grep</code> to search recursively into that directory, <code>-i</code> is for <code>ignore-case</code> and <code>-n</code> finds and outputs the line number along with file name too. As soon as I ran that command it searched the whole <code>app</code> directory and came back with all the place where <code>type="number"</code> occurred with line number too. Then I just edited those files and the issue was fixed.</p>
+
+<p> What took me several minutes would have taken hours to search and find those files manually. Thats one of many benefits of using command line. And you can do pretty amazing things using/combining only a handful of commands.</p>
+]]></content>
+  </entry>
+  
+</feed>

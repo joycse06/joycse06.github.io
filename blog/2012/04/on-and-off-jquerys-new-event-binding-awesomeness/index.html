@@ -1,0 +1,491 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>On and Off jQuery&#8217;s New Event Binding Awesomeness - Prasenjit Kumar Nag a.k.a Joy</title>
+  <meta name="author" content="Joy Nag">
+
+  
+  <meta name="description" content="I have been using jQuery for quite a while and have used all of jQuery&rsquo;s event handlers like $.bind $.live $delegate $.click etc.  Along with &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joycse06.github.io/blog/2012/04/on-and-off-jquerys-new-event-binding-awesomeness/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Prasenjit Kumar Nag a.k.a Joy" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58344400-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Prasenjit Kumar Nag a.k.a Joy</a></h1>
+  
+    <h2>A Developers Adventure in Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="joycse06.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories">Categories</a></li>
+  <li><a href="/about-me">About Me</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">On and Off jQuery&#8217;s New Event Binding Awesomeness</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-29T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I have been using jQuery for quite a while and have used all of jQuery&rsquo;s event handlers like <em>$.bind $.live $delegate $.click etc. </em></p>
+
+<p>Along with the release of jQuery 1.7 , jQuery introduced two new methods for event handling. They are $.on and $.off and in jQuery.com they encouraged use of these two methods for event binding. Because no mater what other method you use like <em>$bind , $live, $delegate</em> jQuery is using $.on for all these under the hood. For a proof of these lets take a look at <em>$bind , $live, $delegate</em> definition in jQuery&rsquo;s source.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">bind</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">unbind</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">live</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">jQuery</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">context</span> <span class="p">).</span><span class="nx">on</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">selector</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">},</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">die</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">jQuery</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">context</span> <span class="p">).</span><span class="nx">off</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">selector</span> <span class="o">||</span> <span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="o">**&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">fn</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">delegate</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">undelegate</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// ( namespace ) or ( selector, types [, fn] )</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">1</span><span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span> <span class="nx">selector</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="o">**&amp;</span><span class="nx">quot</span><span class="p">;</span> <span class="p">)</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">fn</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you can see that jQuery itself is using <em>$.on</em> and <em>$.off</em> for all event handling. So it&rsquo;s good time to start using these new functions for event handling.</p>
+
+<p>Let&rsquo;s take a look at the syntax of <strong>$.on </strong> and how we can use it as a replacement for $.live, $bind and $delegate. Here is the function definition for $.on from jQuery.com.</p>
+
+<blockquote>
+<h4>.on( events [, selector] [, data], handler(eventObject) )</h4>
+<strong>events </strong>One or more space-separated event types and optional namespaces, such as &#8220;click&#8221; or &#8220;keydown.myPlugin&#8221;.
+
+<strong>selector </strong>A selector string to filter the descendants of the selected elements that trigger the event. If the selector is <span style="font-family: Monaco, Consolas, 'Andale Mono', 'DejaVu Sans Mono', monospace; font-size: x-small;"><span style="line-height: normal;">null</span></span> or omitted, the event is always triggered when it reaches the selected element.
+
+<strong>data </strong>Data to be passed to the handler in <em>event.data</em> when an event is triggered.
+
+<strong>handler(eventObject) </strong>A function to execute when the event is triggered. The value <em><span style="font-family: Monaco, Consolas, 'Andale Mono', 'DejaVu Sans Mono', monospace; font-size: x-small;"><span style="line-height: normal;">false</span></span></em> is also allowed as a shorthand for a function that simply does <span style="font-family: Monaco, Consolas, 'Andale Mono', 'DejaVu Sans Mono', monospace; font-size: x-small;"><span style="line-height: normal;">return false</span></span></blockquote>
+
+
+<p>seeing all these arguments it may seems a bit scary at first glance but you dont need to remember all of this. You just need to remember two basic scenarios we need most of the time.</p>
+
+<p>If you need a simple event binding which doesn&rsquo;t need to persist to elements dynamically added to DOM(Document Object Model) through ajax or jQuery codes then you can use on directly on the target element using the syntax</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nx">selector</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span><span class="nx">handler</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//example</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;a.simple&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;I was clicked&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will be added to all anchor elements with a class of <em><strong>simple. <em>But if you add new elements after the DOM is loaded this event binding wont work.</em></strong></em></p>
+
+<p><em><strong><em></em></strong></em>Now if you want the event binding persist to new elements added to the dom then the syntax is a bit different</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span><span class="s1">&#39;a.complex&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;I was clicked&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>now I am attaching the click event to document instead of the target element. Why is that? Because I want the event binding works for new elements too.</p>
+
+<p>So what will happen when user click on an element?</p>
+
+<p>If you have idea about event bubbles in JS then you know that any events triggering travels from source element to its parents unless you specify other wise.</p>
+
+<p>So when user will click on any element document object will get a click event and on method will check if the source of the event is &lsquo;<em>a.complex</em>&rsquo; if it&rsquo;s true then it will fire the handler function. Check this in the following fiddle</p>
+
+<p>[jsfiddle url=&ldquo;<a href="http://jsfiddle.net/GhbZv/6/">http://jsfiddle.net/GhbZv/6/</a>&rdquo; height=&ldquo;400px&rdquo; include=&ldquo;result,html,js,css&rdquo;]</p>
+
+<p>Now as we are attaching the event with document as document will always exist in DOM it will work for all matching elements no matter when they are added to the DOM.</p>
+
+<p>The syntax for $.off is simple</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nx">selector</span><span class="p">).</span><span class="nx">off</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// to turn off a specific handler the syntax will be</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span><span class="nx">selector</span><span class="p">).</span><span class="nx">off</span><span class="p">(</span><span class="nx">handler</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Though jQuery still supports previous event binding method&rsquo;s, it&rsquo;s good to write new event handlers using this two new methods, at least you can save a function call with this.  :)</p>
+
+<p><strong>Update:</strong></p>
+
+<p>And here goes some examples how you can convert previous $.bind, $.delegate or $.live calls</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="cm">/* for $.bind to $.on */</span>
+</span><span class='line'><span class="cm">/* Old: */</span> <span class="nx">$</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;.</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;).</span><span class="nx">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="nx">click</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">handler</span><span class="p">);</span>
+</span><span class='line'><span class="cm">/* New: */</span> <span class="nx">$</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;.</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;).</span><span class="nx">on</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="nx">click</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">handler</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* for $.delegate to $.on */</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* Old: */</span> <span class="nx">$</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="err">#</span><span class="nx">container</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;).</span><span class="nx">delegate</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;.</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="nx">click</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">handler</span><span class="p">);</span>
+</span><span class='line'><span class="cm">/* New: */</span> <span class="nx">$</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="err">#</span><span class="nx">container</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;).</span><span class="nx">on</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="nx">click</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">quot</span><span class="p">;.</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">handler</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* for $.live to $.on */</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/* Old: */</span> <span class="nx">$</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;.</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;).</span><span class="nx">live</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="nx">click</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">handler</span><span class="p">);</span>
+</span><span class='line'><span class="cm">/* New: */</span> <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;</span><span class="nx">click</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="o">&amp;</span><span class="nx">quot</span><span class="p">;.</span><span class="nx">foo</span><span class="o">&amp;</span><span class="nx">quot</span><span class="p">;,</span> <span class="nx">handler</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Joy Nag</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2012-04-29T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>29</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/jquery/'>jquery</a>, <a class='category' href='/blog/categories/web/'>web</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://joycse06.github.io/blog/2012/04/on-and-off-jquerys-new-event-binding-awesomeness/" data-via="joycse06" data-counturl="http://joycse06.github.io/blog/2012/04/on-and-off-jquerys-new-event-binding-awesomeness/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/making-your-terminal-more-intuitive-with-oh-my-zsh-and-other-tools/" title="Previous Post: Making your terminal more intuitive with oh-my-zsh and other tools">&laquo; Making your terminal more intuitive with oh-my-zsh and other tools</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/04/some-sources-of-english-word-list/" title="Next Post: Some Sources of English Word List">Some Sources of English Word List &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/laravel-view-presenters-from-scratch/">Laravel View Presenters From Scratch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/">Exploring Ruby&#8217;s Proc, Lambda and Blocks</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joycse06">@joycse06</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joycse06',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section>
+    <h1>Stack Overflow</h1>
+    <a href="http://stackoverflow.com/users/344304/Joy">
+        <img src="http://stackoverflow.com/users/flair/344304.png" width="208" height="58" alt="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+    </a>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Joy Nag -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joycse06';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joycse06.github.io/blog/2012/04/on-and-off-jquerys-new-event-binding-awesomeness/';
+        var disqus_url = 'http://joycse06.github.io/blog/2012/04/on-and-off-jquerys-new-event-binding-awesomeness/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

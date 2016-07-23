@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Jquery | Prasenjit Kumar Nag a.k.a Joy]]></title>
+  <link href="http://joycse06.github.io/blog/categories/jquery/atom.xml" rel="self"/>
+  <link href="http://joycse06.github.io/"/>
+  <updated>2016-07-23T20:49:45+10:00</updated>
+  <id>http://joycse06.github.io/</id>
+  <author>
+    <name><![CDATA[Joy Nag]]></name>
+    <email><![CDATA[joyruet06@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Taking Advantage of Implicit Looping in jQuery Setter Methods]]></title>
+    <link href="http://joycse06.github.io/blog/2012/07/taking-advantage-of-implicit-looping-in-jquery-setter-methods/"/>
+    <updated>2012-07-08T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2012/07/taking-advantage-of-implicit-looping-in-jquery-setter-methods</id>
+    <content type="html"><![CDATA[<p>jQuery setter methods are those methods using which we can set the value of any input field, or any attributes like width,height,classes etc and some of the setter methods are
+&#8220;` js</p>
+
+<p>.val(val)
+.height(height)
+.width(width)
+.attr(name,value)
+.prop(property,val)
+.text(text)
+.html(html)
+.addClass(className)
+&hellip;..
+&hellip;..</p>
+
+<pre><code>
+and most(or maybe all) of them have a special syntax like for &lt;strong&gt;.width()&lt;/strong&gt; there is
+</code></pre>
+
+<p>.width( function(index, width) )</p>
+
+<pre><code>
+&lt;strong&gt;What jQuery does for this case is, it loops over the set elements in current selection internally and pass those one by one into that callback function.&lt;/strong&gt; And &lt;strong&gt;index&lt;/strong&gt; is the index of the element currently being iterated, and &lt;strong&gt;width&lt;/strong&gt; is the current width of element. And you will also get the current element as this inside that function. 
+This syntax is useful or intended for cases when you use the &lt;strong&gt;.width()&lt;/strong&gt; method on a &lt;strong&gt;collection of elements&lt;/strong&gt;. I wasn't aware of this until recently, but they can be very useful in cases. Suppose if you want to make the width of all divs in a page to half of it's current width, you can do that easily using this syntax like
+</code></pre>
+
+<p>$(&lsquo;div&rsquo;).width(function(index,width){
+   return width/2;
+});</p>
+
+<pre><code>
+So what you return from that function will be set as new width of that element. 
+Pretty cool, huh! You could also use .each() to iterate over the divs collection and set their width manually. But the above code is much more cleaner and maybe a little faster.
+
+Example of some cases when this implicit looping can be useful and will help you write cleaner code.
+
+Suppose you want to give unique id to all li's inside a ul with id of list, you can do so the following way easily
+</code></pre>
+
+<p>$(&lsquo;ul#list li&rsquo;).attr(&lsquo;id&rsquo;,function(i){
+   return &lsquo;list-item-&rsquo;+i;
+});</p>
+
+<pre><code>
+and they will get id's like list-item-1,list-item-2,list-item-3 etc.
+
+Another useful thing can be to trim the value in a textbox as soon as users moves away from it. You can do that like
+</code></pre>
+
+<p>$(&lsquo;input&rsquo;).on(&lsquo;blur&rsquo;,function(){
+  $(this).val(function(index,val){
+    return $.trim(val);
+  });
+});</p>
+
+<pre><code>
+Or say in a text field field(which takes numbers), you always want to force two decimal point in floating values no matter how many decimal points have been entered by users, you can do that like 
+</code></pre>
+
+<p>$(&lsquo;input&rsquo;).on(&lsquo;blur&rsquo;,function(){
+  $(this).val(function(index,val){
+    return parseFloat(val);
+  });
+});</p>
+
+<pre><code class="js">
+Example Fiddle: (Enter any number and click somewhere else)
+
+[jsfiddle url="http://jsfiddle.net/joycse06/PbKVf/" height="400px" include="result,html,js,css"]
+
+There are many useful uses of this callback function in setter methods.
+
+Suppose you have a html5 data attribute named data-bg set on all div and onclick of some button or link or on some user action you want to set that as background image of those divs. You can do do so using
+</code></pre>
+
+<p>  $(&lsquo;something&rsquo;).on(&lsquo;click&rsquo;,function(){
+     $(&lsquo;div&rsquo;).css(&lsquo;background-image&rsquo;,function(){
+         return &lsquo;/images/&rsquo;+$(this).data(&lsquo;bg&rsquo;);
+     });
+  });</p>
+
+<p>&#8220;`</p>
+
+<p>I can show many example of useful uses of this implicit looping. This is a very helpful and often overlooked feature in setter methods which you take advantage of. :)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[On and Off jQuery's New Event Binding Awesomeness]]></title>
+    <link href="http://joycse06.github.io/blog/2012/04/on-and-off-jquerys-new-event-binding-awesomeness/"/>
+    <updated>2012-04-29T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2012/04/on-and-off-jquerys-new-event-binding-awesomeness</id>
+    <content type="html"><![CDATA[<p>I have been using jQuery for quite a while and have used all of jQuery&rsquo;s event handlers like <em>$.bind $.live $delegate $.click etc. </em></p>
+
+<p>Along with the release of jQuery 1.7 , jQuery introduced two new methods for event handling. They are $.on and $.off and in jQuery.com they encouraged use of these two methods for event binding. Because no mater what other method you use like <em>$bind , $live, $delegate</em> jQuery is using $.on for all these under the hood. For a proof of these lets take a look at <em>$bind , $live, $delegate</em> definition in jQuery&rsquo;s source.</p>
+
+<pre><code class="js">
+bind: function( types, data, fn ) {
+
+return this.on( types, null, data, fn );
+
+}
+
+unbind: function( types, fn ) {
+
+return this.off( types, null, fn );
+
+}
+
+live: function( types, data, fn ) {
+
+jQuery( this.context ).on( types, this.selector, data, fn );
+
+return this;
+
+},
+
+die: function( types, fn ) {
+
+jQuery( this.context ).off( types, this.selector || &amp;quot;**&amp;quot;, fn );
+
+return this;
+
+}
+
+delegate: function( selector, types, data, fn ) {
+
+return this.on( types, selector, data, fn );
+
+}
+
+undelegate: function( selector, types, fn ) {
+
+// ( namespace ) or ( selector, types [, fn] )
+
+return arguments.length == 1? this.off( selector, &amp;quot;**&amp;quot; ) : this.off( types, selector, fn );
+
+}
+</code></pre>
+
+<p>Now you can see that jQuery itself is using <em>$.on</em> and <em>$.off</em> for all event handling. So it&rsquo;s good time to start using these new functions for event handling.</p>
+
+<p>Let&rsquo;s take a look at the syntax of <strong>$.on </strong> and how we can use it as a replacement for $.live, $bind and $delegate. Here is the function definition for $.on from jQuery.com.</p>
+
+<blockquote>
+<h4>.on( events [, selector] [, data], handler(eventObject) )</h4>
+<strong>events </strong>One or more space-separated event types and optional namespaces, such as &#8220;click&#8221; or &#8220;keydown.myPlugin&#8221;.
+
+<strong>selector </strong>A selector string to filter the descendants of the selected elements that trigger the event. If the selector is <span style="font-family: Monaco, Consolas, 'Andale Mono', 'DejaVu Sans Mono', monospace; font-size: x-small;"><span style="line-height: normal;">null</span></span> or omitted, the event is always triggered when it reaches the selected element.
+
+<strong>data </strong>Data to be passed to the handler in <em>event.data</em> when an event is triggered.
+
+<strong>handler(eventObject) </strong>A function to execute when the event is triggered. The value <em><span style="font-family: Monaco, Consolas, 'Andale Mono', 'DejaVu Sans Mono', monospace; font-size: x-small;"><span style="line-height: normal;">false</span></span></em> is also allowed as a shorthand for a function that simply does <span style="font-family: Monaco, Consolas, 'Andale Mono', 'DejaVu Sans Mono', monospace; font-size: x-small;"><span style="line-height: normal;">return false</span></span></blockquote>
+
+
+<p>seeing all these arguments it may seems a bit scary at first glance but you dont need to remember all of this. You just need to remember two basic scenarios we need most of the time.</p>
+
+<p>If you need a simple event binding which doesn&rsquo;t need to persist to elements dynamically added to DOM(Document Object Model) through ajax or jQuery codes then you can use on directly on the target element using the syntax</p>
+
+<pre><code class="js">
+$(selector).on(event,handler);
+
+//example
+
+$('a.simple').on('click',function(){
+
+alert('I was clicked');
+
+});
+</code></pre>
+
+<p>This will be added to all anchor elements with a class of <em><strong>simple. <em>But if you add new elements after the DOM is loaded this event binding wont work.</em></strong></em></p>
+
+<p><em><strong><em></em></strong></em>Now if you want the event binding persist to new elements added to the dom then the syntax is a bit different</p>
+
+<pre><code class="js">
+$(document).on('click','a.complex',function(){
+alert('I was clicked');
+});
+</code></pre>
+
+<p>now I am attaching the click event to document instead of the target element. Why is that? Because I want the event binding works for new elements too.</p>
+
+<p>So what will happen when user click on an element?</p>
+
+<p>If you have idea about event bubbles in JS then you know that any events triggering travels from source element to its parents unless you specify other wise.</p>
+
+<p>So when user will click on any element document object will get a click event and on method will check if the source of the event is &lsquo;<em>a.complex</em>&rsquo; if it&rsquo;s true then it will fire the handler function. Check this in the following fiddle</p>
+
+<p>[jsfiddle url=&ldquo;<a href="http://jsfiddle.net/GhbZv/6/">http://jsfiddle.net/GhbZv/6/</a>&rdquo; height=&ldquo;400px&rdquo; include=&ldquo;result,html,js,css&rdquo;]</p>
+
+<p>Now as we are attaching the event with document as document will always exist in DOM it will work for all matching elements no matter when they are added to the DOM.</p>
+
+<p>The syntax for $.off is simple</p>
+
+<pre><code class="js">
+$(selector).off();
+
+// to turn off a specific handler the syntax will be
+
+$(selector).off(handler);
+</code></pre>
+
+<p>Though jQuery still supports previous event binding method&rsquo;s, it&rsquo;s good to write new event handlers using this two new methods, at least you can save a function call with this.  :)</p>
+
+<p><strong>Update:</strong></p>
+
+<p>And here goes some examples how you can convert previous $.bind, $.delegate or $.live calls</p>
+
+<pre><code class="js">
+/* for $.bind to $.on */
+/* Old: */ $(&amp;quot;.foo&amp;quot;).bind(&amp;quot;click&amp;quot;, handler);
+/* New: */ $(&amp;quot;.foo&amp;quot;).on(&amp;quot;click&amp;quot;, handler);
+
+/* for $.delegate to $.on */
+
+/* Old: */ $(&amp;quot;#container&amp;quot;).delegate(&amp;quot;.foo&amp;quot;, &amp;quot;click&amp;quot;, handler);
+/* New: */ $(&amp;quot;#container&amp;quot;).on(&amp;quot;click&amp;quot;, &amp;quot;.foo&amp;quot;, handler);
+
+/* for $.live to $.on */
+
+/* Old: */ $(&amp;quot;.foo&amp;quot;).live(&amp;quot;click&amp;quot;, handler);
+/* New: */ $(document).on(&amp;quot;click&amp;quot;, &amp;quot;.foo&amp;quot;, handler);
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,554 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Laravel View Presenters From Scratch - Prasenjit Kumar Nag a.k.a Joy</title>
+  <meta name="author" content="Joy Nag">
+
+  
+  <meta name="description" content="Why do We need View Presenters? View should be dumb, they shouldn&rsquo;t do much other than showing data to the user. So where&rsquo;s the correct &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joycse06.github.io/blog/2015/01/laravel-view-presenters-from-scratch/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Prasenjit Kumar Nag a.k.a Joy" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58344400-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Prasenjit Kumar Nag a.k.a Joy</a></h1>
+  
+    <h2>A Developers Adventure in Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="joycse06.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories">Categories</a></li>
+  <li><a href="/about-me">About Me</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Laravel View Presenters From Scratch</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-16T02:34:14+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:34 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Why do We need View Presenters?</h2>
+
+<p>View should be dumb, they shouldn&rsquo;t do much other than showing data to the user. So where&rsquo;s the correct place to place your view specific logic in Laravel. Like you need the gravatar url of the user to see if the user already has a gravatar set to save the user from uplaoding a new one in your site. Or maybe you save user name as two field in db, as <code>first_name</code> and <code>last_name</code>, now you need to create user&rsquo;s full name, but you also want apply the function <code>ucfirst</code> first on them. Or maybe you have users profile pic&rsquo;s filename saved in database, now you need to create profile pic url from that by concatenating the upload directory.</p>
+
+<p>Where should we put this sorts of logic. Eloquent Model? This can seem a very tempting choice, but why should the Model handle View specific logics. Then where is the place to put this kind of things?</p>
+
+<p>Well maybe in their own class whose only responsibility will be to do all the logic needed in view using a specific model.</p>
+
+<p>In laravel, there&rsquo;s ins&rsquo;t any built in way to do 1-to-1 Model-Presenter mapping out of the box but it&rsquo;s incredibly easy to set up one.</p>
+
+<!-- more -->
+
+
+<h2>So what do we need</h2>
+
+<ul>
+<li>define a present mentod or any method in every Eloquent model which will return a presenter instance for that model and if you use anything like <code>$model-&gt;present()-&gt;gravatar_url()</code> or <code>$model-&gt;present-&gt;gravatar_url</code> both will actually call a function named <code>gravatar_url</code>on the <code>Presenter</code> class.</li>
+<li>make it easy for the view to use it, like view shouldn&rsquo;t be requried to know where that url is coming from.</li>
+<li>and finally maybe hide away some common Presenter functionality into an abstract class so every presenter class wont have to implement those</li>
+</ul>
+
+
+<h2>Implementing the present() method in every Eloquent Model</h2>
+
+<p>The responsiblity of the <code>present()</code> method will be to</p>
+
+<ul>
+<li>first somehow dertermine the FQN(Fully Qualified Name) of the Presenter class so we can instantiate them</li>
+<li>After we get that class name, we check if that class exists, and if they doesnt exist they you can either throw an exception( which is better ) or fail silently if you want. And if it&rsquo;s there then just instantiate it and return the instance.</li>
+</ul>
+
+
+<h3>How to determine the FQN of the Presenter Class</h3>
+
+<p>There are several ways we can do that, it entirely depends on how we want to desing our app. We can find the Current Model&rsquo;s class name append <code>Presenter</code> in their name and search in the same directory or in a separate <code>Presenters</code> directory which is on a different namespace to find the presenter class.</p>
+
+<p>But it&rsquo;s better not to hard code that logic inside a function and make it more flexible. Like we can look for a <code>$presenter</code> variable in the Model where we will save the Presenters full path so our funciton can use it. That way we can save the Presenter anywhere we want.</p>
+
+<h3>Creating a Presentable Trait</h3>
+
+<p>The functions of the <code>present()</code> method seems to be same for every models, so we could just use a trait for it and use it in every model. Lets see a reference implementation of the trait,</p>
+
+<figure class='code'><figcaption><span>PresentableTrait</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">namespace</span> <span class="nx">Acme\Core\Presenter</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">trait</span> <span class="nx">PresentableTrait</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/* This is where we will save the presenterInstance so use later on the same model object */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="nv">$presenterInstance</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">present</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// Check if the preserneter property has been declared on the model and </span>
+</span><span class='line'>        <span class="c1">// the class exists</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">presenter</span> <span class="k">or</span> <span class="o">!</span> <span class="nb">class_exists</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">presenter</span><span class="p">)){</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c1">// We didn&#39;t find a presenter class, throw an exception</span>
+</span><span class='line'>            <span class="c1">// I am assuming we have a PresenterException defined already</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nx">PresenterException</span><span class="p">(</span><span class="s1">&#39;Please set the Presenter path to your Presenter FQN&#39;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// The good old Singleton pattern</span>
+</span><span class='line'>        <span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">presenterInstance</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">presenterInstance</span> <span class="o">=</span> <span class="k">new</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">presenter</span><span class="p">(</span><span class="nv">$this</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">presenterInstance</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The functionality of the trait is fairly straight forward. We have a variable called <code>$persenterInterface</code> to save the <code>Presenter Instance</code> for further use. I have added comments on the code to make it easier to understand.</p>
+
+<h3>Creating a base Presenter class</h3>
+
+<p>We can ignore this if we want, just adding the <code>Presenter Class</code> is enough for the functionality. But lets add some sytactic sugar using the <code>__get()</code> magic method so when you do something like <code>$user-&gt;present()-&gt;gravatar_url</code> it actually calls the method with that name. Though <code>gravatar_url</code> is actually a method on the presenter we will be able to use it like a property.</p>
+
+<p>Lets check the following abstract Presenter class</p>
+
+<figure class='code'><figcaption><span>Base Presenter Class</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">namespace</span> <span class="nx">Acme\Core\Presenter</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="k">abstract</span> <span class="k">class</span> <span class="nc">Presenter</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">protected</span> <span class="nv">$entity</span><span class="p">;</span> <span class="c1">// This is to store the original model instance</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$entity</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">entity</span> <span class="o">=</span> <span class="nv">$entity</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="c1">// Call the function if that exsits, or return the property on the original model</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">__get</span><span class="p">(</span><span class="nv">$property</span><span class="p">){</span>
+</span><span class='line'>        <span class="k">if</span><span class="p">(</span><span class="nb">method_exists</span><span class="p">(</span><span class="nv">$this</span><span class="p">,</span> <span class="nv">$property</span><span class="p">))</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="p">{</span><span class="nv">$property</span><span class="p">}();</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">entity</span><span class="o">-&gt;</span><span class="p">{</span><span class="nv">$property</span><span class="p">};</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the above trait we actually passed the model instance to the presenter while instantiating that. And hence we have received that in the constructor of the base class.</p>
+
+<h2>Usage</h2>
+
+<p>Lets see how can we use this in a project with an Eloquent Model.</p>
+
+<p>Lets do it for the <code>User</code> model. First we will define the <code>Presenter</code> class.</p>
+
+<figure class='code'><figcaption><span>Acme\Users\UserPresenter.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">namespace</span> <span class="nx">Acme\Users</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">Acme\Core\Presenter\Presenter</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">UserPresenter</span> <span class="k">extends</span> <span class="nx">Presenter</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// return users gravatar url</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">gravatar</span><span class="p">(</span><span class="nv">$size</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$email</span> <span class="o">=</span> <span class="nb">md5</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">email</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="s2">&quot;//www.gravatar.com/avatar/</span><span class="si">{</span><span class="nv">$email</span><span class="si">}</span><span class="s2">?s=</span><span class="si">{</span><span class="nv">$size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">fullname</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">ucfirst</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">first_name</span><span class="p">)</span><span class="o">.</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="nb">ucfirst</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">last_name</span><span class="p">);</span>
+</span><span class='line'>      
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We see in the user Presenter we used <code>$this-&gt;email</code>, <code>$this-&gt;first_name</code> and <code>$this-&gt;last_name</code>. We are being able to do that due the magic getter method we defined which automatically returns the property on the associated model if a function with that name doesn&rsquo;t exist in the <code>Presenter</code> itself.</p>
+
+<p>Now lets create an <code>User</code> model.</p>
+
+<figure class='code'><figcaption><span>Acme\Users\User.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">namespace</span> <span class="nx">Acme\Users</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">Acme\Core\Presenter\PresentableTrait</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="k">extends</span> <span class="nx">\Eloquent</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">use</span> <span class="nx">PresentableTrait</span><span class="p">;</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">protected</span> <span class="nv">$presenter</span> <span class="o">=</span> <span class="s1">&#39;Acme\Users\UserPresenter&#39;</span><span class="p">;</span>
+</span><span class='line'>  
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And we are done. We can now use it like,</p>
+
+<figure class='code'><figcaption><span>Presenter Usage</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nv">$user</span> <span class="o">=</span> <span class="nx">User</span><span class="o">::</span><span class="na">find</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// now we can use</span>
+</span><span class='line'><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">present</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">gravatar_url</span><span class="p">;</span> <span class="c1">// this returns users gravatar url</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// or </span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">present</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">fullname</span><span class="p">;</span> <span class="c1">// This will return users full name</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can use those methods anywhere on any <code>model</code> instance which has the <code>Presenter</code> implemented. Be it inside your controller or in your bade templates.</p>
+
+<p><strong><em>So now you have a clean way to place all your presentation specific logic. As they are in a single class it&rsquo;s easier to maintain and you can refactor any method&rsquo;s body anytime without worrying about breaking anything on other parts of your application.</em></strong></p>
+
+<p>Hope you enjoyed it.</p>
+
+<p><strong>N. B. This post is inspired by Jeffrey Way&rsquo;s View presenter related lessons on Laracasts.</strong></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Joy Nag</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-16T02:34:14+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:34 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/laravel/'>laravel</a>, <a class='category' href='/blog/categories/web/'>web</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://joycse06.github.io/blog/2015/01/laravel-view-presenters-from-scratch/" data-via="joycse06" data-counturl="http://joycse06.github.io/blog/2015/01/laravel-view-presenters-from-scratch/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/" title="Previous Post: Command Driven Design: The world of DTOs, Handlers and Domain Events">&laquo; Command Driven Design: The world of DTOs, Handlers and Domain Events</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/" title="Next Post: Intro to Lambda Calculus and it's relationship to Functional Programming">Intro to Lambda Calculus and it&#8217;s relationship to Functional Programming &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/laravel-view-presenters-from-scratch/">Laravel View Presenters From Scratch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/">Exploring Ruby&#8217;s Proc, Lambda and Blocks</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joycse06">@joycse06</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joycse06',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section>
+    <h1>Stack Overflow</h1>
+    <a href="http://stackoverflow.com/users/344304/Joy">
+        <img src="http://stackoverflow.com/users/flair/344304.png" width="208" height="58" alt="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+    </a>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Joy Nag -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joycse06';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joycse06.github.io/blog/2015/01/laravel-view-presenters-from-scratch/';
+        var disqus_url = 'http://joycse06.github.io/blog/2015/01/laravel-view-presenters-from-scratch/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Linux | Prasenjit Kumar Nag a.k.a Joy]]></title>
+  <link href="http://joycse06.github.io/blog/categories/linux/atom.xml" rel="self"/>
+  <link href="http://joycse06.github.io/"/>
+  <updated>2016-07-23T20:49:45+10:00</updated>
+  <id>http://joycse06.github.io/</id>
+  <author>
+    <name><![CDATA[Joy Nag]]></name>
+    <email><![CDATA[joyruet06@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Looking for Occurrences of a String in All Files Under a Directory Using Grep]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/looking-for-occurrences-of-a-string-in-all-files-under-a-directory-using-grep/"/>
+    <updated>2014-12-10T20:52:18+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/looking-for-occurrences-of-a-string-in-all-files-under-a-directory-using-grep</id>
+    <content type="html"><![CDATA[<p> <code>grep</code> is a very simple command available on linux and OSX terminals which can do amazing things and can save a lot fo time. I was working on a Magento site this morning and on the checkout page I found the telephone field was using <code>&lt;input type="Number" ...</code> while it should use <code>&lt;input type="text" ...</code> or else phone number with dashes in them wont validate and customers wont be able to proceed with next step.</p>
+
+<p>I was thinking of how can I find the file which have this code, those who of you are familiar with Magento knows that magento has a very organized file structure and hierarchies of templates, and different templates gets loaded based on active theme and layout xml files. So I have to find out all the occurrences of <code>&lt;input type="number" ...</code> in the whole installation.</p>
+
+<p>I knew I can use <code>grep</code> to do this. I instantly looked at the man page of <code>grep</code> and reviewed the available options and got what I needed.</p>
+
+<p>The final command I wrote on the server&rsquo;s terminal was</p>
+
+<pre><code class="bash Grep">
+grep -R -i -n 'type="number"' public_html/app
+</code></pre>
+
+<p> <code>-R</code> tells <code>grep</code> to search recursively into that directory, <code>-i</code> is for <code>ignore-case</code> and <code>-n</code> finds and outputs the line number along with file name too. As soon as I ran that command it searched the whole <code>app</code> directory and came back with all the place where <code>type="number"</code> occurred with line number too. Then I just edited those files and the issue was fixed.</p>
+
+<p> What took me several minutes would have taken hours to search and find those files manually. Thats one of many benefits of using command line. And you can do pretty amazing things using/combining only a handful of commands.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[The Unix Tar Pipe : Lots of Unix Knowledge in a Simple One Liner]]></title>
+    <link href="http://joycse06.github.io/blog/2014/12/the-unix-tar-pipe-lots-of-unix-knowledge-in-a-simple-one-liner/"/>
+    <updated>2014-12-06T19:22:15+11:00</updated>
+    <id>http://joycse06.github.io/blog/2014/12/the-unix-tar-pipe-lots-of-unix-knowledge-in-a-simple-one-liner</id>
+    <content type="html"><![CDATA[<p>I have recently been introduced to the Tar Pipe. It&rsquo;s not a command to run in the shell but a pattern which I liked very much.</p>
+
+<p>It uses some primitive unix command and couple features of the shell to solve a problem. Let me talk a bit about the problem it solves. Suppose you have a directory called src and you want to clone it to a destination folder named dst preserving metadata like owners, groups and permissions of files and directories. In modern systems there are command like</p>
+
+<pre><code class="bash Copy Command">cp -rp
+
+# or
+
+rsync -a
+</code></pre>
+
+<p> using which you can clone contents of one directory to another preserving permissions and other metadata easily. But in the days when rsync -a was not there or the cp implementation didn&rsquo;t have the permissions preserving flag there was a tar pipe which did the same thing using unix tar command. The Tar Pipe looks like this</p>
+
+<pre><code class="bash Tar Pipe">
+ (cd src &amp;&amp; tar -c .) | (cd dst &amp;&amp; tar -xp)
+</code></pre>
+
+<!-- more -->
+
+
+<p>So why I liked a command very much considering its obsolete now. The reason is if we look closely there&rsquo;s lot of Unixy stuff in this one line.</p>
+
+<p>Looking from the outside we see two subshells [ (cd src &amp;&amp; tar -c .) and (cd dst &amp;&amp; tar -xp) ] joined by the pipe. A subshell basically tells bash or zsh to fork itself the execute the code inside the parantheses in a new process. And this actuallly isotates the subshell&rsquo;s current working directory, its variables and other options.</p>
+
+<p>So the left part of the Tar pipe change the directory into src and tar the contents of that directory and output the stream into standard output. And on the other side of the pipe we have a blocking process with is waiting to be feed from the left side.</p>
+
+<p>When the left side starts outputting, the right side change current directory into dst and starts reading from the other side of the pipe and untar it preserving permissions.</p>
+
+<p> On either side &amp;&amp;  ensures that if the directory doesn&rsquo;t exist tar command on the right won&rsquo;t fire at all.</p>
+
+<p> That all for today. I will be talking more about fork and tar in another post. Hope you enjoyed it.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Making Your Terminal More Intuitive With Oh-my-zsh and Other Tools]]></title>
+    <link href="http://joycse06.github.io/blog/2012/04/making-your-terminal-more-intuitive-with-oh-my-zsh-and-other-tools/"/>
+    <updated>2012-04-28T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2012/04/making-your-terminal-more-intuitive-with-oh-my-zsh-and-other-tools</id>
+    <content type="html"><![CDATA[<p>I have started using Terminal massively since I got my Macbook back in 2010. I used it in Ubuntu but not that much. So I have always been searching for way about how to be more productive in Terminal and at the same time make it look beautiful as pass a great amount of time everyday. So I will be sharing some of the cool things I found in the internet which made my Macbook&rsquo;s Terminal far better than it was before. Here is a screenshot of my current terminal window.</p>
+
+<p><a href="http://blog.joynag.net/wp-content/uploads/2012/04/terminal.png"><img class="size-medium wp-image-118 aligncenter" title="terminal" src="http://blog.joynag.net/wp-content/uploads/2012/04/terminal-300x187.png" alt="" width="300" height="187" /></a></p>
+
+<p>As you can see in the screenshot it&rsquo;s looking pretty good(well at least to me). It has detected that the directory I am currently in is a GIT repo and I am in master branch. And the arrows you see in the prompt is batttery strength indicator. Pretty interesting Huh! I am using the some tools which made it so. They are:</p>
+
+<ol>
+    <li><strong>Solarized Dark Ansi Theme</strong>: It&#8217;s(<a title="Solarized Theme" href="http://ethanschoonover.com/solarized" target="_blank">link</a>) a very popular theme and have a port for many popular editors. You can it&#8217;s homepage to check screenshots.</li>
+    <li><strong>Adding colors</strong>: Mac&#8217;s Terminal App doesn&#8217;t natively support various colors for texts. But following <a title="Terminal Color" href="https://github.com/altercation/solarized/tree/master/osx-terminal.app-colors-solarized" target="_blank">this</a>  you can add more colors into Terminal.</li>
+    <li><strong>System wide Terminal</strong>: As I had to launch terminal very frequently I was searching for a solution which will allow me to fire the terminal using a keyboard Hotkey and terminal will appear above all applications. And found <a title="Total Terminal" href="http://totalterminal.binaryage.com/" target="_blank">Totalterminal</a> as a rescue. Now I just press CTRL(you can configure the triggering key to you preference) two times and the terminal appears immediately. And you have <a title="iTerm2" href="http://www.iterm2.com/" target="_blank">iTerm2</a> as an alternative with other useful features. Try any of them and stick with the one you like.</li>
+    <li><strong>oh-my-zsh</strong> : I have been using <strong>bash</strong> as my login(default) shell until I came to know about this project. Mac osx comes with a number of shells like <strong>bash</strong>, <strong>csh</strong>, <strong>tcsh</strong>, <strong>ksh</strong>, <strong>sh</strong> and <strong>zsh . </strong>And bash is the default shell which starts if you dont change it to something else. <a title="oh-my-zsh" href="https://github.com/robbyrussell/oh-my-zsh" target="_blank">oh-my-zsh</a> is a very popular project by Robby Russel. I has a magic one line installer found  in it&#8217;s github(follow the above link) page. Some of the features I like about oh-my-zsh are more intuitive <strong>command completion</strong>, <strong>command auto correction prompts, git repo branch detection, battery strength indication and many others. </strong>I found it a month ago and never looked back. :)</li>
+</ol>
+
+
+<p>So based on my experience I can say that you can try oh-my-zsh. You wont be disappointed.</p>
+
+<p>If you are using Mac try the more organized write up <a title="Terminal" href="http://net.tutsplus.com/tutorials/tools-and-tips/how-to-customize-your-command-prompt/" target="_blank">here</a> on nettuts. If you are using Ubuntu check this <a title="Ubuntu" href="https://gist.github.com/1498393" target="_blank">Gist</a> on how to install oh-my-zsh in Ubuntu. :)</p>
+
+<p>&nbsp;</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Boot Slax From Your USB Flash Drive]]></title>
+    <link href="http://joycse06.github.io/blog/2008/04/boot-slax-from-your-usb-flash-drive/"/>
+    <updated>2008-04-13T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2008/04/boot-slax-from-your-usb-flash-drive</id>
+    <content type="html"><![CDATA[<p>Slax is a lightweight linux based distro with some important features. It&rsquo;s possible to boot this from a USB flash drive. Just follow the steps bellow and enjoy your time with Slax 6.0.4.
+        1. Download the package for flash drive from <a href="http://http://nimue.fit.vutbr.cz/slax/SLAX-6.x/slax-6.0.4.tar">here</a><br />
+        2. Unzip the .tar file to the root directory of your Flash drive.
+        3. Navigate to the boot directory of your flash drive.
+        4. Double click on the file bootinst.bat and follow the instruction.
+        5. Reboot the system and enter the boot menu to boot from the flash drive.
+        6. Enter the live session and install to your HDD if you like.
+Enjoy your time with slax.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,344 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob - Prasenjit Kumar Nag a.k.a Joy</title>
+  <meta name="author" content="Joy Nag">
+
+  
+  <meta name="description" content="I was watching this talk from Uncle Bob a while ago and been thinking a lot about the content. Though he primarily talked about Rails in a Ruby Conf &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joycse06.github.io/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Prasenjit Kumar Nag a.k.a Joy" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58344400-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Prasenjit Kumar Nag a.k.a Joy</a></h1>
+  
+    <h2>A Developers Adventure in Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="joycse06.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories">Categories</a></li>
+  <li><a href="/about-me">About Me</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-03T15:05:35+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>3:05 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I was watching <a href="https://www.youtube.com/watch?v=WpkDN78P884">this talk</a> from <a href="https://sites.google.com/site/unclebobconsultingllc/">Uncle Bob</a> a while ago and been thinking a lot about the content. Though he primarily talked about Rails in a Ruby Conf, the content is framework agnostic and apply to all other MVCs/frameworks as well.</p>
+
+<!-- more -->
+
+
+<p>I will be writing a summary of what I have understood so far of it.</p>
+
+<p>Firstly, <strong>the top level directory structure of an application should not communicate any information about the tools being used to build the app.</strong></p>
+
+<p>Like in any MVC, when we look at the top level directory of any MVC framework based app we see directories like Controllers, Models, Views etc which gives us idea about the MVC pattern which is not related to the intent of the application being developed.</p>
+
+<p>He told that WEB is a delivery mechanism and tools are just detail of the project. The application itself should be decoupled from the tools so it&rsquo;s framework agnostic.</p>
+
+<p>He was talking about slow tests, and told Cucumber is not slow, it&rsquo;s a nice little library. What is slow is to boot up whole Rails to run the tests? Because the application is so coupled with the tools.</p>
+
+<p>He talked about interactors, kind of the bridge between your domain level entities and business logic with the delivery mechanism.</p>
+
+<p>If an application can be developed that way then the domain entities/business logic could be packaged as a gem or jar and can be completly decoupled from the delivery mechanism.</p>
+
+<p>He also told views should not be aware of business objects/entities, instead one should use some kind of bridge like viewmodel/presenters to communicate those information into views so the views are so stupid that you don&rsquo;t have to test it.</p>
+
+<p>He was talking about a use case architecture of a project he built, where they used TDD(Red-Green-Refactor cycle) to do the whole app. It was a WiKi app. They started building it with TDD without any persistance layer, and they were storing objects in memory to do testing. Then at some point, when they were in need a persistent data store they wrote a new plugin to replace the in memory store with a file based storage. They developed the whole thing and deployed it to clients without any kind of database.</p>
+
+<p>Then one day one client came and they need a real database due to some business policy restrictions. To fullfil that request they wrote a real database storage plugin to replace the filesytem storage with a DBMS in one day.</p>
+
+<p>He told it as an example architecture of how a decoupled component-based can help refactor things so easily and the project was fully unit tested they could refactor and deploy it within days without worrying about breaking something.</p>
+
+<p>Got this elements summary in <a href="http://hugo.ferreira.cc/post/28240089877/keynote-architecture-the-lost-years-by-robert">this post</a></p>
+
+<blockquote><p>Entities — Generic application agnostic data and business rules (e.g. Order, Customer).</p>
+
+<p>Interactors — Application specific business rules; Manipulates the relevant data from the Request Model and interacts with the Entities.</p>
+
+<p>Boundaries / Gateways — Protocols or Interfaces.</p>
+
+<p>Models — Dumb data structures, without methods.</p>
+
+<p>Request Model
+Response Model
+View Model</p>
+
+<p>Controllers — Convert the stuff submitted by the delivery mechanism into a delivery agnostic Request Model.</p>
+
+<p>Presenters — Turns the delivery agnostic Response Model into a prepared “viewbified” data structure ready for easy manipulation by the view.</p>
+
+<p>&ldquo;… so the view is so stupid that you don’t have to test it!&rdquo;</p></blockquote>
+
+<p>Here are some good things he told in the talk:</p>
+
+<ul>
+<li><h3>Web is a delivery Mecahnism</h3></li>
+<li><h3>Database is a detail and not any integral part of the intent of the applicaiton itself</h3></li>
+<li><h3>A good architecture allows major decisions to be deferred, like choosing a persistance storage</h3></li>
+<li><h3>A good architecture maximizes the number of decisions not made, so you can decide those later and plug them in to fit business needs or respond to changes in business logic</h3></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Joy Nag</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-03T15:05:35+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>3:05 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/architecture/'>architecture</a>, <a class='category' href='/blog/categories/web/'>web</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://joycse06.github.io/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/" data-via="joycse06" data-counturl="http://joycse06.github.io/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/" title="Previous Post: Exploring Ruby's Proc, Lambda and Blocks">&laquo; Exploring Ruby&#8217;s Proc, Lambda and Blocks</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/" title="Next Post: Command Driven Design: The world of DTOs, Handlers and Domain Events">Command Driven Design: The world of DTOs, Handlers and Domain Events &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/laravel-view-presenters-from-scratch/">Laravel View Presenters From Scratch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/">Exploring Ruby&#8217;s Proc, Lambda and Blocks</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joycse06">@joycse06</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joycse06',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section>
+    <h1>Stack Overflow</h1>
+    <a href="http://stackoverflow.com/users/344304/Joy">
+        <img src="http://stackoverflow.com/users/flair/344304.png" width="208" height="58" alt="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+    </a>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Joy Nag -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joycse06';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joycse06.github.io/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/';
+        var disqus_url = 'http://joycse06.github.io/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

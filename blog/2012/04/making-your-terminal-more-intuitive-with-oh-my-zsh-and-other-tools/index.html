@@ -1,0 +1,307 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Making Your Terminal More Intuitive With Oh-my-zsh and Other Tools - Prasenjit Kumar Nag a.k.a Joy</title>
+  <meta name="author" content="Joy Nag">
+
+  
+  <meta name="description" content="I have started using Terminal massively since I got my Macbook back in 2010. I used it in Ubuntu but not that much. So I have always been searching &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joycse06.github.io/blog/2012/04/making-your-terminal-more-intuitive-with-oh-my-zsh-and-other-tools/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Prasenjit Kumar Nag a.k.a Joy" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58344400-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Prasenjit Kumar Nag a.k.a Joy</a></h1>
+  
+    <h2>A Developers Adventure in Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="joycse06.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories">Categories</a></li>
+  <li><a href="/about-me">About Me</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Making Your Terminal More Intuitive With Oh-my-zsh and Other Tools</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-28T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I have started using Terminal massively since I got my Macbook back in 2010. I used it in Ubuntu but not that much. So I have always been searching for way about how to be more productive in Terminal and at the same time make it look beautiful as pass a great amount of time everyday. So I will be sharing some of the cool things I found in the internet which made my Macbook&rsquo;s Terminal far better than it was before. Here is a screenshot of my current terminal window.</p>
+
+<p><a href="http://blog.joynag.net/wp-content/uploads/2012/04/terminal.png"><img class="size-medium wp-image-118 aligncenter" title="terminal" src="http://blog.joynag.net/wp-content/uploads/2012/04/terminal-300x187.png" alt="" width="300" height="187" /></a></p>
+
+<p>As you can see in the screenshot it&rsquo;s looking pretty good(well at least to me). It has detected that the directory I am currently in is a GIT repo and I am in master branch. And the arrows you see in the prompt is batttery strength indicator. Pretty interesting Huh! I am using the some tools which made it so. They are:</p>
+
+<ol>
+    <li><strong>Solarized Dark Ansi Theme</strong>: It&#8217;s(<a title="Solarized Theme" href="http://ethanschoonover.com/solarized" target="_blank">link</a>) a very popular theme and have a port for many popular editors. You can it&#8217;s homepage to check screenshots.</li>
+    <li><strong>Adding colors</strong>: Mac&#8217;s Terminal App doesn&#8217;t natively support various colors for texts. But following <a title="Terminal Color" href="https://github.com/altercation/solarized/tree/master/osx-terminal.app-colors-solarized" target="_blank">this</a>  you can add more colors into Terminal.</li>
+    <li><strong>System wide Terminal</strong>: As I had to launch terminal very frequently I was searching for a solution which will allow me to fire the terminal using a keyboard Hotkey and terminal will appear above all applications. And found <a title="Total Terminal" href="http://totalterminal.binaryage.com/" target="_blank">Totalterminal</a> as a rescue. Now I just press CTRL(you can configure the triggering key to you preference) two times and the terminal appears immediately. And you have <a title="iTerm2" href="http://www.iterm2.com/" target="_blank">iTerm2</a> as an alternative with other useful features. Try any of them and stick with the one you like.</li>
+    <li><strong>oh-my-zsh</strong> : I have been using <strong>bash</strong> as my login(default) shell until I came to know about this project. Mac osx comes with a number of shells like <strong>bash</strong>, <strong>csh</strong>, <strong>tcsh</strong>, <strong>ksh</strong>, <strong>sh</strong> and <strong>zsh . </strong>And bash is the default shell which starts if you dont change it to something else. <a title="oh-my-zsh" href="https://github.com/robbyrussell/oh-my-zsh" target="_blank">oh-my-zsh</a> is a very popular project by Robby Russel. I has a magic one line installer found  in it&#8217;s github(follow the above link) page. Some of the features I like about oh-my-zsh are more intuitive <strong>command completion</strong>, <strong>command auto correction prompts, git repo branch detection, battery strength indication and many others. </strong>I found it a month ago and never looked back. :)</li>
+</ol>
+
+
+<p>So based on my experience I can say that you can try oh-my-zsh. You wont be disappointed.</p>
+
+<p>If you are using Mac try the more organized write up <a title="Terminal" href="http://net.tutsplus.com/tutorials/tools-and-tips/how-to-customize-your-command-prompt/" target="_blank">here</a> on nettuts. If you are using Ubuntu check this <a title="Ubuntu" href="https://gist.github.com/1498393" target="_blank">Gist</a> on how to install oh-my-zsh in Ubuntu. :)</p>
+
+<p>&nbsp;</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Joy Nag</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2012-04-28T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/categories/tools/'>tools</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://joycse06.github.io/blog/2012/04/making-your-terminal-more-intuitive-with-oh-my-zsh-and-other-tools/" data-via="joycse06" data-counturl="http://joycse06.github.io/blog/2012/04/making-your-terminal-more-intuitive-with-oh-my-zsh-and-other-tools/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/gits-stash-a-very-handy-git-feature-in-some-scenario/" title="Previous Post: Gits stash - a very handy git feature in some scenario">&laquo; Gits stash - a very handy git feature in some scenario</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/04/on-and-off-jquerys-new-event-binding-awesomeness/" title="Next Post: on and off jQuery's new event binding awesomeness">on and off jQuery&#8217;s new event binding awesomeness &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/laravel-view-presenters-from-scratch/">Laravel View Presenters From Scratch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/">Exploring Ruby&#8217;s Proc, Lambda and Blocks</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joycse06">@joycse06</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joycse06',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section>
+    <h1>Stack Overflow</h1>
+    <a href="http://stackoverflow.com/users/344304/Joy">
+        <img src="http://stackoverflow.com/users/flair/344304.png" width="208" height="58" alt="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+    </a>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Joy Nag -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joycse06';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joycse06.github.io/blog/2012/04/making-your-terminal-more-intuitive-with-oh-my-zsh-and-other-tools/';
+        var disqus_url = 'http://joycse06.github.io/blog/2012/04/making-your-terminal-more-intuitive-with-oh-my-zsh-and-other-tools/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Mysql | Prasenjit Kumar Nag a.k.a Joy]]></title>
+  <link href="http://joycse06.github.io/blog/categories/mysql/atom.xml" rel="self"/>
+  <link href="http://joycse06.github.io/"/>
+  <updated>2016-07-23T20:49:45+10:00</updated>
+  <id>http://joycse06.github.io/</id>
+  <author>
+    <name><![CDATA[Joy Nag]]></name>
+    <email><![CDATA[joyruet06@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using MAMP's Mysql Installation With Rails App]]></title>
+    <link href="http://joycse06.github.io/blog/2012/04/using-mamp-mysql-installation-with-rails-app/"/>
+    <updated>2012-04-27T00:00:00+10:00</updated>
+    <id>http://joycse06.github.io/blog/2012/04/using-mamp-mysql-installation-with-rails-app</id>
+    <content type="html"><![CDATA[<p>Being primarily a PHP developer I always have one AMP package installed in my machine no matter what platform I work with. Now-a-days as I work on my macbook I have MAMP installed.</p>
+
+<p>Few days back I was trying to install <em>mysql2 </em>gem to use in Rails app which acts as the interface between MySql engine and Rails(or Ruby) apps. But it was constantly failing every time I tried to. I even tried to install previous versions of mysql2 gem but no luck. Then I tried to have a closer look at the error the <strong><em>bundle install</em></strong> command was spitting out into the terminal.</p>
+
+<p>It was not being able to find mysql header files which are required to compile mysql2 gem. After searching in the internet I found out MAMP doesn&rsquo;t ship mysql headers by default.</p>
+
+<p>So The options I had was either recompile Mysql from source and add headers into proper MAMP Directory. Or manage another mysql installation only for rails which is a whole lot of pain. So I had to go for one, I searched through Stack Overflow and found some tutorials on how to do that. After studying some of those I finally took a backup of mamp and started the recompilation process. Here are the steps I followed:</p>
+
+<p>Take a backup of your whole MAMP directory if by any chance you mess it up. :) It&rsquo;s always safe.</p>
+
+<ol>
+<li>First you need to download the MAMP open source components from their source forge page here</li>
+</ol>
+
+
+<p><a href="http://sourceforge.net/projects/mamp/files/mamp/">http://sourceforge.net/projects/mamp/files/mamp/</a> download the components for mamp 2.0.2 that is the latest now.</p>
+
+<ol>
+<li>Recently MAMP have switched from MySql 5.1 to to MySQL 5.5. And MySQL, in turn, has switched from GNU Make (with <em>./configure</em>) to CMake (with <em>cmake .</em>). So you need to have cmake installed in you Mac. You can do that easily using <em>brew</em> or <em>macport</em> using the following command</li>
+</ol>
+
+
+<pre><code class="bash">
+brew install cmake
+
+or
+
+port install cmake
+</code></pre>
+
+<ol>
+<li>Suppose You have downloaded it into your desktop then Extract and put the mysql-5.5.9.tar.gz file into your desktop and type in the following command in your terminal.</li>
+</ol>
+
+
+<pre><code class="bash">
+$ cd /tmp
+ $ mv /Users/yourname/Desktop/mysql-5.5.9.tar.gz .
+ $ tar xf mysql-5.5.9.tar.gz
+ $ cd mysql-5.5.9
+ $ cmake . -DMYSQL_UNIX_ADDR=/Applications/MAMP/tmp/mysql/mysql.sock -DCMAKE_INSTALL_PREFIX=/Applications/MAMP/Library
+ $ make -j  3
+ $ cp libmysql/*.dylib /Applications/MAMP/Library/lib/
+ $ mkdir -p /Applications/MAMP/Library/include/mysql
+ $ cp include/* /Applications/MAMP/Library/include/mysql
+ $ sudo env ARCHFLAGS=&amp;quot;-arch x86_64&amp;quot; gem install mysql2 -- --with-mysql-config=/Applications/MAMP/Library/bin/mysql_config
+</code></pre>
+
+<ol>
+<li>after this you should see 1 Gem installed successfully message into the termnal and you gem has been install successfully. Now you need to symlink a bundle from your mysql Library into /user/lib. Run the following command in the terminal.</li>
+</ol>
+
+
+<p>&#8220;` bash
+sudo ln -s /Applications/MAMP/Library/lib/libmysqlclient.16.dylib /usr/lib/libmysqlclient.16.dylib [/bash]</p>
+
+<div></div>
+
+
+<div>5. Now clean up your temp directory</div>
+
+
+<pre><code class="bash">
+ rm -rf /tmp/mysql-5.5.9 /tmp/mysql-5.5.9.tar.gz
+</code></pre>
+
+<div>and you are done. Now you can try <strong>bundle install or </strong> <strong>rake db:create</strong></div>
+
+
+<div>and they should work fine. :)</div>
+
+
+<div>Happy reusing MAMP&#8217;s mysql with your rails applications :)</div>
+
+]]></content>
+  </entry>
+  
+</feed>
