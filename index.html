@@ -102,170 +102,17 @@
   </header>
 
 
-  <div class="entry-content"><p>This post is written based on the First Chapter (All you need is lambda) of the <a href="http://haskellbook.com/">HaskellBook</a> which is great book for learning Haskell. All the code examples in this post will be using Haskell but should be understandable to anyone having decent experience in any programming language.
-Lambda calculus is a model of computation devised in the 1930s by Alanzo Church. It&rsquo;s one process for formalizing a method. Like Turing machines it formalizes the concept of effective computability, thus determining which problems or classes of problems, can be solved.
+  <div class="entry-content"><p>This post is written based on the First Chapter (All you need is lambda) of the <a href="http://haskellbook.com/">HaskellBook</a> which is great book for learning Haskell. All the code examples in this post will be using Haskell but should be understandable to anyone having decent experience in any programming language.</p>
+
+<p>Lambda calculus is a model of computation devised in the 1930s by Alanzo Church. It&rsquo;s one process for formalizing a method. Like Turing machines it formalizes the concept of effective computability, thus determining which problems or classes of problems, can be solved.
 You might be thinking but thats Calculus(Math), how is it related to functional programming or programming in general. It is indeed deeply related.</p>
 
-<p>Lets define Functional programming, we know that functional programming is a programming paradigm that relies on functions modeled on mathematical functions. The essence of functional programming is that programs are a combination of expressions. Expressions include concrete values, variables and also functions. Functional programming languages are all based on the lambda calculus. Though some of them incorporate features into the language that are not translatable into lambda expressions. Haskell doesn&rsquo;t do that because it&rsquo;s a pure functional language. We will not get into what it means for a functional programming language to be <em>Pure</em> because it&rsquo;s an topic of it&rsquo;s own.</p>
-
-<h2>What is a function ( in Math )?</h2>
-
-<p>We all have studied in High school math( Set theory ), that a function is a relation between a set of inputs and a set of outputs. The function itself defines and represents the relationship. For example, when you apply the addition function to two inputs, it maps those two inputs to an output &ndash; the sum of those numbers. A simple function can be <code>f(x) = x + 1</code> which takes one argument named <code>x</code>. The relationship between the input and the output is described in the function body. For this function, it will add 1 to whatever value x is and return that result.</p>
-
-<p>When we apply the above function to a value, such as 1, we substitute the value in for x:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>f(1) = 1 + 1 = 2</span></code></pre></td></tr></table></div></figure>
-
-
-<p><em>Understanding functions in this way - as a mapping of a set of inputs to a set of outputs is crucial to understanding functional programming.</em></p>
-
-<h2>Structure of Lambda Terms</h2>
-
-<p>The lambda calculus has three basic components, or lambda terms: <code>expressions</code>, <code>variables</code> and <code>abstractions</code>. The word <code>expression</code> refers to a superset of all those things: an expression that can be a variable name, an abstraction or a combination of those things.</p>
-
-<p>An <em>abstraction</em> is a <em>function</em>. It is a lambda term that has a head and a body and  is applied to an argument. An argument is an input value. The head of a function is a <code>𝜆(lambda)</code> followed by a variable name.The body of the function is another expression. So a simple function might look like: <code>𝜆x.x</code> . It&rsquo;s an identity function because it just return the argument passed to it. In the previous example of <code>f(x) = x + 1</code> we were talking about a function called <code>f</code>, but the lambda abstraction <code>𝜆x.x</code> has no name. It&rsquo;s an <em>anonymous function (we all are familiar with this term, because it&rsquo;s a very powerful idea and almost all imperative languages have some sort of implementation of it too)</em>. In the definition the dot separates the parameters of the lambda function from the body.</p>
-
-<h3>Beta reduction</h3>
-
-<p>When we apply a function to an argument, we substitute the input expression for all instances of bound variables within the body of the abstraction. We then also eliminate the head of the abstraction, since it&rsquo;s only purpose was to bind a variable. This process is called <em>beta reduction</em>.</p>
-
-<p>An example of a beta reduction can be:</p>
-
-<figure class='code'><figcaption><span>Example of Beta Reduction</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>we have this lambda 𝜆x.x ,
-</span><span class='line'><span class="k">if</span> we want to apply the number <span class="m">2</span> into the lambda above,
-</span><span class='line'>we simply substitute <span class="m">2</span> <span class="k">for</span> each bound variable in the body of the <span class="k">function</span>,
-</span><span class='line'>and eliminate the head:
-</span><span class='line'><span class="o">(</span>𝜆x.x<span class="o">)</span> 2
-</span><span class='line'>2
-</span><span class='line'>As another example, <span class="k">if</span> we have 𝜆x.x+1
-</span><span class='line'><span class="k">then</span> <span class="k">if</span> we apply <span class="m">2</span> it becomes
-</span><span class='line'><span class="o">(</span>𝜆x.x+1<span class="o">)</span> <span class="nv">2</span>
-</span><span class='line'><span class="o">==</span>&gt; 2+1
-</span><span class='line'><span class="o">==</span>&gt; 3
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I could continue and do some more complex <em>beta reductions</em> but will restrain myself</p>
-
-<h3>Multiple arguments</h3>
-
-<p>Each lambda can only bind one parameter and can only accept one argument. Functions that require multiple arguments have multiple, nested heads. When you apply it once and eliminate the first(left-most) head, the next one is applied and so on. This formulation is named after <em>Haskell Curry</em> and is commonly called currying. So</p>
-
-<figure class='code'><figcaption><span>Example of Beta Reduction</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>𝜆xy.xy
-</span><span class='line'>is actually convenient shorthand <span class="k">for</span> two nested lambdas<span class="o">(</span> one <span class="k">for</span> each argument, x and y<span class="o">)</span>
-</span><span class='line'>like following
-</span><span class='line'>𝜆x.<span class="o">(</span>𝜆y.xy<span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Evaluation is simplification</h3>
-
-<p>There is a thing named <em>beta normal form</em> in lambda calculus. It&rsquo;s a form when you can&rsquo;t beta reduce(apply lambdas to arguments) the term any further. This corresponds to a fully evaluated expression, or, in programming a fully executed program. In terms of executing a program it could mean continue applying lambda functions to their arguments until it become irreducible at which point the execution will finish. For example <code>𝜆x.x</code> is in beta normal form as we can&rsquo;t reduce it any further with what we have.
-But <code>(𝜆x.x) 2</code> is not because it&rsquo;s an lambda awaiting an application so we can reduce it to <code>2</code> by replacing instances of <code>x</code> with <code>2</code> in the body of the the lambda. <code>2</code> is in <em>beta normal form</em> because it&rsquo;s a literal value and we can&rsquo;t reduce it any further.</p>
-
-<h2>Relationship with functional programming</h2>
-
-<p>Like I said earlier Functional programming languages are based on <em>Lambda Calculus</em>, as we have learned a bit more about <em>lambdas</em> we can relate more about how they are connected. We might have heard the phrase <em>Functions are first class citizens in functional languages</em>. Lets explain that a bit. Imperative languages usually treat functions differently than other values(variables, objects and other inhabitants of a program) in the program though that is changing with omnipresence of lambdas(anonymous) function everywhere.</p>
-
-<p>But in functional languages functions are just like any other value. You can toss function around, return another function from a function body, compose functions to build complex functionalities from simple functions and all sorts of cool things.</p>
-
-<p>And if the function is a pure( like mathematical one) which always return the same output for the same input you don&rsquo;t even need to care where the function is being evaluated, be it in another core of the same machine or in the cloud because you don&rsquo;t need to care. All you want is the result of applying the function to an input.</p>
-
-<p><em>Building Software is a complex task</em> and Composability is a(<em>or is the</em>) way to handle complexity. You start with simple building blocks and compose them to build complex program to solve complex problems. Pure functions are such building blocks.</p>
-
-<p>In a way, programs in functional languages are like reducing expressions(remember <em>beta reduction</em> from last paragraph). The compilers continue evaluating expressions until it reaches a point when it can&rsquo;t reduce the expression anymore and the execution is complete.</p>
-
-<p>I wont get any deeper into this in this post. Research and learn more if you are still not bored.</p>
-
-<h2>Haskell, Haskell, Haskell</h2>
-
-<p>Haskell is purely based on <em>Lambda Calculus</em>. In fact it&rsquo;s typed lambda calculus. On the surface level it has some syntactic sugar which could lead one to believe this thing doesn&rsquo;t have a equivalent form in lambda calculus. But it ultimately boils down a very simple intermediate language construct which is then evaluated by STG(Spineless Tagless Graph-Reducing Machine) which is a abstract virtual machine and convert that code into binary. It has some very powerful abstractions understanding which properly could enable anyone to write better code in any other languages(This is not something I am saying myself, I have heard it countless times from many great programmers). By the way, Haskell is not the only language in which you can learn functional programming, but it&rsquo;s definitely one of the good ones.</p>
-
-<h3>Some Haskell examples</h3>
-
-<p>I will not explain any of the syntaxes, will just try to relate some of the things I mentioned above with haskell code.
-You can type them in <code>ghci</code> repl and they should run fine.</p>
-
-<h4>A lambda in haskell is very similar to lambda from lambda calculus,</h4>
-
-<figure class='code'><figcaption><span>A simple Lambda</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='haskell'><span class='line'><span class="nf">\</span><span class="n">x</span> <span class="ow">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span class='line'><span class="c1">-- which takes a single param and add 1 to it, we can use it like</span>
-</span><span class='line'><span class="p">(</span><span class="nf">\</span><span class="n">x</span> <span class="ow">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">2</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Haskell supports currying, so you can define function which can take multiple arguments, like</h4>
-
-<figure class='code'><figcaption><span>Simple Addition Function</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='Haskell'><span class='line'><span class="nf">add</span> <span class="n">x</span> <span class="n">y</span> <span class="ow">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
-</span><span class='line'><span class="c1">-- which is in de-sugared form becomes similar to</span>
-</span><span class='line'><span class="kr">let</span> <span class="n">add</span> <span class="ow">=</span> <span class="nf">\</span><span class="n">x</span> <span class="ow">-&gt;</span> <span class="nf">\</span><span class="n">y</span> <span class="ow">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Composing functions in Haskell is very easy</h4>
-
-<figure class='code'><figcaption><span>Function composition</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='Haskell'><span class='line'><span class="c1">-- lets define a square function</span>
-</span><span class='line'><span class="kr">let</span> <span class="n">square</span> <span class="n">x</span> <span class="ow">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
-</span><span class='line'><span class="c1">-- lets define a sum function which takes a list and add all the values</span>
-</span><span class='line'><span class="kr">let</span> <span class="n">sum</span> <span class="ow">=</span> <span class="n">foldr</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">-- and another function which negate the argument</span>
-</span><span class='line'><span class="kr">let</span> <span class="n">neg</span> <span class="ow">=</span> <span class="n">negate</span> <span class="c1">-- negate is a standard function</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">-- now using the above function we can define our complex function( hint: compose them)</span>
-</span><span class='line'><span class="kr">let</span> <span class="n">negateSquaredSum</span> <span class="ow">=</span> <span class="n">neg</span> <span class="o">.</span> <span class="n">square</span> <span class="o">.</span> <span class="n">sum</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">-- now you can call it like</span>
-</span><span class='line'><span class="nf">negateSquaredSum</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
-</span><span class='line'><span class="c1">-- which will result in -100</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>In our case they are simple function. But they can be anything, and we can then execute the smaller building blocks ( <code>neg</code>, <code>square</code> and <code>sum</code>) anywhere(could be other cores or maybe in the cloud) and then combine the results.</p>
-
-<p>Its not about Haskell, you can do the above in any language, it&rsquo;s about the idea of <code>function composition</code> or in general <code>composition</code>.</p>
-
-<p>The best thing about all the above codes no matter how complex they become, they are type checked by the compiler. Haskell is a statically and strongly typed language. So if your program compiles there&rsquo;s a much greater chance it will work.</p>
-
-<p>Enough for a single blog post. Hope you enjoyed it. Stay tuned for more Haskell and functional programming related posts.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Read on &rarr;</a>
+    </footer>
   
 
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Functional-programming, | Prasenjit Kumar Nag a.k.a Joy]]></title>
   <link href="http://joycse06.github.io/blog/categories/functional-programming/atom.xml" rel="self"/>
   <link href="http://joycse06.github.io/"/>
-  <updated>2016-07-23T20:49:45+10:00</updated>
+  <updated>2016-07-23T20:53:21+10:00</updated>
   <id>http://joycse06.github.io/</id>
   <author>
     <name><![CDATA[Joy Nag]]></name>
@@ -18,9 +18,13 @@
     <link href="http://joycse06.github.io/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/"/>
     <updated>2016-07-23T17:38:18+10:00</updated>
     <id>http://joycse06.github.io/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming</id>
-    <content type="html"><![CDATA[<p>This post is written based on the First Chapter (All you need is lambda) of the <a href="http://haskellbook.com/">HaskellBook</a> which is great book for learning Haskell. All the code examples in this post will be using Haskell but should be understandable to anyone having decent experience in any programming language.
-Lambda calculus is a model of computation devised in the 1930s by Alanzo Church. It&rsquo;s one process for formalizing a method. Like Turing machines it formalizes the concept of effective computability, thus determining which problems or classes of problems, can be solved.
+    <content type="html"><![CDATA[<p>This post is written based on the First Chapter (All you need is lambda) of the <a href="http://haskellbook.com/">HaskellBook</a> which is great book for learning Haskell. All the code examples in this post will be using Haskell but should be understandable to anyone having decent experience in any programming language.</p>
+
+<p>Lambda calculus is a model of computation devised in the 1930s by Alanzo Church. It&rsquo;s one process for formalizing a method. Like Turing machines it formalizes the concept of effective computability, thus determining which problems or classes of problems, can be solved.
 You might be thinking but thats Calculus(Math), how is it related to functional programming or programming in general. It is indeed deeply related.</p>
+
+<!-- more -->
+
 
 <p>Lets define Functional programming, we know that functional programming is a programming paradigm that relies on functions modeled on mathematical functions. The essence of functional programming is that programs are a combination of expressions. Expressions include concrete values, variables and also functions. Functional programming languages are all based on the lambda calculus. Though some of them incorporate features into the language that are not translatable into lambda expressions. Haskell doesn&rsquo;t do that because it&rsquo;s a pure functional language. We will not get into what it means for a functional programming language to be <em>Pure</em> because it&rsquo;s an topic of it&rsquo;s own.</p>
 
