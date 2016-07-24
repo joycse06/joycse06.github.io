@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Functional-programming, | Prasenjit Kumar Nag a.k.a Joy]]></title>
   <link href="http://joycse06.github.io/blog/categories/functional-programming/atom.xml" rel="self"/>
   <link href="http://joycse06.github.io/"/>
-  <updated>2016-07-23T20:53:21+10:00</updated>
+  <updated>2016-07-24T13:26:04+10:00</updated>
   <id>http://joycse06.github.io/</id>
   <author>
     <name><![CDATA[Joy Nag]]></name>
@@ -12,6 +12,92 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Hello Haskell -- Partial Function Application]]></title>
+    <link href="http://joycse06.github.io/blog/2016/07/hello-haskell-partial-function-applicaton/"/>
+    <updated>2016-07-24T12:50:05+10:00</updated>
+    <id>http://joycse06.github.io/blog/2016/07/hello-haskell-partial-function-applicaton</id>
+    <content type="html"><![CDATA[<p>In this blog post, We will be talking shortly about Haskell&rsquo;s type system( which is a very broad topic, this post won&rsquo;t eve scratch the surface). I will just explain what is needed to explain <code>partial function application</code> means and how is it done in Haskell.</p>
+
+<p>N.B. Installing Haskell is very easy with <a href="https://docs.haskellstack.org/en/stable/README/">Stack</a>, if you are on a Mac, you can just do <code>brew install haskell-stack</code> to install Stack. Then starting the <code>repl</code> is as easy as writing <code>stack ghci</code> in your favorite terminal.</p>
+
+<p>Haskell is a statically typed functional programming language. That means everything has a type associated with it and the compiler checks and enforce types at compile time. So there are two phases of code in Haskell one is <code>Type Level Code</code> which involves type definition, type constructors etc. Another is <code>Term Level Code</code> which is the body of the program. That doesn&rsquo;t necessarily mean you will always have to write type signatures for trivial things. Haskell has a very powerful <code>Type Inference</code> system which can infer types from untyped code, so you don&rsquo;t have to specify types of all the things but Haskell will infer them from the code and complain if types of anything doesn&rsquo;t match. It uses <code>Hindley-Milner Inference</code> algorithm( well, an extended version of it for <code>Constrained Types</code>).</p>
+
+<!-- more -->
+
+
+<h2>What are types?</h2>
+
+<p>Types are how we group a set of values together that share something in common. Sometime that something is abstract and sometime that something is a specific model of a particular concept or domain. We can think of types as <code>Set</code> from mathematics to better guide our intuition. So for example what is the type of number 2, well it&rsquo;s a number, a member of the set of <code>Natural Numbers</code>. Type of <code>a</code> is character. You know this if you have worked with any statically typed programming language before like <code>C/C++ or Java</code>. However Haskell takes it to a whole new level.</p>
+
+<h2>How do we define types for a simple addition function?</h2>
+
+<p>Let&rsquo;s write the function signature first then we will explain it.</p>
+
+<pre><code class="Haskell Type of an add Function">-- declare the type of the function
+add :: Integer -&gt; Integer -&gt; Integer
+-- now declare the function itself
+add x y = x + y
+</code></pre>
+
+<p>What we are telling the Compiler by this is we have an <code>add</code> function which takes two
+<code>integer</code> and returns result by adding them. If you we remember what I was telling about currying <a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">in my previous post</a> you can&rsquo;t accept two params into a single function. You have to define them a nested lambdas, but it&rsquo;s a syntactic sugar Haskell provides to make it more useful, still make the core conform to whatever lambda calculus provides.
+So the above function is pretty straight forward. Lets get to the point and talk about the main focus of this blog post.</p>
+
+<h2>Partial function application</h2>
+
+<p>Partial application is the notion of supplying less arguments than the function expects. Let&rsquo;s see an example, we defined an <code>add</code> function in previous section, now if we want to define an <code>increment</code> function in terms of it we can do something like</p>
+
+<pre><code class="Haskell">inc :: Integer -&gt; Integer
+inc = add 1
+</code></pre>
+
+<p>ahh that seems simple, now lets explain how that works. We are assigning value of <code>add 1</code> as the body of our <code>inc</code> function.</p>
+
+<p>We know from the type signature of <code>add</code> that it takes two integer and return their sum. So what happens when we supply it only one argument. We the value <code>1</code> gets bound to the first param <code>x</code> in the definition of <code>add</code> function and we get something like</p>
+
+<pre><code class="haskell">add 1 y = 1 + y
+-- which is equivalent to
+\y -&gt; 1 + y -- a lambda which just add one to it's argument
+</code></pre>
+
+<p>Which is another function. A partially applied one. If we want to see it from the point of Lambda Calculus it will be more clear</p>
+
+<pre><code class="bash"># our add functions equivalent lambda calculus expression will be
+𝜆x.𝜆y.x+y
+# now if we apply 1 to it
+(𝜆x.𝜆y.x+y) 1
+# which gets bound to the left most lambda and it becomes
+𝜆y.1+y
+# because we can get rid of a lambda after its applied to a value
+# finally what we get is a another lambda waiting for an argument
+</code></pre>
+
+<p>Thats what is happening with our <code>add</code> function too because haskell is typed lambda calculus. So <code>add 1</code> is an partially applied function waiting for another application to a value. It&rsquo;s easy but a very powerful idea, and lets one write cool functions in terms of other simpler functions. <em>Composability for the win!.</em></p>
+
+<p>We can similarly write these functions too,
+<code>Haskell
+multiplyTen = (10 * )
+-- * is a infix binary operator, so it requires two arguments
+-- as we supplied one, it's a partially applied one and waiting for another
+-- argument
+-- we can invoke it like
+multiplyTen 10
+-- and it will give us 100
+helloWorld = ("Hello " ++ )
+-- ++ is the infix binary string concatenation operator( actually a function
+-- requiring two arguments), we only supplied one so it's waiting for another one
+-- if we run
+helloWorld "World!"
+-- it will return "Hello World!"
+</code></p>
+
+<p>The examples in this blog post were intentionally contrived but The idea of <code>partial function application</code> is a profound one and we can do all sort of cool things with it.</p>
+
+<p>Thats all for today. Hope you enjoyed it.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Intro to Lambda Calculus and It's Relationship to Functional Programming]]></title>

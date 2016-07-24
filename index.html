@@ -9,7 +9,7 @@
   <meta name="author" content="Joy Nag">
 
   
-  <meta name="description" content="This post is written based on the First Chapter (All you need is lambda) of the HaskellBook which is great book for learning Haskell. All the code &hellip;">
+  <meta name="description" content="In this blog post, We will be talking shortly about Haskell&rsquo;s type system( which is a very broad topic, this post won&rsquo;t eve scratch the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,44 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/07/hello-haskell-partial-function-applicaton/">Hello Haskell &#8211; Partial Function Application</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-07-24T12:50:05+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>24</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>12:50 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In this blog post, We will be talking shortly about Haskell&rsquo;s type system( which is a very broad topic, this post won&rsquo;t eve scratch the surface). I will just explain what is needed to explain <code>partial function application</code> means and how is it done in Haskell.</p>
+
+<p>N.B. Installing Haskell is very easy with <a href="https://docs.haskellstack.org/en/stable/README/">Stack</a>, if you are on a Mac, you can just do <code>brew install haskell-stack</code> to install Stack. Then starting the <code>repl</code> is as easy as writing <code>stack ghci</code> in your favorite terminal.</p>
+
+<p>Haskell is a statically typed functional programming language. That means everything has a type associated with it and the compiler checks and enforce types at compile time. So there are two phases of code in Haskell one is <code>Type Level Code</code> which involves type definition, type constructors etc. Another is <code>Term Level Code</code> which is the body of the program. That doesn&rsquo;t necessarily mean you will always have to write type signatures for trivial things. Haskell has a very powerful <code>Type Inference</code> system which can infer types from untyped code, so you don&rsquo;t have to specify types of all the things but Haskell will infer them from the code and complain if types of anything doesn&rsquo;t match. It uses <code>Hindley-Milner Inference</code> algorithm( well, an extended version of it for <code>Constrained Types</code>).</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/07/hello-haskell-partial-function-applicaton/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -420,42 +458,6 @@ You might be thinking but thats Calculus(Math), how is it related to functional 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/taking-a-magento-site-into-maintenance-mode-for-everyone-except-you/">Taking a Magento Site Into Maintenance Mode for Everyone Except You</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-12-10T18:54:25+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>6:54 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Magento takes a dead simple approach for activating the maintanence mode for any site using it. You just get into servers&rsquo;s terminal via <code>ssh</code> , <code>cd</code> into the magento root folder and run the following command <code>touch maintenance.flag</code> or just crate a file named <code>maintenance.flag</code> in the root of the your magento installation and voila, you will see the maintenance mode message when you visit your store now.</p>
-
-<p>Now Its locked for everyone, but say you are updating somethings on the site and you would like to check how thats affecting the look of the store but you dont want anyone to view it before getting done. Fortunately thas easy too.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/12/taking-a-magento-site-into-maintenance-mode-for-everyone-except-you/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -471,6 +473,10 @@ You might be thinking but thats Calculus(Math), how is it related to functional 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/07/hello-haskell-partial-function-applicaton/">Hello Haskell &#8211; Partial Function Application</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</a>
       </li>
     
@@ -484,10 +490,6 @@ You might be thinking but thats Calculus(Math), how is it related to functional 
     
       <li class="post">
         <a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/exploring-rubys-proc-lambda-and-blocks/">Exploring Ruby&#8217;s Proc, Lambda and Blocks</a>
       </li>
     
   </ul>
