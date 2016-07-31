@@ -9,7 +9,7 @@
   <meta name="author" content="Joy Nag">
 
   
-  <meta name="description" content="In this blog post, We will be talking shortly about Haskell&rsquo;s type system( which is a very broad topic, this post won&rsquo;t eve scratch the &hellip;">
+  <meta name="description" content="What is Map? The notion of Map has become so prevalent in all programming languages that almost everyone has some kind of exposure to it. Generically &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/">Understanding the Ubiquitous Notion of Mapping Over a Structure</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-07-31T10:53:05+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>10:53 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>What is Map?</h2>
+
+<p>The notion of Map has become so prevalent in all programming languages that almost everyone has some kind of exposure to it. Generically speaking, <code>Map</code> means apply a function to vallues which are inside some kind of structure or apply function structure.</p>
+
+<p>We usually use it a lot to apply a function to a list of values e.g mapping over the values of an <code>Array</code> to be more specific.</p>
+
+<p>In this post we will first see some examples of mapping in different languages and then we dive deep into it&rsquo;s internals in terms of <code>Haskell</code> and maybe finish with a better understanding of how everything fits together. Saying that lets start.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -414,50 +454,6 @@ You might be thinking but thats Calculus(Math), how is it related to functional 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/looking-for-occurrences-of-a-string-in-all-files-under-a-directory-using-grep/">Looking for Occurrences of a String in All Files Under a Directory Using Grep</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-12-10T20:52:18+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>8:52 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p> <code>grep</code> is a very simple command available on linux and OSX terminals which can do amazing things and can save a lot fo time. I was working on a Magento site this morning and on the checkout page I found the telephone field was using <code>&lt;input type="Number" ...</code> while it should use <code>&lt;input type="text" ...</code> or else phone number with dashes in them wont validate and customers wont be able to proceed with next step.</p>
-
-<p>I was thinking of how can I find the file which have this code, those who of you are familiar with Magento knows that magento has a very organized file structure and hierarchies of templates, and different templates gets loaded based on active theme and layout xml files. So I have to find out all the occurrences of <code>&lt;input type="number" ...</code> in the whole installation.</p>
-
-<p>I knew I can use <code>grep</code> to do this. I instantly looked at the man page of <code>grep</code> and reviewed the available options and got what I needed.</p>
-
-<p>The final command I wrote on the server&rsquo;s terminal was</p>
-
-<figure class='code'><figcaption><span>Grep</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>grep -R -i -n <span class="s1">&#39;type=&quot;number&quot;&#39;</span> public_html/app
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p> <code>-R</code> tells <code>grep</code> to search recursively into that directory, <code>-i</code> is for <code>ignore-case</code> and <code>-n</code> finds and outputs the line number along with file name too. As soon as I ran that command it searched the whole <code>app</code> directory and came back with all the place where <code>type="number"</code> occurred with line number too. Then I just edited those files and the issue was fixed.</p>
-
-<p> What took me several minutes would have taken hours to search and find those files manually. Thats one of many benefits of using command line. And you can do pretty amazing things using/combining only a handful of commands.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -473,6 +469,10 @@ You might be thinking but thats Calculus(Math), how is it related to functional 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/">Understanding the Ubiquitous Notion of Mapping Over a Structure</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/07/hello-haskell-partial-function-applicaton/">Hello Haskell &#8211; Partial Function Application</a>
       </li>
     
@@ -486,10 +486,6 @@ You might be thinking but thats Calculus(Math), how is it related to functional 
     
       <li class="post">
         <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a>
       </li>
     
   </ul>

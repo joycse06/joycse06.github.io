@@ -1,0 +1,489 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Understanding the Ubiquitous Notion of Mapping Over a Structure - Prasenjit Kumar Nag a.k.a Joy</title>
+  <meta name="author" content="Joy Nag">
+
+  
+  <meta name="description" content="What is Map? The notion of Map has become so prevalent in all programming languages that almost everyone has some kind of exposure to it. Generically &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joycse06.github.io/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Prasenjit Kumar Nag a.k.a Joy" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58344400-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Prasenjit Kumar Nag a.k.a Joy</a></h1>
+  
+    <h2>A Developers Adventure in Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="joycse06.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories">Categories</a></li>
+  <li><a href="/about-me">About Me</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Understanding the Ubiquitous Notion of Mapping Over a Structure</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-07-31T10:53:05+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>10:53 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>What is Map?</h2>
+
+<p>The notion of Map has become so prevalent in all programming languages that almost everyone has some kind of exposure to it. Generically speaking, <code>Map</code> means apply a function to vallues which are inside some kind of structure or apply function structure.</p>
+
+<p>We usually use it a lot to apply a function to a list of values e.g mapping over the values of an <code>Array</code> to be more specific.</p>
+
+<p>In this post we will first see some examples of mapping in different languages and then we dive deep into it&rsquo;s internals in terms of <code>Haskell</code> and maybe finish with a better understanding of how everything fits together. Saying that lets start.</p>
+
+<!-- more -->
+
+
+<h2>Some examples of Mapping in some popular langauges</h2>
+
+<h3>JS and JQuery</h3>
+
+<figure class='code'><figcaption><span>Map</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='JS'><span class='line'><span class="c1">// copies from MDN</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">];</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">roots</span> <span class="o">=</span> <span class="nx">numbers</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span> <span class="c1">// =&gt; [ 1, 4, 9]</span>
+</span><span class='line'><span class="c1">// the above code squares all values of the array</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// In jQuery we always do things like</span>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span> <span class="s2">&quot;:checkbox&quot;</span> <span class="p">)</span>
+</span><span class='line'>  <span class="c1">// which returns all checkboxes</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">})</span>
+</span><span class='line'><span class="c1">// it applies the anonymous function over that collection of checkboxes and just return</span>
+</span><span class='line'><span class="c1">// their ids</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Ruby</h3>
+
+<figure class='code'><figcaption><span>Map</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='Ruby'><span class='line'><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span> <span class="p">}</span> <span class="c1">#=&gt; [1, 4, 9]</span>
+</span><span class='line'><span class="sr">//</span> <span class="n">which</span> <span class="n">just</span> <span class="n">squares</span> <span class="n">all</span> <span class="n">the</span> <span class="n">values</span> <span class="n">inside</span> <span class="n">the</span> <span class="n">array</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>PHP</h3>
+
+<figure class='code'><figcaption><span>Map</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='Php'><span class='line'><span class="nv">$square</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$n</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nv">$n</span> <span class="o">*</span> <span class="nv">$n</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+</span><span class='line'><span class="nb">array_map</span><span class="p">(</span><span class="nv">$square</span><span class="p">,</span> <span class="nv">$arr</span><span class="p">)</span> <span class="c1">// =&gt; [1, 4, 9]</span>
+</span><span class='line'><span class="c1">// Array is a primitive data type in PHP so we can&#39;t do</span>
+</span><span class='line'><span class="c1">// $arr.map.....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Map internals with Haskell</h2>
+
+<p>So lets see how an implementation of a <code>Map</code> function in Haskell looks like</p>
+
+<figure class='code'><figcaption><span>Map implementation</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='Haskell'><span class='line'><span class="nf">map</span> <span class="ow">::</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">b</span><span class="p">]</span>
+</span><span class='line'><span class="c1">-- type signature of map, which says map takes a function ( a -&gt; b ) and a list ( [a] )</span>
+</span><span class='line'><span class="c1">-- apply the function on all elements of that list and returns another list ([b])</span>
+</span><span class='line'><span class="nf">map</span> <span class="n">f</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">[]</span>
+</span><span class='line'><span class="c1">-- base case if the function is empty just return an empty list</span>
+</span><span class='line'><span class="nf">map</span> <span class="n">f</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">f</span> <span class="n">x</span> <span class="kt">:</span> <span class="p">(</span><span class="n">map</span> <span class="n">f</span> <span class="n">xs</span><span class="p">)</span>
+</span><span class='line'><span class="c1">-- otherwise apply the function to first element ( head )</span>
+</span><span class='line'><span class="c1">-- and call map recursively on the rest of the list ( tail )</span>
+</span><span class='line'><span class="c1">-- on a side note (:) is called the cons constructor which adds an element to a list</span>
+</span><span class='line'><span class="c1">-- lets see how a simple function like (+1) it will apply to the list [1,2]</span>
+</span><span class='line'><span class="c1">-- map (+1) [1,2]</span>
+</span><span class='line'><span class="c1">-- (+1) 1 : (+1) 2 : [] ( this [] is coming from the base case of the recursion above) </span>
+</span><span class='line'><span class="c1">-- 2 : 3 : []</span>
+</span><span class='line'><span class="c1">-- [2, 3]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You see how partially applied functions ( <code>(+1)</code> above ) comes in handy.</p>
+
+<p>It&rsquo;s pretty simple right. But why contrain this great idea to only a list of values. Haskell takes it a step further
+and generalizes it with an Abstraction named <code>Functor</code>. I will not get into details of <code>Functors</code> but will just use that to demonstrate the generic notion of mapping over a structure. So what is this structure thing I am talking about.</p>
+
+<p>In the application above the list is the structure, it&rsquo;s characteristic is to hold a list of values. <code>Tree</code> is another structure which has <code>leafs</code> and <code>branches</code>. They are ways of organizing data.</p>
+
+<p>The notion of <code>map</code> in generic sense is to apply a function over a strucure. Think of it like you want to throw a function over some kind of structure and apply it to the values inside. This can be any kind of strucure defined by you or in haskell <code>Types</code>. Haskell has a <code>TypeClass</code> named <code>Functor</code> which any custom type can implement and thereby define how map should work for that type.</p>
+
+<p>Lets see how this works for a <code>Tree</code> type.</p>
+
+<figure class='code'><figcaption><span>Tree</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='Haskell'><span class='line'><span class="kr">data</span> <span class="kt">Tree</span> <span class="n">a</span> <span class="ow">=</span> <span class="kt">Leaf</span> <span class="n">a</span> <span class="o">|</span> <span class="kt">Branch</span> <span class="p">(</span><span class="kt">Tree</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="kt">Tree</span> <span class="n">a</span><span class="p">)</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Show</span><span class="p">)</span>
+</span><span class='line'><span class="c1">-- in laymen term is defines a tree data type, which has either a leaf or a branch with left</span>
+</span><span class='line'><span class="c1">-- or right subtree</span>
+</span><span class='line'><span class="c1">-- we can also see it&#39;s a recursive data structure as it&#39;s left and right subtree holds same structure</span>
+</span><span class='line'><span class="c1">-- we get a sense of that from the definition itself</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now how should map works for this structure. In case of list we only had a list of values. In case of our <code>Tree</code> its a bit different but we still have values in the leaves which we may want to transform.</p>
+
+<p>Let&rsquo;s see how we can define a <code>map</code> function for our tree.</p>
+
+<figure class='code'><figcaption><span>treeMap</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='Haskell'><span class='line'><span class="nf">treeMap</span> <span class="ow">::</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="kt">Tree</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="kt">Tree</span> <span class="n">b</span>
+</span><span class='line'><span class="nf">treeMap</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="n">x</span><span class="p">)</span> <span class="ow">=</span> <span class="kt">Leaf</span> <span class="p">(</span><span class="n">f</span> <span class="n">x</span><span class="p">)</span>
+</span><span class='line'><span class="nf">treeMap</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Branch</span> <span class="n">left</span> <span class="n">right</span><span class="p">)</span> <span class="ow">=</span> <span class="kt">Branch</span> <span class="p">(</span><span class="n">treeMap</span> <span class="n">f</span> <span class="n">left</span><span class="p">)</span> <span class="p">(</span><span class="n">treeMap</span> <span class="n">f</span> <span class="n">right</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">-- example</span>
+</span><span class='line'><span class="nf">treeMap</span> <span class="p">(</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">4</span><span class="p">)))</span>
+</span><span class='line'><span class="c1">-- which multiplies 2 to every leaf of the tree and returns the new tree as below</span>
+</span><span class='line'><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">4</span><span class="p">))</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">6</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">8</span><span class="p">))</span>
+</span><span class='line'><span class="c1">-- See all the leafs has been multiplied by 2</span>
+</span><span class='line'><span class="c1">-- lets see function composition fits in here if we first want to multiply by 2 and then negate the numbers</span>
+</span><span class='line'><span class="c1">-- we can do something like</span>
+</span><span class='line'><span class="nf">treeMap</span> <span class="p">(</span><span class="n">negate</span><span class="o">.</span> <span class="p">(</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">4</span><span class="p">)))</span>
+</span><span class='line'><span class="c1">-- function composition for the win</span>
+</span><span class='line'><span class="c1">-- it should return</span>
+</span><span class='line'><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)))</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">))</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">)))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Oh I forgot to say <code>map</code> is a way of transforming data as thats the only way you can chagne data in <code>Pure functinal programming</code> as you can&rsquo;t mutate them in place. But we are lazy programmers, why define a new method or force others to define new map functions for our data types. Haskell abstracts this with <code>Functor</code> as I mentioned above. So lets define an instance of <code>Functor</code> for our tree data type.</p>
+
+<figure class='code'><figcaption><span>Functor instance of Tree</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='Haskell'><span class='line'><span class="kr">instance</span> <span class="kt">Functor</span> <span class="kt">Tree</span> <span class="kr">where</span>
+</span><span class='line'>    <span class="n">fmap</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="n">x</span><span class="p">)</span> <span class="ow">=</span> <span class="kt">Leaf</span> <span class="p">(</span><span class="n">f</span> <span class="n">x</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">fmap</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Branch</span> <span class="n">left</span> <span class="n">right</span><span class="p">)</span> <span class="ow">=</span> <span class="kt">Branch</span> <span class="p">(</span><span class="n">fmap</span> <span class="n">f</span> <span class="n">left</span><span class="p">)</span> <span class="p">(</span><span class="n">fmap</span> <span class="n">f</span> <span class="n">right</span><span class="p">)</span>
+</span><span class='line'><span class="c1">-- it&#39;s same as our treeMap and does the same thing</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> Once we have our <code>Functor</code> instance for <code>Tree</code> we can use the generic <code>fmap</code> function now to do the same thing we did above</p>
+
+<figure class='code'><figcaption><span>fmap example</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='Haskell'><span class='line'> <span class="kr">let</span> <span class="n">tree</span> <span class="ow">=</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">4</span><span class="p">)))</span>
+</span><span class='line'>  <span class="n">fmap</span> <span class="p">(</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span> <span class="n">tree</span>
+</span><span class='line'>  <span class="c1">-- or</span>
+</span><span class='line'>  <span class="n">fmap</span> <span class="p">(</span><span class="n">neg</span> <span class="o">.</span> <span class="p">(</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span> <span class="n">tree</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>  So the generic notion is <code>Map</code> is not just for array or list of values, rather it&rsquo;s a very powerful idea to apply any function over any kind of structures no matter how complex are them.</p>
+
+<p>  Hope you enjoyed it. We may talk more about <code>Functors</code> later and see how haskell takes this idea of mapping to a whole new level.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Joy Nag</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-07-31T10:53:05+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>10:53 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/coding/'>coding</a>, <a class='category' href='/blog/categories/functional-programming/'>functional-programming,</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://joycse06.github.io/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/" data-via="joycse06" data-counturl="http://joycse06.github.io/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/07/hello-haskell-partial-function-applicaton/" title="Previous Post: Hello Haskell -- Partial Function Application">&laquo; Hello Haskell &#8211; Partial Function Application</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/">Understanding the Ubiquitous Notion of Mapping Over a Structure</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/hello-haskell-partial-function-applicaton/">Hello Haskell &#8211; Partial Function Application</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/laravel-view-presenters-from-scratch/">Laravel View Presenters From Scratch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joycse06">@joycse06</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joycse06',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section>
+    <h1>Stack Overflow</h1>
+    <a href="http://stackoverflow.com/users/344304/Joy">
+        <img src="http://stackoverflow.com/users/flair/344304.png" width="208" height="58" alt="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+    </a>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Joy Nag -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joycse06';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joycse06.github.io/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/';
+        var disqus_url = 'http://joycse06.github.io/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

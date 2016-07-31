@@ -4,7 +4,7 @@
   <title><![CDATA[Prasenjit Kumar Nag a.k.a Joy]]></title>
   <link href="http://joycse06.github.io/atom.xml" rel="self"/>
   <link href="http://joycse06.github.io/"/>
-  <updated>2016-07-24T13:26:04+10:00</updated>
+  <updated>2016-07-31T13:09:32+10:00</updated>
   <id>http://joycse06.github.io/</id>
   <author>
     <name><![CDATA[Joy Nag]]></name>
@@ -12,6 +12,217 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Understanding the Ubiquitous Notion of Mapping Over a Structure]]></title>
+    <link href="http://joycse06.github.io/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/"/>
+    <updated>2016-07-31T10:53:05+10:00</updated>
+    <id>http://joycse06.github.io/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure</id>
+    <content type="html"><![CDATA[<h2>What is Map?</h2>
+
+<p>The notion of Map has become so prevalent in all programming languages that almost everyone has some kind of exposure to it. Generically speaking, <code>Map</code> means apply a function to vallues which are inside some kind of structure or apply function structure.</p>
+
+<p>We usually use it a lot to apply a function to a list of values e.g mapping over the values of an <code>Array</code> to be more specific.</p>
+
+<p>In this post we will first see some examples of mapping in different languages and then we dive deep into it&rsquo;s internals in terms of <code>Haskell</code> and maybe finish with a better understanding of how everything fits together. Saying that lets start.</p>
+
+<!-- more -->
+
+
+<h2>Some examples of Mapping in some popular langauges</h2>
+
+<h3>JS and JQuery</h3>
+
+<figure class='code'><figcaption><span>Map</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='JS'><span class='line'><span class="c1">// copies from MDN</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">];</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">roots</span> <span class="o">=</span> <span class="nx">numbers</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span> <span class="c1">// =&gt; [ 1, 4, 9]</span>
+</span><span class='line'><span class="c1">// the above code squares all values of the array</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// In jQuery we always do things like</span>
+</span><span class='line'><span class="nx">$</span><span class="p">(</span> <span class="s2">&quot;:checkbox&quot;</span> <span class="p">)</span>
+</span><span class='line'>  <span class="c1">// which returns all checkboxes</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">})</span>
+</span><span class='line'><span class="c1">// it applies the anonymous function over that collection of checkboxes and just return</span>
+</span><span class='line'><span class="c1">// their ids</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Ruby</h3>
+
+<figure class='code'><figcaption><span>Map</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='Ruby'><span class='line'><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span> <span class="p">}</span> <span class="c1">#=&gt; [1, 4, 9]</span>
+</span><span class='line'><span class="sr">//</span> <span class="n">which</span> <span class="n">just</span> <span class="n">squares</span> <span class="n">all</span> <span class="n">the</span> <span class="n">values</span> <span class="n">inside</span> <span class="n">the</span> <span class="n">array</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>PHP</h3>
+
+<figure class='code'><figcaption><span>Map</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='Php'><span class='line'><span class="nv">$square</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$n</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nv">$n</span> <span class="o">*</span> <span class="nv">$n</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+</span><span class='line'><span class="nb">array_map</span><span class="p">(</span><span class="nv">$square</span><span class="p">,</span> <span class="nv">$arr</span><span class="p">)</span> <span class="c1">// =&gt; [1, 4, 9]</span>
+</span><span class='line'><span class="c1">// Array is a primitive data type in PHP so we can&#39;t do</span>
+</span><span class='line'><span class="c1">// $arr.map.....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Map internals with Haskell</h2>
+
+<p>So lets see how an implementation of a <code>Map</code> function in Haskell looks like</p>
+
+<figure class='code'><figcaption><span>Map implementation</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='Haskell'><span class='line'><span class="nf">map</span> <span class="ow">::</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">b</span><span class="p">]</span>
+</span><span class='line'><span class="c1">-- type signature of map, which says map takes a function ( a -&gt; b ) and a list ( [a] )</span>
+</span><span class='line'><span class="c1">-- apply the function on all elements of that list and returns another list ([b])</span>
+</span><span class='line'><span class="nf">map</span> <span class="n">f</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">[]</span>
+</span><span class='line'><span class="c1">-- base case if the function is empty just return an empty list</span>
+</span><span class='line'><span class="nf">map</span> <span class="n">f</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">f</span> <span class="n">x</span> <span class="kt">:</span> <span class="p">(</span><span class="n">map</span> <span class="n">f</span> <span class="n">xs</span><span class="p">)</span>
+</span><span class='line'><span class="c1">-- otherwise apply the function to first element ( head )</span>
+</span><span class='line'><span class="c1">-- and call map recursively on the rest of the list ( tail )</span>
+</span><span class='line'><span class="c1">-- on a side note (:) is called the cons constructor which adds an element to a list</span>
+</span><span class='line'><span class="c1">-- lets see how a simple function like (+1) it will apply to the list [1,2]</span>
+</span><span class='line'><span class="c1">-- map (+1) [1,2]</span>
+</span><span class='line'><span class="c1">-- (+1) 1 : (+1) 2 : [] ( this [] is coming from the base case of the recursion above) </span>
+</span><span class='line'><span class="c1">-- 2 : 3 : []</span>
+</span><span class='line'><span class="c1">-- [2, 3]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You see how partially applied functions ( <code>(+1)</code> above ) comes in handy.</p>
+
+<p>It&rsquo;s pretty simple right. But why contrain this great idea to only a list of values. Haskell takes it a step further
+and generalizes it with an Abstraction named <code>Functor</code>. I will not get into details of <code>Functors</code> but will just use that to demonstrate the generic notion of mapping over a structure. So what is this structure thing I am talking about.</p>
+
+<p>In the application above the list is the structure, it&rsquo;s characteristic is to hold a list of values. <code>Tree</code> is another structure which has <code>leafs</code> and <code>branches</code>. They are ways of organizing data.</p>
+
+<p>The notion of <code>map</code> in generic sense is to apply a function over a strucure. Think of it like you want to throw a function over some kind of structure and apply it to the values inside. This can be any kind of strucure defined by you or in haskell <code>Types</code>. Haskell has a <code>TypeClass</code> named <code>Functor</code> which any custom type can implement and thereby define how map should work for that type.</p>
+
+<p>Lets see how this works for a <code>Tree</code> type.</p>
+
+<figure class='code'><figcaption><span>Tree</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='Haskell'><span class='line'><span class="kr">data</span> <span class="kt">Tree</span> <span class="n">a</span> <span class="ow">=</span> <span class="kt">Leaf</span> <span class="n">a</span> <span class="o">|</span> <span class="kt">Branch</span> <span class="p">(</span><span class="kt">Tree</span> <span class="n">a</span><span class="p">)</span> <span class="p">(</span><span class="kt">Tree</span> <span class="n">a</span><span class="p">)</span> <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Show</span><span class="p">)</span>
+</span><span class='line'><span class="c1">-- in laymen term is defines a tree data type, which has either a leaf or a branch with left</span>
+</span><span class='line'><span class="c1">-- or right subtree</span>
+</span><span class='line'><span class="c1">-- we can also see it&#39;s a recursive data structure as it&#39;s left and right subtree holds same structure</span>
+</span><span class='line'><span class="c1">-- we get a sense of that from the definition itself</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now how should map works for this structure. In case of list we only had a list of values. In case of our <code>Tree</code> its a bit different but we still have values in the leaves which we may want to transform.</p>
+
+<p>Let&rsquo;s see how we can define a <code>map</code> function for our tree.</p>
+
+<figure class='code'><figcaption><span>treeMap</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='Haskell'><span class='line'><span class="nf">treeMap</span> <span class="ow">::</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="kt">Tree</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="kt">Tree</span> <span class="n">b</span>
+</span><span class='line'><span class="nf">treeMap</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="n">x</span><span class="p">)</span> <span class="ow">=</span> <span class="kt">Leaf</span> <span class="p">(</span><span class="n">f</span> <span class="n">x</span><span class="p">)</span>
+</span><span class='line'><span class="nf">treeMap</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Branch</span> <span class="n">left</span> <span class="n">right</span><span class="p">)</span> <span class="ow">=</span> <span class="kt">Branch</span> <span class="p">(</span><span class="n">treeMap</span> <span class="n">f</span> <span class="n">left</span><span class="p">)</span> <span class="p">(</span><span class="n">treeMap</span> <span class="n">f</span> <span class="n">right</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">-- example</span>
+</span><span class='line'><span class="nf">treeMap</span> <span class="p">(</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">4</span><span class="p">)))</span>
+</span><span class='line'><span class="c1">-- which multiplies 2 to every leaf of the tree and returns the new tree as below</span>
+</span><span class='line'><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">4</span><span class="p">))</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">6</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">8</span><span class="p">))</span>
+</span><span class='line'><span class="c1">-- See all the leafs has been multiplied by 2</span>
+</span><span class='line'><span class="c1">-- lets see function composition fits in here if we first want to multiply by 2 and then negate the numbers</span>
+</span><span class='line'><span class="c1">-- we can do something like</span>
+</span><span class='line'><span class="nf">treeMap</span> <span class="p">(</span><span class="n">negate</span><span class="o">.</span> <span class="p">(</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">4</span><span class="p">)))</span>
+</span><span class='line'><span class="c1">-- function composition for the win</span>
+</span><span class='line'><span class="c1">-- it should return</span>
+</span><span class='line'><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)))</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">))</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">)))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Oh I forgot to say <code>map</code> is a way of transforming data as thats the only way you can chagne data in <code>Pure functinal programming</code> as you can&rsquo;t mutate them in place. But we are lazy programmers, why define a new method or force others to define new map functions for our data types. Haskell abstracts this with <code>Functor</code> as I mentioned above. So lets define an instance of <code>Functor</code> for our tree data type.</p>
+
+<figure class='code'><figcaption><span>Functor instance of Tree</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='Haskell'><span class='line'><span class="kr">instance</span> <span class="kt">Functor</span> <span class="kt">Tree</span> <span class="kr">where</span>
+</span><span class='line'>    <span class="n">fmap</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="n">x</span><span class="p">)</span> <span class="ow">=</span> <span class="kt">Leaf</span> <span class="p">(</span><span class="n">f</span> <span class="n">x</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">fmap</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Branch</span> <span class="n">left</span> <span class="n">right</span><span class="p">)</span> <span class="ow">=</span> <span class="kt">Branch</span> <span class="p">(</span><span class="n">fmap</span> <span class="n">f</span> <span class="n">left</span><span class="p">)</span> <span class="p">(</span><span class="n">fmap</span> <span class="n">f</span> <span class="n">right</span><span class="p">)</span>
+</span><span class='line'><span class="c1">-- it&#39;s same as our treeMap and does the same thing</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> Once we have our <code>Functor</code> instance for <code>Tree</code> we can use the generic <code>fmap</code> function now to do the same thing we did above</p>
+
+<figure class='code'><figcaption><span>fmap example</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='Haskell'><span class='line'> <span class="kr">let</span> <span class="n">tree</span> <span class="ow">=</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="kt">Branch</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="kt">Leaf</span> <span class="mi">4</span><span class="p">)))</span>
+</span><span class='line'>  <span class="n">fmap</span> <span class="p">(</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span> <span class="n">tree</span>
+</span><span class='line'>  <span class="c1">-- or</span>
+</span><span class='line'>  <span class="n">fmap</span> <span class="p">(</span><span class="n">neg</span> <span class="o">.</span> <span class="p">(</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span> <span class="n">tree</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>  So the generic notion is <code>Map</code> is not just for array or list of values, rather it&rsquo;s a very powerful idea to apply any function over any kind of structures no matter how complex are them.</p>
+
+<p>  Hope you enjoyed it. We may talk more about <code>Functors</code> later and see how haskell takes this idea of mapping to a whole new level.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Hello Haskell -- Partial Function Application]]></title>
@@ -2394,130 +2605,6 @@ So File::domeSomething() is actually somewhat equivalent to</p>
 <p>I dont know why but finding the whole thing was a great joy for me. It always feels great to understand the inner working principle of a thing I am using. This is the most awesome thing I have learnt/known in a while.</p>
 
 <p>Hope you enjoyed it. :D</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Taking Advantage of Implicit Looping in jQuery Setter Methods]]></title>
-    <link href="http://joycse06.github.io/blog/2012/07/taking-advantage-of-implicit-looping-in-jquery-setter-methods/"/>
-    <updated>2012-07-08T00:00:00+10:00</updated>
-    <id>http://joycse06.github.io/blog/2012/07/taking-advantage-of-implicit-looping-in-jquery-setter-methods</id>
-    <content type="html"><![CDATA[<p>jQuery setter methods are those methods using which we can set the value of any input field, or any attributes like width,height,classes etc and some of the setter methods are</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">height</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">width</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">value</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="nx">property</span><span class="p">,</span><span class="nx">val</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="nx">html</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="nx">className</span><span class="p">)</span>
-</span><span class='line'><span class="p">.....</span>
-</span><span class='line'><span class="p">.....</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>and most(or maybe all) of them have a special syntax like for <strong>.width()</strong> there is</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">.</span><span class="nx">width</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">width</span><span class="p">)</span> <span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>What jQuery does for this case is, it loops over the set elements in current selection internally and pass those one by one into that callback function.</strong> And <strong>index</strong> is the index of the element currently being iterated, and <strong>width</strong> is the current width of element. And you will also get the current element as this inside that function.
-This syntax is useful or intended for cases when you use the <strong>.width()</strong> method on a <strong>collection of elements</strong>. I wasn&rsquo;t aware of this until recently, but they can be very useful in cases. Suppose if you want to make the width of all divs in a page to half of it&rsquo;s current width, you can do that easily using this syntax like</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">).</span><span class="nx">width</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span><span class="nx">width</span><span class="p">){</span>
-</span><span class='line'>   <span class="k">return</span> <span class="nx">width</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So what you return from that function will be set as new width of that element.
-Pretty cool, huh! You could also use .each() to iterate over the divs collection and set their width manually. But the above code is much more cleaner and maybe a little faster.</p>
-
-<p>Example of some cases when this implicit looping can be useful and will help you write cleaner code.</p>
-
-<p>Suppose you want to give unique id to all li&rsquo;s inside a ul with id of list, you can do so the following way easily</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;ul#list li&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">){</span>
-</span><span class='line'>   <span class="k">return</span> <span class="s1">&#39;list-item-&#39;</span><span class="o">+</span><span class="nx">i</span><span class="p">;</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>and they will get id&rsquo;s like list-item-1,list-item-2,list-item-3 etc.</p>
-
-<p>Another useful thing can be to trim the value in a textbox as soon as users moves away from it. You can do that like</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;blur&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span><span class="nx">val</span><span class="p">){</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">trim</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">});</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Or say in a text field field(which takes numbers), you always want to force two decimal point in floating values no matter how many decimal points have been entered by users, you can do that like</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;blur&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span><span class="nx">val</span><span class="p">){</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nb">parseFloat</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">});</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p> js</p>
-
-<p>Example Fiddle: (Enter any number and click somewhere else)</p>
-
-<p>[jsfiddle url=&ldquo;<a href="http://jsfiddle.net/joycse06/PbKVf/">http://jsfiddle.net/joycse06/PbKVf/</a>&rdquo; height=&ldquo;400px&rdquo; include=&ldquo;result,html,js,css&rdquo;]</p>
-
-<p>There are many useful uses of this callback function in setter methods.</p>
-
-<p>Suppose you have a html5 data attribute named data-bg set on all div and onclick of some button or link or on some user action you want to set that as background image of those divs. You can do do so using</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;something&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>     <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;background-image&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>         <span class="k">return</span> <span class="s1">&#39;/images/&#39;</span><span class="o">+</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;bg&#39;</span><span class="p">);</span>
-</span><span class='line'>     <span class="p">});</span>
-</span><span class='line'>  <span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I can show many example of useful uses of this implicit looping. This is a very helpful and often overlooked feature in setter methods which you take advantage of. :)</p>
 ]]></content>
   </entry>
   

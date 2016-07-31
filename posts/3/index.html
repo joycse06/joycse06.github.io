@@ -9,7 +9,7 @@
   <meta name="author" content="Joy Nag">
 
   
-  <meta name="description" content="Those who of you have been working with subversion for a while may have noticed that when you add a number of files in different directories into an &hellip;">
+  <meta name="description" content="jQuery setter methods are those methods using which we can set the value of any input field, or any attributes like width,height,classes etc and some &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,150 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/taking-advantage-of-implicit-looping-in-jquery-setter-methods/">Taking Advantage of Implicit Looping in jQuery Setter Methods</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-07-08T00:00:00+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>jQuery setter methods are those methods using which we can set the value of any input field, or any attributes like width,height,classes etc and some of the setter methods are</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
+</span><span class='line'><span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">height</span><span class="p">)</span>
+</span><span class='line'><span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">width</span><span class="p">)</span>
+</span><span class='line'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">value</span><span class="p">)</span>
+</span><span class='line'><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="nx">property</span><span class="p">,</span><span class="nx">val</span><span class="p">)</span>
+</span><span class='line'><span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span>
+</span><span class='line'><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="nx">html</span><span class="p">)</span>
+</span><span class='line'><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="nx">className</span><span class="p">)</span>
+</span><span class='line'><span class="p">.....</span>
+</span><span class='line'><span class="p">.....</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and most(or maybe all) of them have a special syntax like for <strong>.width()</strong> there is</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">.</span><span class="nx">width</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">width</span><span class="p">)</span> <span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>What jQuery does for this case is, it loops over the set elements in current selection internally and pass those one by one into that callback function.</strong> And <strong>index</strong> is the index of the element currently being iterated, and <strong>width</strong> is the current width of element. And you will also get the current element as this inside that function.
+This syntax is useful or intended for cases when you use the <strong>.width()</strong> method on a <strong>collection of elements</strong>. I wasn&rsquo;t aware of this until recently, but they can be very useful in cases. Suppose if you want to make the width of all divs in a page to half of it&rsquo;s current width, you can do that easily using this syntax like</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">).</span><span class="nx">width</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span><span class="nx">width</span><span class="p">){</span>
+</span><span class='line'>   <span class="k">return</span> <span class="nx">width</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So what you return from that function will be set as new width of that element.
+Pretty cool, huh! You could also use .each() to iterate over the divs collection and set their width manually. But the above code is much more cleaner and maybe a little faster.</p>
+
+<p>Example of some cases when this implicit looping can be useful and will help you write cleaner code.</p>
+
+<p>Suppose you want to give unique id to all li&rsquo;s inside a ul with id of list, you can do so the following way easily</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;ul#list li&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">){</span>
+</span><span class='line'>   <span class="k">return</span> <span class="s1">&#39;list-item-&#39;</span><span class="o">+</span><span class="nx">i</span><span class="p">;</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and they will get id&rsquo;s like list-item-1,list-item-2,list-item-3 etc.</p>
+
+<p>Another useful thing can be to trim the value in a textbox as soon as users moves away from it. You can do that like</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;blur&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span><span class="nx">val</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">trim</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Or say in a text field field(which takes numbers), you always want to force two decimal point in floating values no matter how many decimal points have been entered by users, you can do that like</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;blur&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span><span class="nx">val</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">parseFloat</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> js</p>
+
+<p>Example Fiddle: (Enter any number and click somewhere else)</p>
+
+<p>[jsfiddle url=&ldquo;<a href="http://jsfiddle.net/joycse06/PbKVf/">http://jsfiddle.net/joycse06/PbKVf/</a>&rdquo; height=&ldquo;400px&rdquo; include=&ldquo;result,html,js,css&rdquo;]</p>
+
+<p>There are many useful uses of this callback function in setter methods.</p>
+
+<p>Suppose you have a html5 data attribute named data-bg set on all div and onclick of some button or link or on some user action you want to set that as background image of those divs. You can do do so using</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;something&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>     <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;background-image&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>         <span class="k">return</span> <span class="s1">&#39;/images/&#39;</span><span class="o">+</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;bg&#39;</span><span class="p">);</span>
+</span><span class='line'>     <span class="p">});</span>
+</span><span class='line'>  <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I can show many example of useful uses of this implicit looping. This is a very helpful and often overlooked feature in setter methods which you take advantage of. :)</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1221,84 +1365,6 @@ But thanks to the internet I found some tricks somewhere in the internet that I 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/01/responding-to-orientation-changes-in-iphone-apps-titaniu/">Responding to Orientation Changes in Iphone Application Using Titanium</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2011-01-27T00:00:00+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I am learning Titanium and Just Loving it. Earlier I thought i wont be able to do many things using titanium and started learning Obj-C and Cocoa-touch framework. And that path needs lots of study and learning before someone can build something really productive.</p>
-
-<p>But the Scenario is different in case of Titanium. If you have basic programming concepts and have some experience with JavaScript you can start right away after a couple hours of study. And Titanium creates the native Obj-C codes for you. So there is basically no difference in an Iphone App made with Obj-C using UIKit framework with one built using Titanium. And even better is that you can deploy your Iphone App code In Andriod Platform with few changes. Supports for Blackberry is coming. So Titanium is a very good Parser itself, it takes you code written in JavaScript And Creates the Obj-C code for Iphone and Java Code for Android for you. As Titanium acquired Aptana few days ago We can expect that we will get a very good IDE for developing Titanium Apps with code Sense, debugging features and who know what else, lets wait and see what they brings.</p>
-
-<p>And the amazing thing is that it&rsquo;s open source. They have an example app which have all the features Available in Iphone ranging from simple TableViews to 3D animations.</p>
-
-<p>Anyway, let&rsquo;s talk about the Title of this post. You know Iphone,Ipod Touch, IPad have accelerometers built-in. That means it can detect orientation changes. Now responding to orientation changes Is a very important feature that every Iphone Apps should have. Doing it is not tough with Titanium. Here is a code block, which will respond to device orientation changes by changing the UI orientation. Place it anywhere in you app.js file.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">Ti</span><span class="p">.</span><span class="nx">Gesture</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span>
-</span><span class='line'><span class="s1">&#39;orientationchange&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'><span class="c1">// alert(&quot;Called&quot;);</span>
-</span><span class='line'><span class="nx">win</span><span class="p">.</span><span class="nx">orientationModes</span> <span class="o">=</span> <span class="p">[</span>
-</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_LEFT</span><span class="p">,</span>
-</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_RIGHT</span><span class="p">,</span>
-</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">PORTRAIT</span><span class="p">,</span>
-</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">UPSIDE_PORTRAIT</span>
-</span><span class='line'><span class="p">];</span>
-</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">orientation</span> <span class="o">==</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_LEFT</span> <span class="o">||</span>
-</span><span class='line'><span class="nx">e</span><span class="p">.</span><span class="nx">orientation</span> <span class="o">==</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_RIGHT</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'><span class="c1">// Do anything you wanna do when user changes the orientation to LandScape</span>
-</span><span class='line'><span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">orientation</span> <span class="o">=</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_RIGHT</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'><span class="c1">// Revert the changes you made, the user is back to portrait mode</span>
-</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">orientation</span> <span class="o">=</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">PORTRAIT</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The code is pretty straightforward. We are attaching an event listener into the Ti.Gesture and once the orientation of the device changes this callback is fired and we can do anything we want into that callback. I will try to write small posts on titanium as i go along learning Titanium.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/4">&larr; Older</a>
@@ -1316,6 +1382,10 @@ But thanks to the internet I found some tricks somewhere in the internet that I 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/">Understanding the Ubiquitous Notion of Mapping Over a Structure</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/07/hello-haskell-partial-function-applicaton/">Hello Haskell &#8211; Partial Function Application</a>
       </li>
     
@@ -1329,10 +1399,6 @@ But thanks to the internet I found some tricks somewhere in the internet that I 
     
       <li class="post">
         <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a>
       </li>
     
   </ul>

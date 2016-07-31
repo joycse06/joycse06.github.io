@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Functional-programming, | Prasenjit Kumar Nag a.k.a Joy]]></title>
   <link href="http://joycse06.github.io/blog/categories/functional-programming/atom.xml" rel="self"/>
   <link href="http://joycse06.github.io/"/>
-  <updated>2016-07-24T13:26:04+10:00</updated>
+  <updated>2016-07-31T13:09:32+10:00</updated>
   <id>http://joycse06.github.io/</id>
   <author>
     <name><![CDATA[Joy Nag]]></name>
@@ -12,6 +12,144 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Understanding the Ubiquitous Notion of Mapping Over a Structure]]></title>
+    <link href="http://joycse06.github.io/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/"/>
+    <updated>2016-07-31T10:53:05+10:00</updated>
+    <id>http://joycse06.github.io/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure</id>
+    <content type="html"><![CDATA[<h2>What is Map?</h2>
+
+<p>The notion of Map has become so prevalent in all programming languages that almost everyone has some kind of exposure to it. Generically speaking, <code>Map</code> means apply a function to vallues which are inside some kind of structure or apply function structure.</p>
+
+<p>We usually use it a lot to apply a function to a list of values e.g mapping over the values of an <code>Array</code> to be more specific.</p>
+
+<p>In this post we will first see some examples of mapping in different languages and then we dive deep into it&rsquo;s internals in terms of <code>Haskell</code> and maybe finish with a better understanding of how everything fits together. Saying that lets start.</p>
+
+<!-- more -->
+
+
+<h2>Some examples of Mapping in some popular langauges</h2>
+
+<h3>JS and JQuery</h3>
+
+<pre><code class="JS Map">
+// copies from MDN
+var numbers = [1, 2, 3];
+var roots = numbers.map(function(x) {
+    return Math.pow(x, 2);
+}); // =&gt; [ 1, 4, 9]
+// the above code squares all values of the array
+
+// In jQuery we always do things like
+$( ":checkbox" )
+  // which returns all checkboxes
+  .map(function() {
+    return this.id;
+  })
+// it applies the anonymous function over that collection of checkboxes and just return
+// their ids
+</code></pre>
+
+<h3>Ruby</h3>
+
+<pre><code class="Ruby Map">[1, 2, 3].map { |n| n * n } #=&gt; [1, 4, 9]
+// which just squares all the values inside the array
+</code></pre>
+
+<h3>PHP</h3>
+
+<pre><code class="Php Map">$square = function ($n) {
+  return $n * $n;
+}
+
+$arr = [1,2,3]
+array_map($square, $arr) // =&gt; [1, 4, 9]
+// Array is a primitive data type in PHP so we can't do
+// $arr.map.....
+</code></pre>
+
+<h2>Map internals with Haskell</h2>
+
+<p>So lets see how an implementation of a <code>Map</code> function in Haskell looks like</p>
+
+<pre><code class="Haskell Map implementation">map :: (a -&gt; b) -&gt; [a] -&gt; [b]
+-- type signature of map, which says map takes a function ( a -&gt; b ) and a list ( [a] )
+-- apply the function on all elements of that list and returns another list ([b])
+map f [] = []
+-- base case if the function is empty just return an empty list
+map f (x:xs) = f x : (map f xs)
+-- otherwise apply the function to first element ( head )
+-- and call map recursively on the rest of the list ( tail )
+-- on a side note (:) is called the cons constructor which adds an element to a list
+-- lets see how a simple function like (+1) it will apply to the list [1,2]
+-- map (+1) [1,2]
+-- (+1) 1 : (+1) 2 : [] ( this [] is coming from the base case of the recursion above) 
+-- 2 : 3 : []
+-- [2, 3]
+</code></pre>
+
+<p>You see how partially applied functions ( <code>(+1)</code> above ) comes in handy.</p>
+
+<p>It&rsquo;s pretty simple right. But why contrain this great idea to only a list of values. Haskell takes it a step further
+and generalizes it with an Abstraction named <code>Functor</code>. I will not get into details of <code>Functors</code> but will just use that to demonstrate the generic notion of mapping over a structure. So what is this structure thing I am talking about.</p>
+
+<p>In the application above the list is the structure, it&rsquo;s characteristic is to hold a list of values. <code>Tree</code> is another structure which has <code>leafs</code> and <code>branches</code>. They are ways of organizing data.</p>
+
+<p>The notion of <code>map</code> in generic sense is to apply a function over a strucure. Think of it like you want to throw a function over some kind of structure and apply it to the values inside. This can be any kind of strucure defined by you or in haskell <code>Types</code>. Haskell has a <code>TypeClass</code> named <code>Functor</code> which any custom type can implement and thereby define how map should work for that type.</p>
+
+<p>Lets see how this works for a <code>Tree</code> type.</p>
+
+<pre><code class="Haskell Tree">data Tree a = Leaf a | Branch (Tree a) (Tree a) deriving (Show)
+-- in laymen term is defines a tree data type, which has either a leaf or a branch with left
+-- or right subtree
+-- we can also see it's a recursive data structure as it's left and right subtree holds same structure
+-- we get a sense of that from the definition itself
+</code></pre>
+
+<p>Now how should map works for this structure. In case of list we only had a list of values. In case of our <code>Tree</code> its a bit different but we still have values in the leaves which we may want to transform.</p>
+
+<p>Let&rsquo;s see how we can define a <code>map</code> function for our tree.</p>
+
+<pre><code class="Haskell treeMap">treeMap :: (a -&gt; b) -&gt; Tree a -&gt; Tree b
+treeMap f (Leaf x) = Leaf (f x)
+treeMap f (Branch left right) = Branch (treeMap f left) (treeMap f right)
+
+-- example
+treeMap (*2) (Branch (Branch (Leaf 1) (Leaf 2)) (Branch (Leaf 3) (Leaf 4)))
+-- which multiplies 2 to every leaf of the tree and returns the new tree as below
+Branch (Branch (Leaf 2) (Leaf 4)) (Branch (Leaf 6) (Leaf 8))
+-- See all the leafs has been multiplied by 2
+-- lets see function composition fits in here if we first want to multiply by 2 and then negate the numbers
+-- we can do something like
+treeMap (negate. (*2)) (Branch (Branch (Leaf 1) (Leaf 2)) (Branch (Leaf 3) (Leaf 4)))
+-- function composition for the win
+-- it should return
+Branch (Branch (Leaf (-2)) (Leaf (-4))) (Branch (Leaf (-6)) (Leaf (-8)))
+</code></pre>
+
+<p>Oh I forgot to say <code>map</code> is a way of transforming data as thats the only way you can chagne data in <code>Pure functinal programming</code> as you can&rsquo;t mutate them in place. But we are lazy programmers, why define a new method or force others to define new map functions for our data types. Haskell abstracts this with <code>Functor</code> as I mentioned above. So lets define an instance of <code>Functor</code> for our tree data type.</p>
+
+<pre><code class="Haskell Functor instance of Tree">
+instance Functor Tree where
+    fmap f (Leaf x) = Leaf (f x)
+    fmap f (Branch left right) = Branch (fmap f left) (fmap f right)
+-- it's same as our treeMap and does the same thing
+</code></pre>
+
+<p> Once we have our <code>Functor</code> instance for <code>Tree</code> we can use the generic <code>fmap</code> function now to do the same thing we did above</p>
+
+<pre><code class="Haskell fmap example"> let tree = (Branch (Branch (Leaf 1) (Leaf 2)) (Branch (Leaf 3) (Leaf 4)))
+  fmap (*2) tree
+  -- or
+  fmap (neg . (*2)) tree
+</code></pre>
+
+<p>  So the generic notion is <code>Map</code> is not just for array or list of values, rather it&rsquo;s a very powerful idea to apply any function over any kind of structures no matter how complex are them.</p>
+
+<p>  Hope you enjoyed it. We may talk more about <code>Functors</code> later and see how haskell takes this idea of mapping to a whole new level.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Hello Haskell -- Partial Function Application]]></title>

@@ -9,8 +9,7 @@
   <meta name="author" content="Joy Nag">
 
   
-  <meta name="description" content="Hi Guys,
-I got my new macbook a few days ago. It&rsquo;s new but refurbished. One of my friend bought me this from the US. And those who of you are &hellip;">
+  <meta name="description" content="I am learning Titanium and Just Loving it. Earlier I thought i wont be able to do many things using titanium and started learning Obj-C and Cocoa- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +80,84 @@ I got my new macbook a few days ago. It&rsquo;s new but refurbished. One of my f
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/01/responding-to-orientation-changes-in-iphone-apps-titaniu/">Responding to Orientation Changes in Iphone Application Using Titanium</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2011-01-27T00:00:00+11:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2011</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I am learning Titanium and Just Loving it. Earlier I thought i wont be able to do many things using titanium and started learning Obj-C and Cocoa-touch framework. And that path needs lots of study and learning before someone can build something really productive.</p>
+
+<p>But the Scenario is different in case of Titanium. If you have basic programming concepts and have some experience with JavaScript you can start right away after a couple hours of study. And Titanium creates the native Obj-C codes for you. So there is basically no difference in an Iphone App made with Obj-C using UIKit framework with one built using Titanium. And even better is that you can deploy your Iphone App code In Andriod Platform with few changes. Supports for Blackberry is coming. So Titanium is a very good Parser itself, it takes you code written in JavaScript And Creates the Obj-C code for Iphone and Java Code for Android for you. As Titanium acquired Aptana few days ago We can expect that we will get a very good IDE for developing Titanium Apps with code Sense, debugging features and who know what else, lets wait and see what they brings.</p>
+
+<p>And the amazing thing is that it&rsquo;s open source. They have an example app which have all the features Available in Iphone ranging from simple TableViews to 3D animations.</p>
+
+<p>Anyway, let&rsquo;s talk about the Title of this post. You know Iphone,Ipod Touch, IPad have accelerometers built-in. That means it can detect orientation changes. Now responding to orientation changes Is a very important feature that every Iphone Apps should have. Doing it is not tough with Titanium. Here is a code block, which will respond to device orientation changes by changing the UI orientation. Place it anywhere in you app.js file.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">Ti</span><span class="p">.</span><span class="nx">Gesture</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span>
+</span><span class='line'><span class="s1">&#39;orientationchange&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="c1">// alert(&quot;Called&quot;);</span>
+</span><span class='line'><span class="nx">win</span><span class="p">.</span><span class="nx">orientationModes</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_LEFT</span><span class="p">,</span>
+</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_RIGHT</span><span class="p">,</span>
+</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">PORTRAIT</span><span class="p">,</span>
+</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">UPSIDE_PORTRAIT</span>
+</span><span class='line'><span class="p">];</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">orientation</span> <span class="o">==</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_LEFT</span> <span class="o">||</span>
+</span><span class='line'><span class="nx">e</span><span class="p">.</span><span class="nx">orientation</span> <span class="o">==</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_RIGHT</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="c1">// Do anything you wanna do when user changes the orientation to LandScape</span>
+</span><span class='line'><span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">orientation</span> <span class="o">=</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">LANDSCAPE_RIGHT</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'><span class="c1">// Revert the changes you made, the user is back to portrait mode</span>
+</span><span class='line'><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">orientation</span> <span class="o">=</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">PORTRAIT</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The code is pretty straightforward. We are attaching an event listener into the Ti.Gesture and once the orientation of the device changes this callback is fired and we can do anything we want into that callback. I will try to write small posts on titanium as i go along learning Titanium.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -248,6 +325,10 @@ Enjoy your time with slax.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/">Understanding the Ubiquitous Notion of Mapping Over a Structure</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/07/hello-haskell-partial-function-applicaton/">Hello Haskell &#8211; Partial Function Application</a>
       </li>
     
@@ -261,10 +342,6 @@ Enjoy your time with slax.</p>
     
       <li class="post">
         <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a>
       </li>
     
   </ul>

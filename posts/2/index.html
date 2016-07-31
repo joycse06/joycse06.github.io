@@ -9,7 +9,7 @@
   <meta name="author" content="Joy Nag">
 
   
-  <meta name="description" content="Magento takes a dead simple approach for activating the maintanence mode for any site using it. You just get into servers&rsquo;s terminal via ssh , &hellip;">
+  <meta name="description" content="grep is a very simple command available on linux and OSX terminals which can do amazing things and can save a lot fo time. I was working on a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/looking-for-occurrences-of-a-string-in-all-files-under-a-directory-using-grep/">Looking for Occurrences of a String in All Files Under a Directory Using Grep</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-12-10T20:52:18+11:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>8:52 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p> <code>grep</code> is a very simple command available on linux and OSX terminals which can do amazing things and can save a lot fo time. I was working on a Magento site this morning and on the checkout page I found the telephone field was using <code>&lt;input type="Number" ...</code> while it should use <code>&lt;input type="text" ...</code> or else phone number with dashes in them wont validate and customers wont be able to proceed with next step.</p>
+
+<p>I was thinking of how can I find the file which have this code, those who of you are familiar with Magento knows that magento has a very organized file structure and hierarchies of templates, and different templates gets loaded based on active theme and layout xml files. So I have to find out all the occurrences of <code>&lt;input type="number" ...</code> in the whole installation.</p>
+
+<p>I knew I can use <code>grep</code> to do this. I instantly looked at the man page of <code>grep</code> and reviewed the available options and got what I needed.</p>
+
+<p>The final command I wrote on the server&rsquo;s terminal was</p>
+
+<figure class='code'><figcaption><span>Grep</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>grep -R -i -n <span class="s1">&#39;type=&quot;number&quot;&#39;</span> public_html/app
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> <code>-R</code> tells <code>grep</code> to search recursively into that directory, <code>-i</code> is for <code>ignore-case</code> and <code>-n</code> finds and outputs the line number along with file name too. As soon as I ran that command it searched the whole <code>app</code> directory and came back with all the place where <code>type="number"</code> occurred with line number too. Then I just edited those files and the issue was fixed.</p>
+
+<p> What took me several minutes would have taken hours to search and find those files manually. Thats one of many benefits of using command line. And you can do pretty amazing things using/combining only a handful of commands.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -472,150 +516,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/taking-advantage-of-implicit-looping-in-jquery-setter-methods/">Taking Advantage of Implicit Looping in jQuery Setter Methods</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-07-08T00:00:00+10:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>jQuery setter methods are those methods using which we can set the value of any input field, or any attributes like width,height,classes etc and some of the setter methods are</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="nx">height</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="nx">width</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">value</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="nx">property</span><span class="p">,</span><span class="nx">val</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="nx">html</span><span class="p">)</span>
-</span><span class='line'><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="nx">className</span><span class="p">)</span>
-</span><span class='line'><span class="p">.....</span>
-</span><span class='line'><span class="p">.....</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>and most(or maybe all) of them have a special syntax like for <strong>.width()</strong> there is</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">.</span><span class="nx">width</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">width</span><span class="p">)</span> <span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong>What jQuery does for this case is, it loops over the set elements in current selection internally and pass those one by one into that callback function.</strong> And <strong>index</strong> is the index of the element currently being iterated, and <strong>width</strong> is the current width of element. And you will also get the current element as this inside that function.
-This syntax is useful or intended for cases when you use the <strong>.width()</strong> method on a <strong>collection of elements</strong>. I wasn&rsquo;t aware of this until recently, but they can be very useful in cases. Suppose if you want to make the width of all divs in a page to half of it&rsquo;s current width, you can do that easily using this syntax like</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">).</span><span class="nx">width</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span><span class="nx">width</span><span class="p">){</span>
-</span><span class='line'>   <span class="k">return</span> <span class="nx">width</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So what you return from that function will be set as new width of that element.
-Pretty cool, huh! You could also use .each() to iterate over the divs collection and set their width manually. But the above code is much more cleaner and maybe a little faster.</p>
-
-<p>Example of some cases when this implicit looping can be useful and will help you write cleaner code.</p>
-
-<p>Suppose you want to give unique id to all li&rsquo;s inside a ul with id of list, you can do so the following way easily</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;ul#list li&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">){</span>
-</span><span class='line'>   <span class="k">return</span> <span class="s1">&#39;list-item-&#39;</span><span class="o">+</span><span class="nx">i</span><span class="p">;</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>and they will get id&rsquo;s like list-item-1,list-item-2,list-item-3 etc.</p>
-
-<p>Another useful thing can be to trim the value in a textbox as soon as users moves away from it. You can do that like</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;blur&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span><span class="nx">val</span><span class="p">){</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">trim</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">});</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Or say in a text field field(which takes numbers), you always want to force two decimal point in floating values no matter how many decimal points have been entered by users, you can do that like</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;blur&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span><span class="nx">val</span><span class="p">){</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nb">parseFloat</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">});</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p> js</p>
-
-<p>Example Fiddle: (Enter any number and click somewhere else)</p>
-
-<p>[jsfiddle url=&ldquo;<a href="http://jsfiddle.net/joycse06/PbKVf/">http://jsfiddle.net/joycse06/PbKVf/</a>&rdquo; height=&ldquo;400px&rdquo; include=&ldquo;result,html,js,css&rdquo;]</p>
-
-<p>There are many useful uses of this callback function in setter methods.</p>
-
-<p>Suppose you have a html5 data attribute named data-bg set on all div and onclick of some button or link or on some user action you want to set that as background image of those divs. You can do do so using</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'>  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;something&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>     <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;background-image&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
-</span><span class='line'>         <span class="k">return</span> <span class="s1">&#39;/images/&#39;</span><span class="o">+</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;bg&#39;</span><span class="p">);</span>
-</span><span class='line'>     <span class="p">});</span>
-</span><span class='line'>  <span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I can show many example of useful uses of this implicit looping. This is a very helpful and often overlooked feature in setter methods which you take advantage of. :)</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/3">&larr; Older</a>
@@ -633,6 +533,10 @@ Pretty cool, huh! You could also use .each() to iterate over the divs collection
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/">Understanding the Ubiquitous Notion of Mapping Over a Structure</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/07/hello-haskell-partial-function-applicaton/">Hello Haskell &#8211; Partial Function Application</a>
       </li>
     
@@ -646,10 +550,6 @@ Pretty cool, huh! You could also use .each() to iterate over the divs collection
     
       <li class="post">
         <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/01/what-i-learned-from-the-architecture-the-lost-years-talk-by-uncle-bob/">What I Learned From the &#8216;Architecture, the Lost Years&#8217; Talk by Uncle Bob</a>
       </li>
     
   </ul>
