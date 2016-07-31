@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Coding | Prasenjit Kumar Nag a.k.a Joy]]></title>
   <link href="http://joycse06.github.io/blog/categories/coding/atom.xml" rel="self"/>
   <link href="http://joycse06.github.io/"/>
-  <updated>2016-07-31T13:09:32+10:00</updated>
+  <updated>2016-07-31T13:16:45+10:00</updated>
   <id>http://joycse06.github.io/</id>
   <author>
     <name><![CDATA[Joy Nag]]></name>
@@ -20,9 +20,9 @@
     <id>http://joycse06.github.io/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure</id>
     <content type="html"><![CDATA[<h2>What is Map?</h2>
 
-<p>The notion of Map has become so prevalent in all programming languages that almost everyone has some kind of exposure to it. Generically speaking, <code>Map</code> means apply a function to vallues which are inside some kind of structure or apply function structure.</p>
+<p>The notion of Map has become so prevalent in all programming languages that almost everyone has some kind of exposure to it. Generically speaking, <code>Map</code> means applying a function to values which are inside some kind of structure.</p>
 
-<p>We usually use it a lot to apply a function to a list of values e.g mapping over the values of an <code>Array</code> to be more specific.</p>
+<p>We usually use it a lot to apply a function to a list of values e.g mapping over the values of an <code>Array or List</code> to be more specific.</p>
 
 <p>In this post we will first see some examples of mapping in different languages and then we dive deep into it&rsquo;s internals in terms of <code>Haskell</code> and maybe finish with a better understanding of how everything fits together. Saying that lets start.</p>
 
@@ -107,7 +107,7 @@ and generalizes it with an Abstraction named <code>Functor</code>. I will not ge
 -- we get a sense of that from the definition itself
 </code></pre>
 
-<p>Now how should map works for this structure. In case of list we only had a list of values. In case of our <code>Tree</code> its a bit different but we still have values in the leaves which we may want to transform.</p>
+<p>Now how should map works for this structure. In case of list we only had a list of values. In case of our <code>Tree</code> its a bit different but we still have values in the leaves which we may want to transform, as the owner of the <code>Data Type</code> we know best how to apply the function and on which data inside our structure to apply it to.</p>
 
 <p>Let&rsquo;s see how we can define a <code>map</code> function for our tree.</p>
 
@@ -145,9 +145,9 @@ instance Functor Tree where
   fmap (neg . (*2)) tree
 </code></pre>
 
-<p>  So the generic notion is <code>Map</code> is not just for array or list of values, rather it&rsquo;s a very powerful idea to apply any function over any kind of structures no matter how complex are them.</p>
+<p>  So the generic notion is <code>Map</code> is not just for array or list of values, rather it&rsquo;s a very powerful idea to apply any function over any kind of structures no matter how complex they are.</p>
 
-<p>  Hope you enjoyed it. We may talk more about <code>Functors</code> later and see how haskell takes this idea of mapping to a whole new level.</p>
+<p>  Hope you enjoyed it. We may talk more about <code>Functors</code> later and see how haskell takes this idea of mapping to a whole new level and make it a lot more useful.</p>
 ]]></content>
   </entry>
   
