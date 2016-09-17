@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Coding | Prasenjit Kumar Nag a.k.a Joy]]></title>
   <link href="http://joycse06.github.io/blog/categories/coding/atom.xml" rel="self"/>
   <link href="http://joycse06.github.io/"/>
-  <updated>2016-09-17T17:44:17+10:00</updated>
+  <updated>2016-09-17T17:44:19+10:00</updated>
   <id>http://joycse06.github.io/</id>
   <author>
     <name><![CDATA[Joy Nag]]></name>
@@ -55,7 +55,7 @@ for (x in values) {
 <p>Similary we may need to find the maximum or minimum of the values. And we are only considering a simple list, it can a tree or anything else.
 But the notion of generating a summary value from a structure remains the same.</p>
 
-<p>We programmers are lazy and don&rsquo;t like to write too much boilerplate code. So it would be cool if we could generalize this notion of reducing structure.</p>
+<p>We programmers are lazy and don&rsquo;t like to write too much boilerplate code. So it would be cool if we could generalize this notion of reducing structures.</p>
 
 <p>What do we need for that, we need a stuructre of some kind, we need a binary operation of some kind (i.e <code>+</code> or <code>*</code>) which takes two values and generate a single value.
 And we also need an initial value to start with which is <code>0</code> or <code>1</code> above, if we look carefully we will see the initial value is related to the operation. It&rsquo;s a unit value for the
@@ -93,10 +93,10 @@ product = fold (*) 1 values -- product will be 120
 <p>But before finishing lets have a look at how a simple call to <code>fold</code> is evaluated under the hood,
 by writing out all the recursive calls</p>
 
-<pre><code>foldr (+) 0 [1, 2, 3]
-1 + (foldr (+) 0 [2, 3])
-1 + (2 + (foldr (+) 0 [3]))
-1 + (2 + (3 + (foldr (+) 0 [])))
+<pre><code>fold (+) 0 [1, 2, 3]
+1 + (fold (+) 0 [2, 3])
+1 + (2 + (fold (+) 0 [3]))
+1 + (2 + (3 + (fold (+) 0 [])))
 1 + (2 + (3 + 0))
 1 + (2 + 3)
 1 + 5
