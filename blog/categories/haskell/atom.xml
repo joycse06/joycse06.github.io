@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Haskell | Prasenjit Kumar Nag a.k.a Joy]]></title>
   <link href="http://joycse06.github.io/blog/categories/haskell/atom.xml" rel="self"/>
   <link href="http://joycse06.github.io/"/>
-  <updated>2016-07-31T13:17:03+10:00</updated>
+  <updated>2016-09-17T17:44:17+10:00</updated>
   <id>http://joycse06.github.io/</id>
   <author>
     <name><![CDATA[Joy Nag]]></name>
@@ -12,6 +12,102 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Folding Structures Aka Catamorphisms]]></title>
+    <link href="http://joycse06.github.io/blog/2016/09/folding-structures-aka-catamorphisms/"/>
+    <updated>2016-09-17T13:28:58+10:00</updated>
+    <id>http://joycse06.github.io/blog/2016/09/folding-structures-aka-catamorphisms</id>
+    <content type="html"><![CDATA[<h2>What does it mean by Folding or Reducing a data structure?</h2>
+
+<p>Folding or Reducing is the notion of creating a summary value from a list of values contained inside a certain structure.
+The structure can be as simple as list of values or a complex structure. The way one will want to reduce the structure is something
+that will depend on the end goal or the structure of data. Folding or Reducing generalizes this notion which are also known as Catamorphisms.</p>
+
+<!-- more -->
+
+
+<h2>Deriving a fold function in Haskell</h2>
+
+<p>I will be providing the code examples in Haskell but they should be generic enough to understand the concept. Lets say we have the following list of values</p>
+
+<pre><code class="haskell">values = [1, 2, 3, 4, 5]
+</code></pre>
+
+<p>and we want to know the sum of all these values. In the imperative world we would start with a loop of some kind which will iterate over the values and add them</p>
+
+<pre><code>The following is pseudo-code
+sum = 0
+for (x in values) {
+  sum = sum + x
+}
+</code></pre>
+
+<p>now say we also need to compute the product of all values in the list, we can do something like following</p>
+
+<pre><code>The following is pseudo-code
+product = 1
+for (x in values) {
+ product = product * x
+}
+</code></pre>
+
+<p>Similary we may need to find the maximum or minimum of the values. And we are only considering a simple list, it can a tree or anything else.
+But the notion of generating a summary value from a structure remains the same.</p>
+
+<p>We programmers are lazy and don&rsquo;t like to write too much boilerplate code. So it would be cool if we could generalize this notion of reducing structure.</p>
+
+<p>What do we need for that, we need a stuructre of some kind, we need a binary operation of some kind (i.e <code>+</code> or <code>*</code>) which takes two values and generate a single value.
+And we also need an initial value to start with which is <code>0</code> or <code>1</code> above, if we look carefully we will see the initial value is related to the operation. It&rsquo;s a unit value for the
+operation like if you add <code>0</code> to something, it doesn&rsquo;t change, same for <code>1</code> and multiplication.</p>
+
+<p>Lets define the <code>fold</code> function in Haskell,</p>
+
+<pre><code class="haskell fold function">-- our fold function takes another function which takes two values of type a and b
+-- and return b, which is our binary operation above,
+-- then an intial value of type b and a list [a]
+-- and return b
+fold :: (a -&gt; b -&gt; b) -&gt; b -&gt; [a] -&gt; b
+-- our function is recursive, this is the base case where the list has no more elements left
+fold _ acc [] = acc
+-- this is the recursive case, where we call the function
+-- with first element of the list and another recursive call to fold itself
+fold f acc (x:xs) = f x (fold f acc xs)
+</code></pre>
+
+<p>In the type signature of <code>fold</code> <code>a</code> <code>b</code> are type variables so they can be of any types. The definition above is the called <code>foldr</code>,
+there&rsquo;s also another fold called <code>foldl</code>, their implementation differs on the recursive case but details about that can be put off for
+another post.</p>
+
+<h2>Usage of the fold function</h2>
+
+<pre><code class="haskell">values = [1, 2, 3, 4, 5]
+
+sum = fold (+) 0 values -- sum will be 15
+
+product = fold (*) 1 values -- product will be 120
+</code></pre>
+
+<p>I am not going to go any further in this blog post but a lot can be done using fold.</p>
+
+<p>But before finishing lets have a look at how a simple call to <code>fold</code> is evaluated under the hood,
+by writing out all the recursive calls</p>
+
+<pre><code>foldr (+) 0 [1, 2, 3]
+1 + (foldr (+) 0 [2, 3])
+1 + (2 + (foldr (+) 0 [3]))
+1 + (2 + (3 + (foldr (+) 0 [])))
+1 + (2 + (3 + 0))
+1 + (2 + 3)
+1 + 5
+6
+</code></pre>
+
+<p>Most languages has some kind of <code>fold</code> function now. Hope you understood how folds works generally.</p>
+
+<p>So go ahead and read up on how to reduce an <code>array</code> or a similar data structure in your favorite language and start using it.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Hello Haskell -- Partial Function Application]]></title>

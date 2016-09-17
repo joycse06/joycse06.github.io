@@ -9,7 +9,9 @@
   <meta name="author" content="Joy Nag">
 
   
-  <meta name="description" content="I am learning Titanium and Just Loving it. Earlier I thought i wont be able to do many things using titanium and started learning Obj-C and Cocoa- &hellip;">
+  <meta name="description" content="Every projects have some kind of configuration such
+as database username, database password, database name blah blah
+no matter whats language it& &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +82,170 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/how-to-use-the-same-config-file/">How to Use the Same Config File Both in Localhost and in Live Server</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2012-04-27T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Every projects have some kind of configuration such
+as database username, database password, database name blah blah
+no matter whats language it&rsquo;s been written in.</p>
+
+<p>But i will be primarily talking about php here.</p>
+
+<p>In past what I used to change the config file every time I had to push updates into the live server either by FTP or SFTP
+or  VCS(Version Control System) and that was painful.
+But thanks to the internet I found some tricks somewhere in the internet that I dont remember right now which I have been using since then which allows me to use the same config file both in localhost and in live server.</p>
+
+<p>Lets say we have the  following config values which are different when the code is running in Localhost and in server. Say for localhost they have the following values</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">var</span> <span class="nv">$dbUsername</span> <span class="o">=</span> <span class="s1">&#39;local&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbPassword</span> <span class="o">=</span> <span class="s1">&#39;localpassword&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbname</span> <span class="o">=</span> <span class="s1">&#39;local_db_name&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And in server the value is different as follows</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">var</span> <span class="nv">$dbUsername</span> <span class="o">=</span> <span class="s1">&#39;server&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbPassword</span> <span class="o">=</span> <span class="s1">&#39;serverpassword&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbname</span> <span class="o">=</span> <span class="s1">&#39;server_db_name&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now as I have already said changing those before every push is a pain in the a**. The way we can have them both at the same time and both environment runs properly is as follows:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">if</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;REMOTE_ADDR&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">){</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//we are in localhost as the user&#39;s IP is 127.0.0.1</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbUsername</span> <span class="o">=</span> <span class="s1">&#39;local&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbPassword</span> <span class="o">=</span> <span class="s1">&#39;localpassword&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbname</span> <span class="o">=</span> <span class="s1">&#39;local_db_name&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// we are in server</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbUsername</span> <span class="o">=</span> <span class="s1">&#39;server&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbPassword</span> <span class="o">=</span> <span class="s1">&#39;serverpassword&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">var</span> <span class="nv">$dbname</span> <span class="o">=</span> <span class="s1">&#39;server_db_name&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>FYI, $_SERVER[&lsquo;REMOTE_ADDR&rsquo;] returns users IP address if the user is not using Proxy.</p>
+
+<p>If you are using Virtual host then you can use $_SERVER[&lsquo;SERVER_NAME&rsquo;]. Suppose I have a virtual host setup for all my office projects as d.noobis.com then we can use the following conditionals to determine the correct environment</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">if</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;SERVER_NAME&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;d.noobis.com&#39;</span><span class="p">){</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// my local config goes here</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;SERVER_NAME&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;noobis.com&#39;</span><span class="p">){</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Live servers config</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;SERVER_NAME&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;local.noobis.com&#39;</span><span class="p">){</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//someone else&#39;s config who is working with me in the same project have a VHost set up as local.noobis.com</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Using this we can remove the burden of editing config file before every commit/upload of codebase into live server. This same technique can be used for frameworks which uses pure php variables for configuration options like Code Igniter.</p>
+
+<p>But if your framework uses special formats for config files like YML then there might be different ways to separate development and production environment settings.</p>
+
+<p>Hope you enjoyed the post. :)</p>
+
+<p>UPDATE: </p>
+
+<p>As Zaman-A-Piri-Pasa suggested in the comment, if you are on windows using XAMPP use</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">if</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;REMOTE_ADDR&#39;</span><span class="p">]</span><span class="o">==</span><span class="nx">’</span><span class="o">::</span><span class="mi">1</span><span class="nx">′</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>instead to check for localhost.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -325,6 +491,10 @@ Enjoy your time with slax.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/09/folding-structures-aka-catamorphisms/">Folding Structures Aka Catamorphisms</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/">Understanding the Ubiquitous Notion of Mapping a Function Over a Structure</a>
       </li>
     
@@ -338,10 +508,6 @@ Enjoy your time with slax.</p>
     
       <li class="post">
         <a href="/blog/2015/01/laravel-view-presenters-from-scratch/">Laravel View Presenters From Scratch</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/01/command-driven-design-the-world-of-dtos-handlers-and-domain-events/">Command Driven Design: The World of DTOs, Handlers and Domain Events</a>
       </li>
     
   </ul>

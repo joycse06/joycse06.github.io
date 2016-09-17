@@ -4,7 +4,7 @@
   <title><![CDATA[Prasenjit Kumar Nag a.k.a Joy]]></title>
   <link href="http://joycse06.github.io/atom.xml" rel="self"/>
   <link href="http://joycse06.github.io/"/>
-  <updated>2016-07-31T13:17:03+10:00</updated>
+  <updated>2016-09-17T17:44:17+10:00</updated>
   <id>http://joycse06.github.io/</id>
   <author>
     <name><![CDATA[Joy Nag]]></name>
@@ -12,6 +12,142 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Folding Structures Aka Catamorphisms]]></title>
+    <link href="http://joycse06.github.io/blog/2016/09/folding-structures-aka-catamorphisms/"/>
+    <updated>2016-09-17T13:28:58+10:00</updated>
+    <id>http://joycse06.github.io/blog/2016/09/folding-structures-aka-catamorphisms</id>
+    <content type="html"><![CDATA[<h2>What does it mean by Folding or Reducing a data structure?</h2>
+
+<p>Folding or Reducing is the notion of creating a summary value from a list of values contained inside a certain structure.
+The structure can be as simple as list of values or a complex structure. The way one will want to reduce the structure is something
+that will depend on the end goal or the structure of data. Folding or Reducing generalizes this notion which are also known as Catamorphisms.</p>
+
+<!-- more -->
+
+
+<h2>Deriving a fold function in Haskell</h2>
+
+<p>I will be providing the code examples in Haskell but they should be generic enough to understand the concept. Lets say we have the following list of values</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='haskell'><span class='line'><span class="nf">values</span> <span class="ow">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and we want to know the sum of all these values. In the imperative world we would start with a loop of some kind which will iterate over the values and add them</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='haskell'><span class='line'><span class="kt">The</span> <span class="n">following</span> <span class="n">is</span> <span class="n">pseudo</span><span class="o">-</span><span class="n">code</span>
+</span><span class='line'><span class="nf">sum</span> <span class="ow">=</span> <span class="mi">0</span>
+</span><span class='line'><span class="nf">for</span> <span class="p">(</span><span class="n">x</span> <span class="kr">in</span> <span class="n">values</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">sum</span> <span class="ow">=</span> <span class="n">sum</span> <span class="o">+</span> <span class="n">x</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>now say we also need to compute the product of all values in the list, we can do something like following</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='haskell'><span class='line'><span class="kt">The</span> <span class="n">following</span> <span class="n">is</span> <span class="n">pseudo</span><span class="o">-</span><span class="n">code</span>
+</span><span class='line'><span class="nf">product</span> <span class="ow">=</span> <span class="mi">1</span>
+</span><span class='line'><span class="nf">for</span> <span class="p">(</span><span class="n">x</span> <span class="kr">in</span> <span class="n">values</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'> <span class="n">product</span> <span class="ow">=</span> <span class="n">product</span> <span class="o">*</span> <span class="n">x</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Similary we may need to find the maximum or minimum of the values. And we are only considering a simple list, it can a tree or anything else.
+But the notion of generating a summary value from a structure remains the same.</p>
+
+<p>We programmers are lazy and don&rsquo;t like to write too much boilerplate code. So it would be cool if we could generalize this notion of reducing structure.</p>
+
+<p>What do we need for that, we need a stuructre of some kind, we need a binary operation of some kind (i.e <code>+</code> or <code>*</code>) which takes two values and generate a single value.
+And we also need an initial value to start with which is <code>0</code> or <code>1</code> above, if we look carefully we will see the initial value is related to the operation. It&rsquo;s a unit value for the
+operation like if you add <code>0</code> to something, it doesn&rsquo;t change, same for <code>1</code> and multiplication.</p>
+
+<p>Lets define the <code>fold</code> function in Haskell,</p>
+
+<figure class='code'><figcaption><span>fold function</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='haskell'><span class='line'><span class="c1">-- our fold function takes another function which takes two values of type a and b</span>
+</span><span class='line'><span class="c1">-- and return b, which is our binary operation above,</span>
+</span><span class='line'><span class="c1">-- then an intial value of type b and a list [a]</span>
+</span><span class='line'><span class="c1">-- and return b</span>
+</span><span class='line'><span class="nf">fold</span> <span class="ow">::</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">b</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="n">b</span>
+</span><span class='line'><span class="c1">-- our function is recursive, this is the base case where the list has no more elements left</span>
+</span><span class='line'><span class="nf">fold</span> <span class="kr">_</span> <span class="n">acc</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="n">acc</span>
+</span><span class='line'><span class="c1">-- this is the recursive case, where we call the function</span>
+</span><span class='line'><span class="c1">-- with first element of the list and another recursive call to fold itself</span>
+</span><span class='line'><span class="nf">fold</span> <span class="n">f</span> <span class="n">acc</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">f</span> <span class="n">x</span> <span class="p">(</span><span class="n">fold</span> <span class="n">f</span> <span class="n">acc</span> <span class="n">xs</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the type signature of <code>fold</code> <code>a</code> <code>b</code> are type variables so they can be of any types. The definition above is the called <code>foldr</code>,
+there&rsquo;s also another fold called <code>foldl</code>, their implementation differs on the recursive case but details about that can be put off for
+another post.</p>
+
+<h2>Usage of the fold function</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='haskell'><span class='line'><span class="nf">values</span> <span class="ow">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">sum</span> <span class="ow">=</span> <span class="n">fold</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span> <span class="n">values</span> <span class="c1">-- sum will be 15</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">product</span> <span class="ow">=</span> <span class="n">fold</span> <span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="mi">1</span> <span class="n">values</span> <span class="c1">-- product will be 120</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I am not going to go any further in this blog post but a lot can be done using fold.</p>
+
+<p>But before finishing lets have a look at how a simple call to <code>fold</code> is evaluated under the hood,
+by writing out all the recursive calls</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='haskell'><span class='line'><span class="nf">foldr</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">foldr</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+</span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">foldr</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+</span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span> <span class="o">+</span> <span class="p">(</span><span class="n">foldr</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span> <span class="kt">[]</span><span class="p">)))</span>
+</span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
+</span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span>
+</span><span class='line'><span class="mi">6</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Most languages has some kind of <code>fold</code> function now. Hope you understood how folds works generally.</p>
+
+<p>So go ahead and read up on how to reduce an <code>array</code> or a similar data structure in your favorite language and start using it.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Understanding the Ubiquitous Notion of Mapping a Function Over a Structure]]></title>
@@ -2439,172 +2575,6 @@ View Model</p>
 <p>From now onward this will be my new homepage and I will try to write posts regularly [ well thats a promise I always break ].</p>
 
 <p>Anyway, let&rsquo;s see how it goes but you know what I am very happy to finally set this up. Thanks for dropping by. :)</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Facades in Laravel 4 and Static Methods Resolution]]></title>
-    <link href="http://joycse06.github.io/blog/2013/05/facades-in-laravel-4-and-static-methods-resolution/"/>
-    <updated>2013-05-28T00:00:00+10:00</updated>
-    <id>http://joycse06.github.io/blog/2013/05/facades-in-laravel-4-and-static-methods-resolution</id>
-    <content type="html"><![CDATA[<p>Several months ago in a blog post I saw people complaining about Laravel3&rsquo;s Static methods stating Static methods are very difficult to Unit Test with and Laravel is a pile of Static API&rsquo;s rather than a framework. I dont remember the Link. It said Laravel 3 is not architecturally “pure”, but it has super clean syntax.</p>
-
-<p>But Laravel 4 combines both of those things. It’s extremely architecturally pure, yet maintains the same terse, expressive syntax.</p>
-
-<p>Last weekend I was checking a video on Laravel 4 which was discussing about facades in Laravel 4 and I was truly amazed to see how the fancy looking static API&rsquo;s are mapped into their original Classes. Laravel 4 takes advantage of Facade Design Pattern[ <a href="http://en.wikipedia.org/wiki/Facade_pattern"><a href="http://en.wikipedia.org/wiki/Facade_pattern">http://en.wikipedia.org/wiki/Facade_pattern</a></a> ] which allows it to provide expressive syntax through static API&rsquo;s but still keep it testable under the hood.</p>
-
-<!-- more -->
-
-
-<p>So, back to the main point of the post, how a static method like</p>
-
-<figure class='code'><figcaption><span>Facade Examples</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">File</span><span class="o">:</span><span class="nx">get</span><span class="p">(),</span><span class="nx">View</span><span class="o">::</span><span class="na">make</span><span class="p">,</span> <span class="nx">Redirect</span><span class="o">::</span><span class="na">to</span><span class="p">,</span> <span class="nx">Cache</span><span class="o">::</span><span class="na">put</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>is resolved under the hood. Let&rsquo;s take File:get() and see how that maps to it&rsquo;s original class. Seeing File:: I first though there must be a File.php some where where the static method will be available. Searched for that and found one at /vendor/laravel/framework/src/Illuminate/Support/Facades/File.php surprisingly it barely has any content in it.
-<a href="https://github.com/illuminate/support/blob/master/Facades/File.php"><a href="https://github.com/illuminate/support/blob/master/Facades/File.php">https://github.com/illuminate/support/blob/master/Facades/File.php</a></a></p>
-
-<figure class='code'><figcaption><span>File Facade</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">namespace</span> <span class="nx">Illuminate\Support\Facades</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">File</span> <span class="k">extends</span> <span class="nx">Facade</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="sd">/**</span>
-</span><span class='line'><span class="sd">  * Get the registered name of the component.</span>
-</span><span class='line'><span class="sd">  *</span>
-</span><span class='line'><span class="sd">  * @return string</span>
-</span><span class='line'><span class="sd">  */</span>
-</span><span class='line'>  <span class="k">protected</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">getFacadeAccessor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">&#39;files&#39;</span><span class="p">;</span> <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>As I didn&rsquo;t find a static get method there my second target was to search in the Facade Base class as File class was extending it. But there wasn&rsquo;t any static get method either. But I did find a __callStatic magic method and became sure thats handling the call dynamically. You can check the contents of Facade.php here at <a href="https://github.com/illuminate/support/blob/master/Facades/Facade.php#L167"><a href="https://github.com/illuminate/support/blob/master/Facades/Facade.php#L167">https://github.com/illuminate/support/blob/master/Facades/Facade.php#L167</a></a></p>
-
-<p>The first line in __callStatic method is</p>
-
-<figure class='code'><figcaption><span>Resolving Facade</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nv">$instance</span> <span class="o">=</span> <span class="k">static</span><span class="o">::</span><span class="na">resolveFacadeInstance</span><span class="p">(</span><span class="k">static</span><span class="o">::</span><span class="na">getFacadeAccessor</span><span class="p">());</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Where&rsquo;s its calling the static resolveFacadeInstance() method and passing child class&rsquo;s static method&rsquo;s static::getFacadeAccessor() return value as a argument. Which is in above you can see returns the string &lsquo;files&rsquo;. Now lets look at the definition of resolveFacadeInstance()</p>
-
-<figure class='code'><figcaption><span>resolveFacadeInstance function</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">protected</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">resolveFacadeInstance</span><span class="p">(</span><span class="nv">$name</span><span class="p">)</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nb">is_object</span><span class="p">(</span><span class="nv">$name</span><span class="p">))</span> <span class="k">return</span> <span class="nv">$name</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="k">static</span><span class="o">::</span><span class="nv">$resolvedInstance</span><span class="p">[</span><span class="nv">$name</span><span class="p">]))</span>
-</span><span class='line'>  <span class="p">{</span>
-</span><span class='line'>      <span class="k">return</span> <span class="k">static</span><span class="o">::</span><span class="nv">$resolvedInstance</span><span class="p">[</span><span class="nv">$name</span><span class="p">];</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">return</span> <span class="k">static</span><span class="o">::</span><span class="nv">$resolvedInstance</span><span class="p">[</span><span class="nv">$name</span><span class="p">]</span> <span class="o">=</span> <span class="k">static</span><span class="o">::</span><span class="nv">$app</span><span class="p">[</span><span class="nv">$name</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>First two conditions wont work for us. So it will return static::$app[$name]. What does $app[&lsquo;file&rsquo;] have in it. Must be an instance of a class. To check this I was studying about the bootstrapping of Laravel 4 and found that at some point in booting up, Laravel 4 registers the service providers passed into it via /app/config/app.php file. And checking that I found a serviceproviders as follows</p>
-
-<figure class='code'><figcaption><span>Service Provider</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="s1">&#39;Illuminate\Filesystem\FilesystemServiceProvider&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then I checked the file Illuminate\Filesystem\FilesystemServiceProvider and found out how $app[&lsquo;files&rsquo;] is being assigned. Here&rsquo;s it&rsquo;s contents</p>
-
-<figure class='code'><figcaption><span>Service Provider</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="k">class</span> <span class="nc">FilesystemServiceProvider</span> <span class="k">extends</span> <span class="nx">ServiceProvider</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'> <span class="sd">/**</span>
-</span><span class='line'><span class="sd"> * Register the service provider.</span>
-</span><span class='line'><span class="sd"> *</span>
-</span><span class='line'><span class="sd"> * @return void</span>
-</span><span class='line'><span class="sd"> */</span>
-</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">register</span><span class="p">()</span>
-</span><span class='line'>   <span class="p">{</span>
-</span><span class='line'>      <span class="nv">$this</span><span class="o">-&amp;</span><span class="nx">gt</span><span class="p">;</span><span class="nx">app</span><span class="p">[</span><span class="s1">&#39;files&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&amp;</span><span class="nx">gt</span><span class="p">;</span><span class="nx">app</span><span class="o">-&amp;</span><span class="nx">gt</span><span class="p">;</span><span class="nx">share</span><span class="p">(</span><span class="k">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">new</span> <span class="nx">Filesystem</span><span class="p">;</span> <span class="p">});</span>
-</span><span class='line'>   <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So $app[&lsquo;files&rsquo;] is actually being assigned to a instance of FileSystem class.
-Laravel uses that register method to add that service in the $app container.
-So File::domeSomething() is actually somewhat equivalent to</p>
-
-<figure class='code'><figcaption><span>Original Filesystem Class</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nv">$fileSystem</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Filesystem</span><span class="p">;</span>
-</span><span class='line'><span class="nv">$fileSystem</span><span class="o">-&gt;</span><span class="na">doSomething</span><span class="p">();</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And I did find a public get() method in the FileSystem Class. You can check here at
-<a href="https://github.com/illuminate/filesystem/blob/master/Filesystem.php#L27">https://github.com/illuminate/filesystem/blob/master/Filesystem.php#L27</a></p>
-
-<p>So, a simple call like File::get() which just works, have a lot more going on under the hood.</p>
-
-<p>The word File is actually an alias to the Facade at &lsquo;Illuminate\Support\Facades\File&rsquo; which you can find at /app/config/app.php in alias block.</p>
-
-<p>Thats true for most if not all(well I havent checked all, but lets hope so) static expressive API&rsquo;s Laravel 4 Provide.</p>
-
-<p>A quick way to check which Class is being mapped for a Facade by using a special route in the route file as follows</p>
-
-<figure class='code'><figcaption><span>Getting Facade Accessor</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nx">Route</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="k">function</span><span class="p">(){</span>
-</span><span class='line'>  <span class="nv">$root</span> <span class="o">=</span> <span class="nb">get_class</span><span class="p">(</span><span class="nx">File</span><span class="o">::</span><span class="na">getFacadeRoot</span><span class="p">());</span>
-</span><span class='line'>  <span class="c1">// using other Facade in place of &#39;File&#39; works too</span>
-</span><span class='line'>  <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$root</span><span class="p">);</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>It will print the original Class that&rsquo;s being used for the Facade.</p>
-
-<p>I dont know why but finding the whole thing was a great joy for me. It always feels great to understand the inner working principle of a thing I am using. This is the most awesome thing I have learnt/known in a while.</p>
-
-<p>Hope you enjoyed it. :D</p>
 ]]></content>
   </entry>
   
