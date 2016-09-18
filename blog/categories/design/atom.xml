@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Design | Prasenjit Kumar Nag a.k.a Joy]]></title>
   <link href="http://joycse06.github.io/blog/categories/design/atom.xml" rel="self"/>
   <link href="http://joycse06.github.io/"/>
-  <updated>2016-09-18T12:07:26+10:00</updated>
+  <updated>2016-09-18T12:13:10+10:00</updated>
   <id>http://joycse06.github.io/</id>
   <author>
     <name><![CDATA[Joy Nag]]></name>
@@ -14,10 +14,10 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Designing Good Background Jobs: Idempotency]]></title>
-    <link href="http://joycse06.github.io/blog/2016/09/designing-good-background-jobs-idempotency/"/>
+    <title type="html"><![CDATA[Designing Good Background Jobs: Idempotence]]></title>
+    <link href="http://joycse06.github.io/blog/2016/09/designing-good-background-jobs-idempotence/"/>
     <updated>2016-09-18T10:13:50+10:00</updated>
-    <id>http://joycse06.github.io/blog/2016/09/designing-good-background-jobs-idempotency</id>
+    <id>http://joycse06.github.io/blog/2016/09/designing-good-background-jobs-idempotence</id>
     <content type="html"><![CDATA[<h2>What are Background Jobs?</h2>
 
 <p>Background jobs are almost part and parcel of every modern Web applications now-a-days. It&rsquo;s the process of
@@ -43,7 +43,7 @@ work with some kind of <code>abs</code> (absolute) function, which gives you the
 Other examples include, Sorting a list of values, transforming a string to all uppercase charecters, Capitalize the first
 letter of a string and many others.</p>
 
-<h2>Why idempotency can be a good property of a background job?</h2>
+<h2>Why idempotence can be a good property of a background job?</h2>
 
 <p>In any sufficiently large web application, there could be lots of background jobs of all sorts. And things fails and fails for
 no obvious reasons. Specially, when you have to interact with other systems you have no control over. You can pull your hair when
@@ -58,20 +58,20 @@ doesn&rsquo;t care what you are sending where until it&rsquo;s executing it and 
 
 <p>If your job is idempotent, you can be sure that your job is not in an inconsistant state and you can confidently retry all of them.</p>
 
-<h2>What idempotency means for a background job?</h2>
+<h2>What idempotence means for a background job?</h2>
 
-<p>Idempotency can mean all sorts of things, like for a <code>SendOrderToWarehouse</code> job it could be <code>was the order already shipped?</code> or for a
+<p>Idempotence can mean all sorts of things, like for a <code>SendOrderToWarehouse</code> job it could be <code>was the order already shipped?</code> or for a
 <code>CapturePaymentJob</code> job it could be <code>was the payment already captured?</code>. Ideally the you will be talking through some kind of API for these
 actions, so you could think the other end of the communication should make sure these operations are idempotent. But in real world, the best idea
 is to not assume anything about other systems. Common sense is not that common.</p>
 
-<h2>Implementing idempotency into a background Job?</h2>
+<h2>Implementing idempotence into a background Job?</h2>
 
-<p>Idempotency could be easily implemented as some kind of <code>status</code> in a persistant storage. If you have a <code>Order</code> record, it could have a boolean
+<p>Idempotence could be easily implemented as some kind of <code>status</code> in a persistant storage. If you have a <code>Order</code> record, it could have a boolean
 field named <code>shipped</code> which is only set to <code>true</code> after you get successful response from the <code>Warehouse</code> that it has imported the <code>ShippingRequest</code>
 into it&rsquo;s system.</p>
 
-<p>Let&rsquo;s implement two sample classes to simulate how <code>idempotency</code> can be implemented in a Job. Code examples are in <code>Ruby</code></p>
+<p>Let&rsquo;s implement two sample classes to simulate how <code>idempotence</code> can be implemented in a Job. Code examples are in <code>Ruby</code></p>
 
 <pre><code class="ruby Warehouse">class Warehouse
   # it should be used as a singleton for the sake of this example
@@ -146,7 +146,7 @@ end
 but we could require re-enqueueing them if they fails) after the first instance is executed, it will just ignore all others
 with a Log.</p>
 
-<p>Idempotency is not always easy to implement, because in a Complex system a Job can enqueue other jobs and can do all sorts of
+<p>Idempotence is not always easy to implement, because in a Complex system a Job can enqueue other jobs and can do all sorts of
 complex stuffs.</p>
 
 <p>But the thing is, one should strive towards designing Idempotent Jobs.</p>
