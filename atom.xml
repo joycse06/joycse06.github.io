@@ -4,7 +4,7 @@
   <title><![CDATA[Prasenjit Kumar Nag a.k.a Joy]]></title>
   <link href="http://joycse06.github.io/atom.xml" rel="self"/>
   <link href="http://joycse06.github.io/"/>
-  <updated>2016-09-17T17:44:17+10:00</updated>
+  <updated>2016-09-18T12:07:26+10:00</updated>
   <id>http://joycse06.github.io/</id>
   <author>
     <name><![CDATA[Joy Nag]]></name>
@@ -12,6 +12,213 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Designing Good Background Jobs: Idempotency]]></title>
+    <link href="http://joycse06.github.io/blog/2016/09/designing-good-background-jobs-idempotency/"/>
+    <updated>2016-09-18T10:13:50+10:00</updated>
+    <id>http://joycse06.github.io/blog/2016/09/designing-good-background-jobs-idempotency</id>
+    <content type="html"><![CDATA[<h2>What are Background Jobs?</h2>
+
+<p>Background jobs are almost part and parcel of every modern Web applications now-a-days. It&rsquo;s the process of
+deferring time-intensive operations in the background and sending early feedback to end users. Examples of
+background jobs could be generating reports, processing large amount of data, sending scheduled emails and
+doing any other kind of works which are necessary but not worth blocking the otherwise quick response to
+waiting user. I can go on forever with examples of background jobs, candidates for background jobs are
+omnipresent (everywhere).</p>
+
+<!-- more -->
+
+
+<h2>What is an idempotent operation?</h2>
+
+<p>In mathematics, an idempotent opretation (i.e. functions in programming lanauges) is one where <code>F(F(x)) = F(x)</code>.
+So you can see, no matter how how many times you apply the functions to the same argument it&rsquo;s equivalent to
+applying it only once.</p>
+
+<p>What are some idempotents functions in our day to day programming? There are many, almost every langauges we
+work with some kind of <code>abs</code> (absolute) function, which gives you the abosolute value of it&rsquo;s argument.</p>
+
+<p>It&rsquo;s an idempotent operation becuase <code>abs(abs(abs(-10)))</code> is equivalent to <code>abs(-10)</code> and the result will always be <code>10</code>.
+Other examples include, Sorting a list of values, transforming a string to all uppercase charecters, Capitalize the first
+letter of a string and many others.</p>
+
+<h2>Why idempotency can be a good property of a background job?</h2>
+
+<p>In any sufficiently large web application, there could be lots of background jobs of all sorts. And things fails and fails for
+no obvious reasons. Specially, when you have to interact with other systems you have no control over. You can pull your hair when
+you get a <code>.NET</code> exception as the response with a <code>200</code> response code for a day. You look at whatever monitoring system or background
+jobs console your system have the next day, and you have myriad of failed Jobs.</p>
+
+<p>What do you do? Do you go through all of them one by one
+and fix them one by one. Can you just retry all of them without thinking about them? It appears that you can, if your jobs are <code>idempotent</code>
+as a whole. The scenario above is just one of many reasons your jobs could fail. You <code>database</code> server could die on your face. You could get
+<code>dogshit</code> from another api while your jobs were expecting other things. And as your language is <code>RAD</code> and <code>Dynamic</code>, uses dynamic dispatch it
+doesn&rsquo;t care what you are sending where until it&rsquo;s executing it and things fail on your face.</p>
+
+<p>If your job is idempotent, you can be sure that your job is not in an inconsistant state and you can confidently retry all of them.</p>
+
+<h2>What idempotency means for a background job?</h2>
+
+<p>Idempotency can mean all sorts of things, like for a <code>SendOrderToWarehouse</code> job it could be <code>was the order already shipped?</code> or for a
+<code>CapturePaymentJob</code> job it could be <code>was the payment already captured?</code>. Ideally the you will be talking through some kind of API for these
+actions, so you could think the other end of the communication should make sure these operations are idempotent. But in real world, the best idea
+is to not assume anything about other systems. Common sense is not that common.</p>
+
+<h2>Implementing idempotency into a background Job?</h2>
+
+<p>Idempotency could be easily implemented as some kind of <code>status</code> in a persistant storage. If you have a <code>Order</code> record, it could have a boolean
+field named <code>shipped</code> which is only set to <code>true</code> after you get successful response from the <code>Warehouse</code> that it has imported the <code>ShippingRequest</code>
+into it&rsquo;s system.</p>
+
+<p>Let&rsquo;s implement two sample classes to simulate how <code>idempotency</code> can be implemented in a Job. Code examples are in <code>Ruby</code></p>
+
+<figure class='code'><figcaption><span>Warehouse</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Warehouse</span>
+</span><span class='line'>  <span class="c1"># it should be used as a singleton for the sake of this example</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">the_warehouse</span>
+</span><span class='line'>    <span class="vi">@the_warehouse</span> <span class="o">||=</span> <span class="no">Warehouse</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">shipments</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="nb">hash</span><span class="p">,</span> <span class="n">key</span><span class="o">|</span> <span class="nb">hash</span><span class="o">[</span><span class="n">key</span><span class="o">]</span> <span class="o">=</span> <span class="o">[]</span> <span class="p">}</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># it keeps track of already shipped orders via a hash </span>
+</span><span class='line'>  <span class="c1"># (which is an instance var and will persist if the class is used as a singleton)</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">shipments_for</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">shipments</span><span class="o">[</span><span class="n">order_id</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">ship_order</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">shipment_id</span> <span class="o">=</span> <span class="n">next_shipment_id</span>
+</span><span class='line'>    <span class="n">shipments</span><span class="o">[</span><span class="n">order_id</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="n">shipment_id</span>
+</span><span class='line'>    <span class="n">shipment_id</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:shipments</span><span class="p">,</span> <span class="ss">:counter</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">next_shipment_id</span>
+</span><span class='line'>    <span class="nb">id</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="s1">&#39;S%06d&#39;</span><span class="p">,</span> <span class="n">counter</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="nb">id</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now lets implement a simple <code>ShipOrderJob</code></p>
+
+<figure class='code'><figcaption><span>ShipOrder</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ShipOrderJob</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">perform</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span class='line'>    <span class="kp">new</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span><span class="o">.</span><span class="n">run</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">order_id</span> <span class="o">=</span> <span class="n">order_id</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">run</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">shipped?</span>
+</span><span class='line'>      <span class="nb">puts</span> <span class="s2">&quot;Order with id# </span><span class="si">#{</span><span class="n">order_id</span><span class="si">}</span><span class="s2"> has already been shipped. Skip processing.&quot;</span>
+</span><span class='line'>      <span class="k">return</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">warehouse</span><span class="o">.</span><span class="n">ship_order</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:order_id</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">shipped?</span>
+</span><span class='line'>    <span class="o">!</span><span class="n">warehouse</span><span class="o">.</span><span class="n">shipments_for</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span><span class="o">.</span><span class="n">empty?</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">warehouse</span>
+</span><span class='line'>    <span class="no">Warehouse</span><span class="o">.</span><span class="n">the_warehouse</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now if we enqueue <code>ShipOrder</code> with the same <code>order_id</code> multiple times (one wouldn&rsquo;t enqueue a single job multiple times willingly,
+but we could require re-enqueueing them if they fails) after the first instance is executed, it will just ignore all others
+with a Log.</p>
+
+<p>Idempotency is not always easy to implement, because in a Complex system a Job can enqueue other jobs and can do all sorts of
+complex stuffs.</p>
+
+<p>But the thing is, one should strive towards designing Idempotent Jobs.</p>
+
+<p>N.B. I learned all of this from a Internal Course from of my Company, the the credit goes to the Original creator of the course.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Folding Structures Aka Catamorphisms]]></title>
@@ -69,7 +276,7 @@ that will depend on the end goal or the structure of data. Folding or Reducing g
 <p>Similary we may need to find the maximum or minimum of the values. And we are only considering a simple list, it can a tree or anything else.
 But the notion of generating a summary value from a structure remains the same.</p>
 
-<p>We programmers are lazy and don&rsquo;t like to write too much boilerplate code. So it would be cool if we could generalize this notion of reducing structure.</p>
+<p>We programmers are lazy and don&rsquo;t like to write too much boilerplate code. So it would be cool if we could generalize this notion of reducing structures.</p>
 
 <p>What do we need for that, we need a stuructre of some kind, we need a binary operation of some kind (i.e <code>+</code> or <code>*</code>) which takes two values and generate a single value.
 And we also need an initial value to start with which is <code>0</code> or <code>1</code> above, if we look carefully we will see the initial value is related to the operation. It&rsquo;s a unit value for the
@@ -132,10 +339,10 @@ by writing out all the recursive calls</p>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='haskell'><span class='line'><span class="nf">foldr</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-</span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">foldr</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
-</span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">foldr</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
-</span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span> <span class="o">+</span> <span class="p">(</span><span class="n">foldr</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span> <span class="kt">[]</span><span class="p">)))</span>
+</pre></td><td class='code'><pre><code class='haskell'><span class='line'><span class="nf">fold</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">fold</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+</span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">fold</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span> <span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+</span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span> <span class="o">+</span> <span class="p">(</span><span class="n">fold</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="mi">0</span> <span class="kt">[]</span><span class="p">)))</span>
 </span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">0</span><span class="p">))</span>
 </span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
 </span><span class='line'><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span>
@@ -2562,19 +2769,6 @@ View Model</p>
 <p>One thing remember, for this case you must have to run <code>UsersTableSeeder</code> before running <code>CompaniesTableSeeder</code>.</p>
 
 <p>Thats all for today. Hope you enjoyed it.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Finally Moving Into Octopress]]></title>
-    <link href="http://joycse06.github.io/blog/2014/01/finally-moving-into-octopress/"/>
-    <updated>2014-01-29T06:10:46+11:00</updated>
-    <id>http://joycse06.github.io/blog/2014/01/finally-moving-into-octopress</id>
-    <content type="html"><![CDATA[<p>I have been planning for a long while to move my blog to Github and use Octopress from now on. Couldn&rsquo;t manage time to do that. Now finally I am free from the hassle of maintaining hosting and other details and I love markdown.</p>
-
-<p>From now onward this will be my new homepage and I will try to write posts regularly [ well thats a promise I always break ].</p>
-
-<p>Anyway, let&rsquo;s see how it goes but you know what I am very happy to finally set this up. Thanks for dropping by. :)</p>
 ]]></content>
   </entry>
   

@@ -1,0 +1,486 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Designing Good Background Jobs: Idempotency - Prasenjit Kumar Nag a.k.a Joy</title>
+  <meta name="author" content="Joy Nag">
+
+  
+  <meta name="description" content="What are Background Jobs? Background jobs are almost part and parcel of every modern Web applications now-a-days. It&rsquo;s the process of
+deferring &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joycse06.github.io/blog/2016/09/designing-good-background-jobs-idempotency/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Prasenjit Kumar Nag a.k.a Joy" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58344400-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Prasenjit Kumar Nag a.k.a Joy</a></h1>
+  
+    <h2>A Developers Adventure in Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="joycse06.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories">Categories</a></li>
+  <li><a href="/about-me">About Me</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Designing Good Background Jobs: Idempotency</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-09-18T10:13:50+10:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:13 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>What are Background Jobs?</h2>
+
+<p>Background jobs are almost part and parcel of every modern Web applications now-a-days. It&rsquo;s the process of
+deferring time-intensive operations in the background and sending early feedback to end users. Examples of
+background jobs could be generating reports, processing large amount of data, sending scheduled emails and
+doing any other kind of works which are necessary but not worth blocking the otherwise quick response to
+waiting user. I can go on forever with examples of background jobs, candidates for background jobs are
+omnipresent (everywhere).</p>
+
+<!-- more -->
+
+
+<h2>What is an idempotent operation?</h2>
+
+<p>In mathematics, an idempotent opretation (i.e. functions in programming lanauges) is one where <code>F(F(x)) = F(x)</code>.
+So you can see, no matter how how many times you apply the functions to the same argument it&rsquo;s equivalent to
+applying it only once.</p>
+
+<p>What are some idempotents functions in our day to day programming? There are many, almost every langauges we
+work with some kind of <code>abs</code> (absolute) function, which gives you the abosolute value of it&rsquo;s argument.</p>
+
+<p>It&rsquo;s an idempotent operation becuase <code>abs(abs(abs(-10)))</code> is equivalent to <code>abs(-10)</code> and the result will always be <code>10</code>.
+Other examples include, Sorting a list of values, transforming a string to all uppercase charecters, Capitalize the first
+letter of a string and many others.</p>
+
+<h2>Why idempotency can be a good property of a background job?</h2>
+
+<p>In any sufficiently large web application, there could be lots of background jobs of all sorts. And things fails and fails for
+no obvious reasons. Specially, when you have to interact with other systems you have no control over. You can pull your hair when
+you get a <code>.NET</code> exception as the response with a <code>200</code> response code for a day. You look at whatever monitoring system or background
+jobs console your system have the next day, and you have myriad of failed Jobs.</p>
+
+<p>What do you do? Do you go through all of them one by one
+and fix them one by one. Can you just retry all of them without thinking about them? It appears that you can, if your jobs are <code>idempotent</code>
+as a whole. The scenario above is just one of many reasons your jobs could fail. You <code>database</code> server could die on your face. You could get
+<code>dogshit</code> from another api while your jobs were expecting other things. And as your language is <code>RAD</code> and <code>Dynamic</code>, uses dynamic dispatch it
+doesn&rsquo;t care what you are sending where until it&rsquo;s executing it and things fail on your face.</p>
+
+<p>If your job is idempotent, you can be sure that your job is not in an inconsistant state and you can confidently retry all of them.</p>
+
+<h2>What idempotency means for a background job?</h2>
+
+<p>Idempotency can mean all sorts of things, like for a <code>SendOrderToWarehouse</code> job it could be <code>was the order already shipped?</code> or for a
+<code>CapturePaymentJob</code> job it could be <code>was the payment already captured?</code>. Ideally the you will be talking through some kind of API for these
+actions, so you could think the other end of the communication should make sure these operations are idempotent. But in real world, the best idea
+is to not assume anything about other systems. Common sense is not that common.</p>
+
+<h2>Implementing idempotency into a background Job?</h2>
+
+<p>Idempotency could be easily implemented as some kind of <code>status</code> in a persistant storage. If you have a <code>Order</code> record, it could have a boolean
+field named <code>shipped</code> which is only set to <code>true</code> after you get successful response from the <code>Warehouse</code> that it has imported the <code>ShippingRequest</code>
+into it&rsquo;s system.</p>
+
+<p>Let&rsquo;s implement two sample classes to simulate how <code>idempotency</code> can be implemented in a Job. Code examples are in <code>Ruby</code></p>
+
+<figure class='code'><figcaption><span>Warehouse</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Warehouse</span>
+</span><span class='line'>  <span class="c1"># it should be used as a singleton for the sake of this example</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">the_warehouse</span>
+</span><span class='line'>    <span class="vi">@the_warehouse</span> <span class="o">||=</span> <span class="no">Warehouse</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">shipments</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="nb">hash</span><span class="p">,</span> <span class="n">key</span><span class="o">|</span> <span class="nb">hash</span><span class="o">[</span><span class="n">key</span><span class="o">]</span> <span class="o">=</span> <span class="o">[]</span> <span class="p">}</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># it keeps track of already shipped orders via a hash </span>
+</span><span class='line'>  <span class="c1"># (which is an instance var and will persist if the class is used as a singleton)</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">shipments_for</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">shipments</span><span class="o">[</span><span class="n">order_id</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">ship_order</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">shipment_id</span> <span class="o">=</span> <span class="n">next_shipment_id</span>
+</span><span class='line'>    <span class="n">shipments</span><span class="o">[</span><span class="n">order_id</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="n">shipment_id</span>
+</span><span class='line'>    <span class="n">shipment_id</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:shipments</span><span class="p">,</span> <span class="ss">:counter</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">next_shipment_id</span>
+</span><span class='line'>    <span class="nb">id</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="s1">&#39;S%06d&#39;</span><span class="p">,</span> <span class="n">counter</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span class='line'>    <span class="nb">id</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now lets implement a simple <code>ShipOrderJob</code></p>
+
+<figure class='code'><figcaption><span>ShipOrder</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ShipOrderJob</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">perform</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span class='line'>    <span class="kp">new</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span><span class="o">.</span><span class="n">run</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">order_id</span> <span class="o">=</span> <span class="n">order_id</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">run</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">shipped?</span>
+</span><span class='line'>      <span class="nb">puts</span> <span class="s2">&quot;Order with id# </span><span class="si">#{</span><span class="n">order_id</span><span class="si">}</span><span class="s2"> has already been shipped. Skip processing.&quot;</span>
+</span><span class='line'>      <span class="k">return</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">warehouse</span><span class="o">.</span><span class="n">ship_order</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">attr_accessor</span> <span class="ss">:order_id</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">shipped?</span>
+</span><span class='line'>    <span class="o">!</span><span class="n">warehouse</span><span class="o">.</span><span class="n">shipments_for</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span><span class="o">.</span><span class="n">empty?</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">warehouse</span>
+</span><span class='line'>    <span class="no">Warehouse</span><span class="o">.</span><span class="n">the_warehouse</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now if we enqueue <code>ShipOrder</code> with the same <code>order_id</code> multiple times (one wouldn&rsquo;t enqueue a single job multiple times willingly,
+but we could require re-enqueueing them if they fails) after the first instance is executed, it will just ignore all others
+with a Log.</p>
+
+<p>Idempotency is not always easy to implement, because in a Complex system a Job can enqueue other jobs and can do all sorts of
+complex stuffs.</p>
+
+<p>But the thing is, one should strive towards designing Idempotent Jobs.</p>
+
+<p>N.B. I learned all of this from a Internal Course from of my Company, the the credit goes to the Original creator of the course.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Joy Nag</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-09-18T10:13:50+10:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>10:13 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/coding/'>coding</a>, <a class='category' href='/blog/categories/design/'>design</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://joycse06.github.io/blog/2016/09/designing-good-background-jobs-idempotency/" data-via="joycse06" data-counturl="http://joycse06.github.io/blog/2016/09/designing-good-background-jobs-idempotency/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/09/folding-structures-aka-catamorphisms/" title="Previous Post: Folding Structures aka Catamorphisms">&laquo; Folding Structures aka Catamorphisms</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/09/designing-good-background-jobs-idempotency/">Designing Good Background Jobs: Idempotency</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/09/folding-structures-aka-catamorphisms/">Folding Structures Aka Catamorphisms</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/">Understanding the Ubiquitous Notion of Mapping a Function Over a Structure</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/hello-haskell-partial-function-applicaton/">Hello Haskell &#8211; Partial Function Application</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joycse06">@joycse06</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joycse06',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section>
+    <h1>Stack Overflow</h1>
+    <a href="http://stackoverflow.com/users/344304/Joy">
+        <img src="http://stackoverflow.com/users/flair/344304.png" width="208" height="58" alt="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+    </a>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Joy Nag -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joycse06';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joycse06.github.io/blog/2016/09/designing-good-background-jobs-idempotency/';
+        var disqus_url = 'http://joycse06.github.io/blog/2016/09/designing-good-background-jobs-idempotency/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
