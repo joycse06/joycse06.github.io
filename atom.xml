@@ -4,7 +4,7 @@
   <title><![CDATA[Prasenjit Kumar Nag a.k.a Joy]]></title>
   <link href="http://joycse06.github.io/atom.xml" rel="self"/>
   <link href="http://joycse06.github.io/"/>
-  <updated>2016-10-08T21:12:57+11:00</updated>
+  <updated>2016-10-09T12:37:29+11:00</updated>
   <id>http://joycse06.github.io/</id>
   <author>
     <name><![CDATA[Joy Nag]]></name>
@@ -14,13 +14,13 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Function Is Data, Data Is Function]]></title>
-    <link href="http://joycse06.github.io/blog/2016/10/function-is-data-data-is-function/"/>
+    <title type="html"><![CDATA[Function as Data, Data as Function]]></title>
+    <link href="http://joycse06.github.io/blog/2016/10/function-as-data-data-as-function/"/>
     <updated>2016-10-08T19:23:48+11:00</updated>
-    <id>http://joycse06.github.io/blog/2016/10/function-is-data-data-is-function</id>
-    <content type="html"><![CDATA[<p>Learning programming with C functions were a very special thing for me in my early days. Though there were <code>function pointers</code> back then, didn&rsquo;t use those much and I had this idea that functions are very different from data.</p>
+    <id>http://joycse06.github.io/blog/2016/10/function-as-data-data-as-function</id>
+    <content type="html"><![CDATA[<p>Learning programming with C, functions were a very special thing for me in my early days. Though there were <code>function pointers</code> back then, didn&rsquo;t use those much and I had this idea that functions are very different from data.</p>
 
-<p>After being introduced to <code>closures</code> and <code>lambdas</code>, functions started becoming less special, with the ability to use them as first class citizens them seemed very much like data as I could pass those around like values, could create higher order functions.</p>
+<p>After being introduced to <code>closures</code> and <code>lambdas</code>, functions started becoming less special, with the ability to use them as first class citizens they seemed very much like data as I could pass those around like values, could create higher order functions.</p>
 
 <p>After spending some time with <code>Haskell</code> it became a lot more clear that functions and data aren&rsquo;t very different. And by <code>function</code> here I mean functions without any funny business aka pure functions. For anyone not knowing what pure functions are, they are like Matemathical functions which always return the same value for the same set of arguments.</p>
 
@@ -75,19 +75,24 @@ it doesn&rsquo;t do anything else.</p>
 <td>..</td>
 <td>..</td>
 </tr>
+<tr>
+<td>256</td>
+<td>256</td>
+<td>512</td>
+</tr>
 </tbody>
 </table>
 
 
-<p>Just to make it clear, it&rsquo;s not about the optimization, don&rsquo;t get caught up in that or try to judge it&rsquo;s usefulness, we are trying to grow our intuition of functions, seeing function from a different angle.</p>
+<p>Just to make it clear, it&rsquo;s not about the optimization, don&rsquo;t get caught up in that or try to judge it&rsquo;s usefulness, we are trying to grow our intuition of functions, looking at functions from a different angle.</p>
 
-<p>So we deliberatly only considered <code>8-bit</code> integers. What about <code>16-bit?</code>, <code>32-bit?</code> or whatever bit you can think of? We could still fill up our table with all possible inputs (which is infinite in this case). So if we had infinite resources we could memoize all pure functions and then our programs would just have been constant(?)/super fast table/hash lookups.</p>
+<p>So we deliberatly only considered <code>8-bit</code> integers. What about <code>16-bit?</code>, <code>32-bit?</code> or whatever bit you can think of? We could still fill up our table with all possible inputs (which is infinite in extreme cases). So if we had infinite resources we could memoize all pure functions and then our programs would just have been constant(?)/super fast table/hash lookups.</p>
 
-<p>Ok enough talking about optimizations. The one takeaway I would like to convey from this section is that <code>pure functions</code> are very similar to hash lookups.</p>
+<p>Ok enough talking about optimizations. The one takeaway I would like to convey from this section is that <code>pure functions</code> are very similar to hash lookups or data.</p>
 
 <h2>Data as functions</h2>
 
-<p>Lets say we have a list definied in haskell like follows</p>
+<p>Lets say we have a list defined in haskell like follows</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -99,7 +104,7 @@ it doesn&rsquo;t do anything else.</p>
 </span><span class='line'>firstFive = take 5 myList -- returns [1,2,3,4,5]</span></code></pre></td></tr></table></div></figure>
 
 
-<p>The above is a pefectly valid chunk of <code>Haskell</code> code. So our list <code>myList</code> is an infinite list. Do you think the runtime will dare to go ahead and generate the complete list for you? As you might have guessed correctly in wont. Haskell&rsquo;s compiler is lazy. It doesn&rsquo;t execute anything unless it&rsquo;s forced to. Like on the second line we are forcing the runtime to generate the first 5 numbers from <code>myList</code> using the <code>take</code> function.</p>
+<p>The above is a pefectly valid chunk of <code>Haskell</code> code. So our list <code>myList</code> is an infinite list. Do you think the runtime will dare to go ahead and generate the complete list for you? As you might have guessed correctly, it won&rsquo;t. Haskell is lazylanguage by default. It doesn&rsquo;t execute anything unless it&rsquo;s forced to. Like on the second line we are forcing the runtime to generate the first 5 numbers from <code>myList</code> using the <code>take</code> function.</p>
 
 <p>On a side note we can do all sorts of cool things by exploiting this behaviour of the haskell runtime. Lets look at the following fibonnacci number generator</p>
 
@@ -119,11 +124,13 @@ it doesn&rsquo;t do anything else.</p>
 
 <p>It&rsquo;s a simple data structure which has some data inside. But we can also think of it as function which takes a <code>String</code> and return another <code>String</code> and has it&rsquo;s data calulated and indexed by it&rsquo;s argument. You can think of <code>myHash['hello']</code> which is the way to access the value of key <code>hello</code> as function call.</p>
 
-<h2>Function is Data, Data is function</h2>
+<h2>Function as Data, Data as function</h2>
 
 <p>From the above sections we can see that a function can be thought of as a container of values. You give it some kind of index (<code>arguments</code>), it gives you back the result for that index.</p>
 
-<p>You might have heard other programmers saying <code>Code is data</code>.</p>
+<p>This intuition about thinking functions as container of data helps to understand some higher level concenpts from abstract algebras like <code>Functors</code> which is omnipresent everywhere once you learn to recognize them.</p>
+
+<p>Hope you enjoyed it. :)</p>
 ]]></content>
   </entry>
   
