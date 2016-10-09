@@ -9,7 +9,7 @@
   <meta name="author" content="Joy Nag">
 
   
-  <meta name="description" content="I have been planning for a long while to move my blog to Github and use Octopress from now on. Couldn&rsquo;t manage time to do that. Now finally I &hellip;">
+  <meta name="description" content="Faker is a great composer package for generating random data which can be used for seeding database tables for testing purposes in Laravel and other &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +80,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/seeding-data-in-laravel-using-faker-maintaining-foreign-key-relationship/">Seeding Data in Laravel Using Faker Maintaining Foreign Key Relationship</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-08T17:42:32+11:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>5:42 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/fzaninotto/Faker">Faker</a> is a great composer package for generating random data which can be used for seeding database tables for testing purposes in Laravel and other frameworks.</p>
+
+<p>Suppose we have a users table and a companies table with the following structure.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Table Structure
+</span><span class='line'>users:
+</span><span class='line'>    id
+</span><span class='line'>    username
+</span><span class='line'>    password
+</span><span class='line'>companies:
+</span><span class='line'>    id
+</span><span class='line'>    user_id
+</span><span class='line'>    name
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/11/seeding-data-in-laravel-using-faker-maintaining-foreign-key-relationship/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -1088,71 +1145,6 @@ First and formost What they are saying around the internet that there&rsquo;s no
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/04/using-mamp-pro-vhosts/">Using MAMP Pro&#8217;s VHosts Feature to Run Rails App in a Fancy Domain Name</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-04-27T00:00:00+10:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have been playing with ROR(Ruby On Rails) from last few days. Those who of you have idea about the the nature of Rails apps know that, to run a rails app you have to run the following command in the terminal from inside the apps directory.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>rails server
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And the app will start running on <strong><a href="http://0.0.0.0:3000">http://0.0.0.0:3000</a></strong> or <strong><a href="http://localhost:3000">http://localhost:3000</a></strong> WEBrick LightWeight Web Server that Rails ships with by default.</p>
-
-<p>As I have left <strong><a href="http://localhost/">http://localhost/</a></strong> long ago and been using fancy local domain names for all my projects, so I was searching for a solution on how can I do that with rails apps to. You know it doesn&rsquo;t feel good to type in some thing like <strong><a href="http://0.0.0.0:3000">http://0.0.0.0:3000</a></strong> in browser . Instead I would love some domain name like <strong><a href="http://d.rails.dev">http://d.rails.dev</a></strong>  or something like that. It&rsquo;s just feels good typing that.</p>
-
-<p>And I found a solution. :) Here&rsquo;s how to do it. In Mamp pro&rsquo;s control panel in the host tab create a new host. Write <strong><a href="http://d.rails.dev">http://d.rails.dev</a></strong> as the server name. The disk location isn&rsquo;t important here but I have set it to my rails app directory. Now switch over to the advanced tab in right configuration panel and paste in the following code block in Customized Virtual Host General Settings option box:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ServerName rails
-</span><span class='line'>ServerAlias *.dev
-</span><span class='line'>
-</span><span class='line'>ProxyPass / http://localhost:3000/
-</span><span class='line'>ProxyPassReverse / http://localhost:3000/
-</span><span class='line'>ProxyPreserveHost On
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>As you can see from the above code it&rsquo;s actually forwarding all traffic in / which is <strong><a href="http://d.rails.dev">http://d.rails.dev</a></strong> into <strong><a href="http://localhost:3000">http://localhost:3000</a></strong> (Where our actual rails app is running). Click apply and you are done.</p>
-
-<p>Now start the rails app using <strong><em>rails server  </em></strong>command from terminal from within the rails app directory and point your browser into <strong><a href="http://d.rails.dev">http://d.rails.dev</a></strong> and see your rails app is running there.</p>
-
-<p>Pretty easy huh! But it provides a good amount of self satisfaction, well, at least for me. I like seeing fancy domain names for my web apps.</p>
-
-<p>I haven&rsquo;t been able to test the process for MAMP but it shouldn&rsquo;t be much different, though you have to do everything manually from adding vhost entry into httpd.conf  and then add the host name entry into /etc/hosts file. (I will be writing another post on how to create a virtual host in mamp/lamp sometime soon).</p>
-
-<p>Thanks for taking the time to read up to this point. :)</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/4">&larr; Older</a>
@@ -1170,6 +1162,10 @@ First and formost What they are saying around the internet that there&rsquo;s no
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/10/function-is-data-data-is-function/">Function Is Data, Data Is Function</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/09/designing-good-background-jobs-idempotence/">Designing Good Background Jobs: Idempotence</a>
       </li>
     
@@ -1183,10 +1179,6 @@ First and formost What they are saying around the internet that there&rsquo;s no
     
       <li class="post">
         <a href="/blog/2016/07/hello-haskell-partial-function-applicaton/">Hello Haskell &#8211; Partial Function Application</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/07/intro-to-lambda-calculus-and-its-relation-to-functional-programming/">Intro to Lambda Calculus and It&#8217;s Relationship to Functional Programming</a>
       </li>
     
   </ul>

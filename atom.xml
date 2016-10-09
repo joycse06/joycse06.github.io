@@ -4,7 +4,7 @@
   <title><![CDATA[Prasenjit Kumar Nag a.k.a Joy]]></title>
   <link href="http://joycse06.github.io/atom.xml" rel="self"/>
   <link href="http://joycse06.github.io/"/>
-  <updated>2016-09-18T12:13:10+10:00</updated>
+  <updated>2016-10-08T21:12:57+11:00</updated>
   <id>http://joycse06.github.io/</id>
   <author>
     <name><![CDATA[Joy Nag]]></name>
@@ -12,6 +12,120 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Function Is Data, Data Is Function]]></title>
+    <link href="http://joycse06.github.io/blog/2016/10/function-is-data-data-is-function/"/>
+    <updated>2016-10-08T19:23:48+11:00</updated>
+    <id>http://joycse06.github.io/blog/2016/10/function-is-data-data-is-function</id>
+    <content type="html"><![CDATA[<p>Learning programming with C functions were a very special thing for me in my early days. Though there were <code>function pointers</code> back then, didn&rsquo;t use those much and I had this idea that functions are very different from data.</p>
+
+<p>After being introduced to <code>closures</code> and <code>lambdas</code>, functions started becoming less special, with the ability to use them as first class citizens them seemed very much like data as I could pass those around like values, could create higher order functions.</p>
+
+<p>After spending some time with <code>Haskell</code> it became a lot more clear that functions and data aren&rsquo;t very different. And by <code>function</code> here I mean functions without any funny business aka pure functions. For anyone not knowing what pure functions are, they are like Matemathical functions which always return the same value for the same set of arguments.</p>
+
+<p>My purpose in this post is to try explaining why functions are very much like data. The code examples will be in <code>Haskell</code> but they will be simple enough to be understandable to anyone having decent programming experience.</p>
+
+<!-- more -->
+
+
+<h2>Pure functions</h2>
+
+<p>Lets talk about pure functions a bit. What they are, how they behave etc.</p>
+
+<p>Consider the following <code>add</code> function</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>add :: Int -&gt; Int -&gt; Int
+</span><span class='line'>add x y = x + y</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s a very simple function. Takes two <code>Integers</code> and return their <code>summation</code>. And as you can see from the definition
+it doesn&rsquo;t do anything else.</p>
+
+<p>Now as a optimization technique, we can decide to generate the sum of all integers (for simplicity&rsquo;s sake consider they are 8 bit unsigned integers and the number of possible values for either of <code>x</code> or <code>y</code> will be <code>2^8</code> or 256) and save them in a hash/table. Once we have all the values, then the function call just become a hash/table lookup. The table for the above function will look like the following.</p>
+
+<table>
+<thead>
+<tr>
+<th>x  </th>
+<th> y </th>
+<th> sum </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> 0  </td>
+<td> 0  </td>
+<td> 0  </td>
+</tr>
+<tr>
+<td> 0  </td>
+<td> 1  </td>
+<td> 1  </td>
+</tr>
+<tr>
+<td> 0  </td>
+<td> 2  </td>
+<td> 2  </td>
+</tr>
+<tr>
+<td>..</td>
+<td>..</td>
+<td>..</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>Just to make it clear, it&rsquo;s not about the optimization, don&rsquo;t get caught up in that or try to judge it&rsquo;s usefulness, we are trying to grow our intuition of functions, seeing function from a different angle.</p>
+
+<p>So we deliberatly only considered <code>8-bit</code> integers. What about <code>16-bit?</code>, <code>32-bit?</code> or whatever bit you can think of? We could still fill up our table with all possible inputs (which is infinite in this case). So if we had infinite resources we could memoize all pure functions and then our programs would just have been constant(?)/super fast table/hash lookups.</p>
+
+<p>Ok enough talking about optimizations. The one takeaway I would like to convey from this section is that <code>pure functions</code> are very similar to hash lookups.</p>
+
+<h2>Data as functions</h2>
+
+<p>Lets say we have a list definied in haskell like follows</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>myList :: [Int]
+</span><span class='line'>myList = [1..]
+</span><span class='line'>
+</span><span class='line'>firstFive = take 5 myList -- returns [1,2,3,4,5]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The above is a pefectly valid chunk of <code>Haskell</code> code. So our list <code>myList</code> is an infinite list. Do you think the runtime will dare to go ahead and generate the complete list for you? As you might have guessed correctly in wont. Haskell&rsquo;s compiler is lazy. It doesn&rsquo;t execute anything unless it&rsquo;s forced to. Like on the second line we are forcing the runtime to generate the first 5 numbers from <code>myList</code> using the <code>take</code> function.</p>
+
+<p>On a side note we can do all sorts of cool things by exploiting this behaviour of the haskell runtime. Lets look at the following fibonnacci number generator</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>fibs = 0 : 1 : zipWith (+) fibs1 (tail fibs1)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s a full featured infinite fibonacci number generator, and like before we can force it to generate the first 5 fibonacci number using <code>take 5 fibs</code>, we can also use it as a list, for example <code>fibs !! 10</code> will return <code>55</code> (<code>!!</code> is the function to access a list value of a certain index in haskell). It&rsquo;s cool and elegant, isn&rsquo;t it? I won&rsquo;t go ahead and start explaining how it works, but that could be the content of a future blog post.</p>
+
+<p>Anyway, back to the point, though the last two examples were lists, they were actually more like functions, you force the runtime to give more values and it goes ahead, use some kind of generator to generate next values of the list to return them back.</p>
+
+<p>So, lists which think of data structures, can be represted/thoght of as functions. Lets see the following hash,</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>myHash = { 'hello' =&gt; 'world', 'name' =&gt; 'John' }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s a simple data structure which has some data inside. But we can also think of it as function which takes a <code>String</code> and return another <code>String</code> and has it&rsquo;s data calulated and indexed by it&rsquo;s argument. You can think of <code>myHash['hello']</code> which is the way to access the value of key <code>hello</code> as function call.</p>
+
+<h2>Function is Data, Data is function</h2>
+
+<p>From the above sections we can see that a function can be thought of as a container of values. You give it some kind of index (<code>arguments</code>), it gives you back the result for that index.</p>
+
+<p>You might have heard other programmers saying <code>Code is data</code>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Designing Good Background Jobs: Idempotence]]></title>
@@ -2624,151 +2738,6 @@ View Model</p>
 <p> On either side &amp;&amp;  ensures that if the directory doesn&rsquo;t exist tar command on the right won&rsquo;t fire at all.</p>
 
 <p> That all for today. I will be talking more about fork and tar in another post. Hope you enjoyed it.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Seeding Data in Laravel Using Faker Maintaining Foreign Key Relationship]]></title>
-    <link href="http://joycse06.github.io/blog/2014/11/seeding-data-in-laravel-using-faker-maintaining-foreign-key-relationship/"/>
-    <updated>2014-11-08T17:42:32+11:00</updated>
-    <id>http://joycse06.github.io/blog/2014/11/seeding-data-in-laravel-using-faker-maintaining-foreign-key-relationship</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/fzaninotto/Faker">Faker</a> is a great composer package for generating random data which can be used for seeding database tables for testing purposes in Laravel and other frameworks.</p>
-
-<p>Suppose we have a users table and a companies table with the following structure.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># Table Structure
-</span><span class='line'>users:
-</span><span class='line'>    id
-</span><span class='line'>    username
-</span><span class='line'>    password
-</span><span class='line'>companies:
-</span><span class='line'>    id
-</span><span class='line'>    user_id
-</span><span class='line'>    name
-</span></code></pre></td></tr></table></div></figure>
-
-
-<!-- more -->
-
-
-<p>For the sake of simplicity lets assume we dont have any other fields in those tables.</p>
-
-<p>Now if we want to insert seed data in those two tables how would we do that in laravel. We would need two seeders one for <code>users</code> table and another for <code>companies</code> table.</p>
-
-<p>Suppose we have Models corresponding to those two entities are already there as <code>User</code> and <code>Company</code> in Laravel.</p>
-
-<!-- more -->
-
-
-<p>adding seed users in users table is pretty straight forward. We can do it like</p>
-
-<figure class='code'><figcaption><span>UsersTableSeeder.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
-</span><span class='line'><span class="k">use</span> <span class="nx">Faker\Factory</span> <span class="k">as</span> <span class="nx">Faker</span><span class="p">;</span>
-</span><span class='line'><span class="k">use</span> <span class="nx">Illuminate\Database\Seeder</span><span class="p">;</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">UsersTableSeeder</span> <span class="k">extends</span> <span class="nx">Seeder</span><span class="p">{</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">run</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$faker</span> <span class="o">=</span> <span class="nx">Faker</span><span class="o">::</span><span class="na">create</span><span class="p">();</span>
-</span><span class='line'>        <span class="nv">$candidates</span> <span class="o">=</span> <span class="nx">Candidate</span><span class="o">::</span><span class="na">lists</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">);</span>
-</span><span class='line'>        <span class="k">foreach</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span> <span class="k">as</span> <span class="nv">$index</span><span class="p">)</span>
-</span><span class='line'>        <span class="p">{</span>
-</span><span class='line'>            <span class="nx">User</span><span class="o">::</span><span class="na">create</span><span class="p">([</span>
-</span><span class='line'>                <span class="s1">&#39;username&#39;</span> <span class="o">=&gt;</span> <span class="nv">$faker</span><span class="o">-&gt;</span><span class="na">userName</span><span class="p">(),</span>
-</span><span class='line'>                <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;secret&#39;</span>
-</span><span class='line'>            <span class="p">]);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The above seeder will create 50 users for us in database. Now comes the real problem which is the purpose of this blog post. In <code>companies</code> table we have a field named <code>user_id</code> we can just use random integers into that field as that will break relationships between tables. Whatever we want to put in this field that user has to be present in the database already for the models relationships to work properly.</p>
-
-<p>Fortunately, with Laravel thats easy too. Lets have a look at the companies seeder.</p>
-
-<figure class='code'><figcaption><span>CompaniesTableSeeder</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">use</span> <span class="nx">Illuminate\Database\Seeder</span><span class="p">;</span>
-</span><span class='line'><span class="k">use</span> <span class="nx">Faker\Factory</span> <span class="k">as</span> <span class="nx">Faker</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">CompaniesTableSeeder</span> <span class="k">extends</span> <span class="nx">Seeder</span><span class="p">{</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">run</span><span class="p">(){</span>
-</span><span class='line'>        <span class="nv">$faker</span> <span class="o">=</span> <span class="nx">Faker</span><span class="o">::</span><span class="na">create</span><span class="p">();</span>
-</span><span class='line'>        <span class="c1">// following line retrieve all the user_ids from DB</span>
-</span><span class='line'>        <span class="nv">$users</span> <span class="o">=</span> <span class="nx">User</span><span class="o">::</span><span class="na">all</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">lists</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">);</span>
-</span><span class='line'>        <span class="k">foreach</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span> <span class="k">as</span> <span class="nv">$index</span><span class="p">){</span>
-</span><span class='line'>            <span class="nv">$company</span> <span class="o">=</span> <span class="nx">Company</span><span class="o">::</span><span class="na">create</span><span class="p">([</span>
-</span><span class='line'>                <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="nv">$faker</span><span class="o">-&gt;</span><span class="na">company</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;user_id&#39;</span> <span class="o">=&gt;</span> <span class="nv">$faker</span><span class="o">-&gt;</span><span class="na">randomElement</span><span class="p">(</span><span class="nv">$users</span><span class="p">),</span>
-</span><span class='line'>            <span class="p">]);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So first step is to retrieve all the users&rsquo;s id we inserted in <code>UsersTableSeeder</code> then randomly assign those in the <code>user_id</code> field of companies table.</p>
-
-<p>We can get the value of any column of a table using <code>lists(COLUMN_NAME)</code> Eloquent method. Here we need the value of <code>id</code> column. Now after executing <code>$users = User::all()-&gt;lists('id');</code> we will have an array filled with all current users IDs from DB, so in that time those are all valid users.</p>
-
-<p>Faker has a method named <code>randomElement()</code> which takes an array and randomly returns value from that array. So the <code>user_id</code> column of the <code>companies</code> table will be filled with real user id from DB. And after proper relationships are set we will be able to do things like</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="nv">$company</span> <span class="o">=</span> <span class="nx">Company</span><span class="o">::</span><span class="na">find</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="nv">$company_owner</span> <span class="o">=</span> <span class="nv">$company</span><span class="o">-&gt;</span><span class="na">user</span><span class="p">();</span> <span class="c1">// return a User object</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Thats how you can seed your database using <code>Faker</code> maintaining model relationships.</p>
-
-<p>One thing remember, for this case you must have to run <code>UsersTableSeeder</code> before running <code>CompaniesTableSeeder</code>.</p>
-
-<p>Thats all for today. Hope you enjoyed it.</p>
 ]]></content>
   </entry>
   

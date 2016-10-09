@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Function Is Data, Data Is Function - Prasenjit Kumar Nag a.k.a Joy</title>
+  <meta name="author" content="Joy Nag">
+
+  
+  <meta name="description" content="Learning programming with C functions were a very special thing for me in my early days. Though there were function pointers back then, didn&rsquo;t &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://joycse06.github.io/blog/2016/10/function-is-data-data-is-function/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Prasenjit Kumar Nag a.k.a Joy" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-58344400-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Prasenjit Kumar Nag a.k.a Joy</a></h1>
+  
+    <h2>A Developers Adventure in Coding</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="joycse06.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/blog/categories">Categories</a></li>
+  <li><a href="/about-me">About Me</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Function Is Data, Data Is Function</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-10-08T19:23:48+11:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>7:23 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Learning programming with C functions were a very special thing for me in my early days. Though there were <code>function pointers</code> back then, didn&rsquo;t use those much and I had this idea that functions are very different from data.</p>
+
+<p>After being introduced to <code>closures</code> and <code>lambdas</code>, functions started becoming less special, with the ability to use them as first class citizens them seemed very much like data as I could pass those around like values, could create higher order functions.</p>
+
+<p>After spending some time with <code>Haskell</code> it became a lot more clear that functions and data aren&rsquo;t very different. And by <code>function</code> here I mean functions without any funny business aka pure functions. For anyone not knowing what pure functions are, they are like Matemathical functions which always return the same value for the same set of arguments.</p>
+
+<p>My purpose in this post is to try explaining why functions are very much like data. The code examples will be in <code>Haskell</code> but they will be simple enough to be understandable to anyone having decent programming experience.</p>
+
+<!-- more -->
+
+
+<h2>Pure functions</h2>
+
+<p>Lets talk about pure functions a bit. What they are, how they behave etc.</p>
+
+<p>Consider the following <code>add</code> function</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>add :: Int -&gt; Int -&gt; Int
+</span><span class='line'>add x y = x + y</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s a very simple function. Takes two <code>Integers</code> and return their <code>summation</code>. And as you can see from the definition
+it doesn&rsquo;t do anything else.</p>
+
+<p>Now as a optimization technique, we can decide to generate the sum of all integers (for simplicity&rsquo;s sake consider they are 8 bit unsigned integers and the number of possible values for either of <code>x</code> or <code>y</code> will be <code>2^8</code> or 256) and save them in a hash/table. Once we have all the values, then the function call just become a hash/table lookup. The table for the above function will look like the following.</p>
+
+<table>
+<thead>
+<tr>
+<th>x  </th>
+<th> y </th>
+<th> sum </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> 0  </td>
+<td> 0  </td>
+<td> 0  </td>
+</tr>
+<tr>
+<td> 0  </td>
+<td> 1  </td>
+<td> 1  </td>
+</tr>
+<tr>
+<td> 0  </td>
+<td> 2  </td>
+<td> 2  </td>
+</tr>
+<tr>
+<td>..</td>
+<td>..</td>
+<td>..</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>Just to make it clear, it&rsquo;s not about the optimization, don&rsquo;t get caught up in that or try to judge it&rsquo;s usefulness, we are trying to grow our intuition of functions, seeing function from a different angle.</p>
+
+<p>So we deliberatly only considered <code>8-bit</code> integers. What about <code>16-bit?</code>, <code>32-bit?</code> or whatever bit you can think of? We could still fill up our table with all possible inputs (which is infinite in this case). So if we had infinite resources we could memoize all pure functions and then our programs would just have been constant(?)/super fast table/hash lookups.</p>
+
+<p>Ok enough talking about optimizations. The one takeaway I would like to convey from this section is that <code>pure functions</code> are very similar to hash lookups.</p>
+
+<h2>Data as functions</h2>
+
+<p>Lets say we have a list definied in haskell like follows</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>myList :: [Int]
+</span><span class='line'>myList = [1..]
+</span><span class='line'>
+</span><span class='line'>firstFive = take 5 myList -- returns [1,2,3,4,5]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The above is a pefectly valid chunk of <code>Haskell</code> code. So our list <code>myList</code> is an infinite list. Do you think the runtime will dare to go ahead and generate the complete list for you? As you might have guessed correctly in wont. Haskell&rsquo;s compiler is lazy. It doesn&rsquo;t execute anything unless it&rsquo;s forced to. Like on the second line we are forcing the runtime to generate the first 5 numbers from <code>myList</code> using the <code>take</code> function.</p>
+
+<p>On a side note we can do all sorts of cool things by exploiting this behaviour of the haskell runtime. Lets look at the following fibonnacci number generator</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>fibs = 0 : 1 : zipWith (+) fibs1 (tail fibs1)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s a full featured infinite fibonacci number generator, and like before we can force it to generate the first 5 fibonacci number using <code>take 5 fibs</code>, we can also use it as a list, for example <code>fibs !! 10</code> will return <code>55</code> (<code>!!</code> is the function to access a list value of a certain index in haskell). It&rsquo;s cool and elegant, isn&rsquo;t it? I won&rsquo;t go ahead and start explaining how it works, but that could be the content of a future blog post.</p>
+
+<p>Anyway, back to the point, though the last two examples were lists, they were actually more like functions, you force the runtime to give more values and it goes ahead, use some kind of generator to generate next values of the list to return them back.</p>
+
+<p>So, lists which think of data structures, can be represted/thoght of as functions. Lets see the following hash,</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>myHash = { 'hello' =&gt; 'world', 'name' =&gt; 'John' }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s a simple data structure which has some data inside. But we can also think of it as function which takes a <code>String</code> and return another <code>String</code> and has it&rsquo;s data calulated and indexed by it&rsquo;s argument. You can think of <code>myHash['hello']</code> which is the way to access the value of key <code>hello</code> as function call.</p>
+
+<h2>Function is Data, Data is function</h2>
+
+<p>From the above sections we can see that a function can be thought of as a container of values. You give it some kind of index (<code>arguments</code>), it gives you back the result for that index.</p>
+
+<p>You might have heard other programmers saying <code>Code is data</code>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Joy Nag</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-10-08T19:23:48+11:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>7:23 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://joycse06.github.io/blog/2016/10/function-is-data-data-is-function/" data-via="joycse06" data-counturl="http://joycse06.github.io/blog/2016/10/function-is-data-data-is-function/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/09/designing-good-background-jobs-idempotence/" title="Previous Post: Designing Good Background Jobs: Idempotence">&laquo; Designing Good Background Jobs: Idempotence</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/10/function-is-data-data-is-function/">Function Is Data, Data Is Function</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/09/designing-good-background-jobs-idempotence/">Designing Good Background Jobs: Idempotence</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/09/folding-structures-aka-catamorphisms/">Folding Structures Aka Catamorphisms</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/understanding-the-ubiquitous-notion-of-mapping-over-a-structure/">Understanding the Ubiquitous Notion of Mapping a Function Over a Structure</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/hello-haskell-partial-function-applicaton/">Hello Haskell &#8211; Partial Function Application</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/joycse06">@joycse06</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'joycse06',
+            count: 4,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<section>
+    <h1>Stack Overflow</h1>
+    <a href="http://stackoverflow.com/users/344304/Joy">
+        <img src="http://stackoverflow.com/users/flair/344304.png" width="208" height="58" alt="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Joy at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+    </a>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Joy Nag -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'joycse06';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://joycse06.github.io/blog/2016/10/function-is-data-data-is-function/';
+        var disqus_url = 'http://joycse06.github.io/blog/2016/10/function-is-data-data-is-function/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
