@@ -1,147 +1,602 @@
 # https://joycse06.github.io
 
-baseURL: https://joycse06.github.io
-disablePathToLower: false
-languageCode: en-us
-title: Life Adventures
-theme: ["LoveIt"]
-
-IsMultilingual: false
-
-# Frontmatter in Yaml
-metadataformat: yaml
-
-services:
-  disqus:
-    shortname: "hello"
 # Permalink URL Type. Don't change this because it will invalidate all old links
 # unless you like to do a ton of aliases. Add `url:` to your new posts instead.
-permalinks:
-  post: "/blog/:year-:month-:day-:title"
+#permalinks:
+#  post: "/blog/:year-:month-:day-:title"
 
-# Menu
+baseURL: "https://joycse06.github.io"
+theme: LoveIt
+title: Hamsi
+languageCode: en-us
+# IsMultilingual: false
+paginate: 12
+googleAnalytics: ""
+copyright: ""
+enableRobotsTXT: true
+enableGitInfo: true
+enableEmoji: true
+ignoreErrors:
+  - error-remote-getjson
+  - error-missing-instagram-accesstoken
+author:
+  name: Joy Nag
+  email: "joyruet06@gmail.com"
+  link: ""
 menu:
-  # Navigation Menu
-  # Template: {{theme-dir}}/layouts/partials/nevigation.html
   main:
-    - Name: Blog
-      URL: /blog/
-      weight: 2
-    - name: Archive
-      URL: /blog/archive/
-    - name: Categories
-      URL: /blog/categories/
-    - name: About Me
-      URL: /about/
-    - name: Contact
-      URL: /contact/
-
-# Parameters
+    - weight: 1
+      identifier: posts
+      pre: ""
+      post: ""
+      name: Posts
+      url: /posts/
+      title: ""
+    - weight: 2
+      identifier: tags
+      pre: ""
+      post: ""
+      name: Tags
+      url: /tags/
+      title: ""
+    - weight: 3
+      identifier: categories
+      pre: ""
+      post: ""
+      name: Categories
+      url: /categories/
+      title: ""
+    - weight: 6
+      identifier: github
+      pre: <i class='fab fa-github fa-fw' aria-hidden='true'></i>
+      post: ""
+      name: ""
+      url: "https://github.com/joycse06"
+      title: GitHub
 params:
-  sidebarHeader: Who am I?
-  sidebarText: |-
-    I am Prasenjit Kumar Nag (Joy), a Software Engineer.
-
-    I write about programming, spirituality, software architecture.
-
-    Click on [About Me!](/about/) to know more.
-
-  sidebarRecentLimit: 10
-
-  # Enable sidebarHeader
-  # Sidebar links
-  # bitbucket: "https://bitbucket.org/parsiya/" # I am not really active on bitbucket.
-  twitter: "https://twitter.com/joycse06/"
-  # keybase: "https://keybase.io/parsiya/"
-  github: "https://github.com/joycse06/"
-  linkedin: "https://www.linkedin.com/in/prasenjitnag"
-
-  # 404 page. Header and text.
-  notfoundHeader: There's nothing here.
-  notfoundText: You can never go back.
-
-  # Do not display all posts' content on the front page (and in pagination).
-  truncate: true
-
-  # Author's name. Appears in metadata and under posts.
-  author: Joy
-
-  # Text that appears in the website header under the website title.
-  subtitle: |-
-    The knowledge of anything, since all things have causes, is not acquired or
-    complete unless it is known by its causes. - Avicenna
-
-  # Search engine URL.
-  searchEngineURL: "https://www.google.com/search"
-
-  # "Continue Reading" text that appears under truncated posts.
-  # continueReadingText: Would you like to know more? # I don't need this, I am using the compact index.
-
-  # # Enable the RSS icon in navigation.
-  rss: true
-
-  description: ""
-  defaultKeywords:
-    - Prasenjit
-    - Joy
-    - programming
-    - spirituality
-
-  # Enable table of contents for post by setting this to true. Otherwise, you
-  # can enable/disable them individually via frontmatter.
-  # tableOfContents: false
-
-  # Generate taxonomy list under /categories/ and /tags/
-  generateTaxonomyList: true
-
-  # Twitter card config.
-  # Enable twitter card.
-  twitterCardEnabled: true
-  # Twitter card domain.
-  twitterCardDomain: parsiya.net
-  # Your twitter username, do not include the @.
-  twitterCardAuthor: CryptoGangsta
-  # Not sure what this is used for, but my twitter card works without it.
-  # twitterCardSite =
-
-  # Use the compact index.
-  compactIndex: true
-
-# markup for Hugo v.60+
+  defaultTheme: auto
+  gitRepo: "https://github.com/joycse06/joycse06.github.io"
+  fingerprint: ""
+  dateFormat: "2006-01-02"
+  title: Hamsi
+  description: Hamsi
+  images: []
+  header:
+    desktopMode: fixed
+    mobileMode: auto
+    title:
+      logo: ""
+      name: Hamsi
+      pre: <i class='fa fa-computer fa-fw' aria-hidden='true'></i>
+      post: ""
+      typeit: false
+  footer:
+    enable: true
+    custom: ""
+    hugo: true
+    copyright: true
+    author: true
+    since: 2008
+    icp: ""
+    license: >-
+      <a rel="license external nofollow noopener noreffer"
+      href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC
+      BY-NC 4.0</a>
+  section:
+    paginate: 20
+    dateFormat: 01-02
+    rss: 10
+  list:
+    paginate: 20
+    dateFormat: 01-02
+    rss: 10
+  app:
+    title: Hamsi
+    noFavicon: false
+    svgFavicon: ""
+    themeColor: "#ffffff"
+    iconColor: "#5bbad5"
+    tileColor: "#da532c"
+  search:
+    enable: true
+    type: lunr
+    contentLength: 4000
+    placeholder: ""
+    maxResultLength: 10
+    snippetLength: 30
+    highlightTag: em
+    absoluteURL: false
+  home:
+    rss: 10
+    profile:
+      enable: true
+      gravatarEmail: "joyruet06@gmail.com"
+      avatarURL: "" #/images/avatar.png
+      title: ""
+      subtitle: "A Programmer's Adventure in Coding"
+      typeit: true
+      social: true
+      disclaimer: ""
+    posts:
+      enable: true
+      paginate: 6
+  social:
+    GitHub: "joycse06"
+    Linkedin: "prasenjitnag"
+    Twitter: "joycse06"
+    Instagram: ""
+    Facebook: ""
+    Telegram: ""
+    Medium: ""
+    Gitlab: ""
+    Youtubelegacy: ""
+    Youtubecustom: ""
+    Youtubechannel: ""
+    Tumblr: ""
+    Quora: ""
+    Keybase: ""
+    Pinterest: ""
+    Reddit: ""
+    Codepen: ""
+    FreeCodeCamp: ""
+    Bitbucket: ""
+    Stackoverflow: ""
+    Weibo: ""
+    Odnoklassniki: ""
+    VK: ""
+    Flickr: ""
+    Xing: ""
+    Snapchat: ""
+    Soundcloud: ""
+    Spotify: ""
+    Bandcamp: ""
+    Paypal: ""
+    Fivehundredpx: ""
+    Mix: ""
+    Goodreads: ""
+    Lastfm: ""
+    Foursquare: ""
+    Hackernews: ""
+    Kickstarter: ""
+    Patreon: ""
+    Steam: ""
+    Twitch: ""
+    Strava: ""
+    Skype: ""
+    Whatsapp: ""
+    Zhihu: ""
+    Douban: ""
+    Angellist: ""
+    Slidershare: ""
+    Jsfiddle: ""
+    Deviantart: ""
+    Behance: ""
+    Dribbble: ""
+    Wordpress: ""
+    Vine: ""
+    Googlescholar: ""
+    Researchgate: ""
+    Mastodon: ""
+    Thingiverse: ""
+    Devto: ""
+    Gitea: ""
+    XMPP: ""
+    Matrix: ""
+    Bilibili: ""
+    Discord: ""
+    DiscordInvite: ""
+    Lichess: ""
+    ORCID: ""
+    Pleroma: ""
+    Kaggle: ""
+    MediaWiki: ""
+    Plume: ""
+    HackTheBox: ""
+    RootMe: ""
+    Email: ""
+    RSS: ""
+  page:
+    hiddenFromHomePage: true
+    hiddenFromSearch: false
+    twemoji: false
+    lightgallery: false
+    ruby: true
+    fraction: true
+    fontawesome: true
+    linkToMarkdown: true
+    rssFullText: false
+    toc:
+      enable: true
+      keepStatic: false
+      auto: true
+    code:
+      copy: true
+      maxShownLines: 50
+    math:
+      enable: true
+      inlineLeftDelimiter: ""
+      inlineRightDelimiter: ""
+      blockLeftDelimiter: ""
+      blockRightDelimiter: ""
+      copyTex: true
+      mhchem: true
+    mapbox:
+      accessToken: >-
+        pk.eyJ1IjoiZGlsbG9uenEiLCJhIjoiY2s2czd2M2x3MDA0NjNmcGxmcjVrZmc2cyJ9.aSjv2BNuZUfARvxRYjSVZQ
+      lightStyle: "mapbox://styles/mapbox/light-v10?optimize=true"
+      darkStyle: "mapbox://styles/mapbox/dark-v10?optimize=true"
+      navigation: true
+      geolocate: true
+      scale: true
+      fullscreen: true
+    share:
+      enable: true
+      Twitter: true
+      Facebook: true
+      Linkedin: true
+      Whatsapp: false
+      Pinterest: false
+      Tumblr: false
+      HackerNews: true
+      Reddit: false
+      VK: false
+      Buffer: false
+      Xing: false
+      Line: false
+      Instapaper: false
+      Pocket: false
+      Flipboard: false
+      Weibo: false
+      Blogger: false
+      Baidu: false
+      Odnoklassniki: false
+      Evernote: false
+      Skype: false
+      Trello: false
+      Mix: false
+    comment:
+      enable: true
+      disqus:
+        enable: false
+        shortname: ""
+      gitalk:
+        enable: false
+        owner: ""
+        repo: ""
+        clientId: ""
+        clientSecret: ""
+      valine:
+        enable: false
+        appId: ""
+        appKey: ""
+        placeholder: ""
+        avatar: mp
+        meta: ""
+        pageSize: 10
+        lang: ""
+        visitor: true
+        recordIP: true
+        highlight: true
+        enableQQ: false
+        serverURLs: "https://leancloud.hugoloveit.com"
+        emoji: ""
+      facebook:
+        enable: false
+        width: 100%
+        numPosts: 10
+        appId: ""
+        languageCode: ""
+      telegram:
+        enable: false
+        siteID: ""
+        limit: 5
+        height: ""
+        color: ""
+        colorful: true
+        dislikes: false
+        outlined: false
+      commento:
+        enable: false
+      utterances:
+        enable: false
+        repo: ""
+        issueTerm: pathname
+        label: ""
+        lightTheme: github-light
+        darkTheme: github-dark
+      giscus:
+        enable: true
+        repo: "joycse06/joycse06.github.io"
+        repoId: "MDEwOlJlcG9zaXRvcnkxNjMyMTAwOQ=="
+        category: "Blog Post Comments"
+        categoryId: "DIC_kwDOAPkJ8c4Cir7L"
+        lang: ""
+        mapping: pathname
+        reactionsEnabled: "1"
+        emitMetadata: "0"
+        inputPosition: bottom
+        lazyLoading: false
+        lightTheme: light
+        darkTheme: dark
+    library:
+      css: {}
+      js: {}
+    seo:
+      images: []
+      publisher:
+        name: xxxx
+        logoUrl: "" # /images/avatar.png
+  typeit:
+    speed: 100
+    cursorSpeed: 1000
+    cursorChar: "|"
+    duration: -1
+  verification:
+    google: ""
+    bing: ""
+    yandex: ""
+    pinterest: ""
+    baidu: ""
+  seo:
+    image: "" # /images/Apple-Devices-Preview.png
+    thumbnailUrl: "" # /images/screenshot.png
+  analytics:
+    enable: false
+    google:
+      id: ""
+      anonymizeIP: true
+    fathom:
+      id: ""
+      server: ""
+    plausible:
+      dataDomain: ""
+    yandexMetrica:
+      id: ""
+  cookieconsent:
+    enable: false
+    content:
+      message: ""
+      dismiss: ""
+      link: ""
+  cdn:
+    data: jsdelivr.yml
+  compatibility:
+    polyfill: false
+    objectFit: false
 markup:
-  # Note to future me: The reason is because new links in Goldmark are not
-  # opened in a new tab by default. We can use the render hook to make it happen
-  # for just markdown links but not image links or linkify links (i.e., URLs in
-  # the markdown documents as-is). So before you come and waste a lot of time to
-  # switch to Goldmark, don't. Of course, unless this problem has been solved in
-  # Goldmark.
-  # defaultMarkdownHandler: blackfriday # use Blackfriday
-  # blackFriday:
-  #   fractions: false
-  #   hrefTargetBlank: true
-  #   latexDashes: false
-  #   nofollowLinks: true
-  #   smartDashes: false
-  #   smartypants: false
-
-  # Goodbye blackfriday, you have been deprecated.
-  # The render hook is not fired for linkify links in Goldmark so we have to
-  # replace all of them.
+  highlight:
+    codeFences: true
+    guessSyntax: true
+    lineNos: true
+    lineNumbersInTable: true
+    noClasses: false
   goldmark:
     extensions:
-      typographer: false
+      definitionList: true
+      footnote: true
+      linkify: true
+      strikethrough: true
+      table: true
+      taskList: true
+      typographer: true
     renderer:
-      hardWraps: false
       unsafe: true
-
-  # Change the defaults for the toc because I want to render every heading in
-  # the document.
   tableOfContents:
-    endLevel: 7
-    startLevel: 1
-    # Note to future me: Consider changing the start level to 2 but then you
-    # have to go and change it for every blog post that started with a level 1
-    # heading.
-  highlight:
-    # use solarized-dark to highlight code.
-    style: "solarized-dark"
+    startLevel: 2
+    endLevel: 6
+sitemap:
+  changefreq: weekly
+  filename: sitemap.xml
+  priority: 0.5
+Permalinks:
+  posts: "/blog/:year-:month-:day-:title"
+privacy:
+  googleAnalytics: {}
+  twitter:
+    enableDNT: true
+  youtube:
+    privacyEnhanced: true
+mediaTypes:
+  text/plain:
+    suffixes:
+      - md
+outputFormats:
+  MarkDown:
+    mediaType: text/plain
+    isPlainText: true
+    isHTML: false
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+  page:
+    - HTML
+    - MarkDown
+  section:
+    - HTML
+    - RSS
+  taxonomy:
+    - HTML
+    - RSS
+  taxonomyTerm:
+    - HTML
+
+languages:
+  en:
+    weight: 1
+    languageCode: en
+    languageName: English
+    hasCJKLanguage: false
+    copyright: >-
+      This work is licensed under a Creative Commons Attribution-NonCommercial
+      4.0 International License.
+    menu:
+      main:
+        - weight: 1
+          identifier: posts
+          pre: ""
+          post: ""
+          name: Posts
+          url: /posts/
+          title: ""
+        - weight: 2
+          identifier: tags
+          pre: ""
+          post: ""
+          name: Tags
+          url: /tags/
+          title: ""
+        - weight: 3
+          identifier: categories
+          pre: ""
+          post: ""
+          name: Categories
+          url: /categories/
+          title: ""
+        - weight: 4
+          identifier: documentation
+          pre: ""
+          post: ""
+          name: Docs
+          url: /categories/documentation/
+          title: ""
+        - weight: 5
+          identifier: about
+          pre: ""
+          post: ""
+          name: About
+          url: /about/
+          title: ""
+        - weight: 6
+          identifier: github
+          pre: <i class='fab fa-github fa-fw' aria-hidden='true'></i>
+          post: ""
+          name: ""
+          url: "https://github.com/dillonzq/LoveIt"
+          title: GitHub
+    params:
+      search:
+        enable: true
+        type: algolia
+        contentLength: 4000
+        placeholder: ""
+        maxResultLength: 10
+        snippetLength: 30
+        highlightTag: em
+        absoluteURL: false
+        algolia:
+          index: index.en
+          appID: PASDMWALPK
+          searchKey: b42948e51daaa93df92381c8e2ac0f93
+      home:
+        rss: 10
+        profile:
+          enable: true
+          gravatarEmail: ""
+          avatarURL: /images/avatar.png
+          title: ""
+          subtitle: "A Clean, Elegant but Advanced Hugo Theme"
+          typeit: true
+          social: true
+          disclaimer: ""
+      social:
+        GitHub: xxxx
+        Twitter: xxxx
+        Instagram: xxxx
+        Facebook: xxxx
+        Telegram: xxxx
+        Youtubelegacy: xxxx
+        Phone: 555-555-555
+        Email: xxxx@xxxx.com
+        RSS: true
+        Mastodon:
+          id: "@xxxx"
+          prefix: "https://mastodon.technology/"
+  zh-cn:
+    weight: 2
+    languageCode: zh-CN
+    languageName: 简体中文
+    hasCJKLanguage: true
+    copyright: >-
+      This work is licensed under a Creative Commons Attribution-NonCommercial
+      4.0 International License.
+    menu:
+      main:
+        - weight: 1
+          identifier: posts
+          pre: ""
+          post: ""
+          name: 所有文章
+          url: /posts/
+          title: ""
+        - weight: 2
+          identifier: tags
+          pre: ""
+          post: ""
+          name: 标签
+          url: /tags/
+          title: ""
+        - weight: 3
+          identifier: categories
+          pre: ""
+          post: ""
+          name: 分类
+          url: /categories/
+          title: ""
+        - weight: 4
+          identifier: documentation
+          pre: ""
+          name: 文档
+          url: /categories/documentation/
+          title: ""
+        - weight: 5
+          identifier: about
+          pre: ""
+          post: ""
+          name: 关于
+          url: /about/
+          title: ""
+        - weight: 6
+          identifier: github
+          pre: <i class='fab fa-github fa-fw' aria-hidden='true'></i>
+          post: ""
+          name: ""
+          url: "https://github.com/dillonzq/LoveIt"
+          title: GitHub
+    params:
+      search:
+        enable: true
+        type: algolia
+        contentLength: 4000
+        placeholder: ""
+        maxResultLength: 10
+        snippetLength: 50
+        highlightTag: em
+        absoluteURL: false
+        algolia:
+          index: index.zh-cn
+          appID: PASDMWALPK
+          searchKey: b42948e51daaa93df92381c8e2ac0f93
+      home:
+        rss: 10
+        profile:
+          enable: true
+          gravatarEmail: ""
+          avatarURL: /images/avatar.png
+          title: ""
+          subtitle: 一个简洁、优雅且高效的 Hugo 主题
+          typeit: true
+          social: true
+          disclaimer: ""
+      social:
+        GitHub: xxxx
+        Weibo: xxxx
+        Steam: xxxx
+        Zhihu: xxxx
+        Douban: xxxx
+        Devto: xxxx
+        Bilibili: xxxx
+        Email: xxxx@xxxx.com
+        Phone: 555-555-555
+        RSS: true
