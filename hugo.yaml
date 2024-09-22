@@ -1,0 +1,147 @@
+# https://joycse06.github.io
+
+baseURL: https://joycse06.github.io
+disablePathToLower: false
+languageCode: en-us
+title: Life Adventures
+theme: ["LoveIt"]
+
+IsMultilingual: false
+
+# Frontmatter in Yaml
+metadataformat: yaml
+
+services:
+  disqus:
+    shortname: "hello"
+# Permalink URL Type. Don't change this because it will invalidate all old links
+# unless you like to do a ton of aliases. Add `url:` to your new posts instead.
+permalinks:
+  post: "/blog/:year-:month-:day-:title"
+
+# Menu
+menu:
+  # Navigation Menu
+  # Template: {{theme-dir}}/layouts/partials/nevigation.html
+  main:
+    - Name: Blog
+      URL: /blog/
+      weight: 2
+    - name: Archive
+      URL: /blog/archive/
+    - name: Categories
+      URL: /blog/categories/
+    - name: About Me
+      URL: /about/
+    - name: Contact
+      URL: /contact/
+
+# Parameters
+params:
+  sidebarHeader: Who am I?
+  sidebarText: |-
+    I am Prasenjit Kumar Nag (Joy), a Software Engineer.
+
+    I write about programming, spirituality, software architecture.
+
+    Click on [About Me!](/about/) to know more.
+
+  sidebarRecentLimit: 10
+
+  # Enable sidebarHeader
+  # Sidebar links
+  # bitbucket: "https://bitbucket.org/parsiya/" # I am not really active on bitbucket.
+  twitter: "https://twitter.com/joycse06/"
+  # keybase: "https://keybase.io/parsiya/"
+  github: "https://github.com/joycse06/"
+  linkedin: "https://www.linkedin.com/in/prasenjitnag"
+
+  # 404 page. Header and text.
+  notfoundHeader: There's nothing here.
+  notfoundText: You can never go back.
+
+  # Do not display all posts' content on the front page (and in pagination).
+  truncate: true
+
+  # Author's name. Appears in metadata and under posts.
+  author: Joy
+
+  # Text that appears in the website header under the website title.
+  subtitle: |-
+    The knowledge of anything, since all things have causes, is not acquired or
+    complete unless it is known by its causes. - Avicenna
+
+  # Search engine URL.
+  searchEngineURL: "https://www.google.com/search"
+
+  # "Continue Reading" text that appears under truncated posts.
+  # continueReadingText: Would you like to know more? # I don't need this, I am using the compact index.
+
+  # # Enable the RSS icon in navigation.
+  rss: true
+
+  description: ""
+  defaultKeywords:
+    - Prasenjit
+    - Joy
+    - programming
+    - spirituality
+
+  # Enable table of contents for post by setting this to true. Otherwise, you
+  # can enable/disable them individually via frontmatter.
+  # tableOfContents: false
+
+  # Generate taxonomy list under /categories/ and /tags/
+  generateTaxonomyList: true
+
+  # Twitter card config.
+  # Enable twitter card.
+  twitterCardEnabled: true
+  # Twitter card domain.
+  twitterCardDomain: parsiya.net
+  # Your twitter username, do not include the @.
+  twitterCardAuthor: CryptoGangsta
+  # Not sure what this is used for, but my twitter card works without it.
+  # twitterCardSite =
+
+  # Use the compact index.
+  compactIndex: true
+
+# markup for Hugo v.60+
+markup:
+  # Note to future me: The reason is because new links in Goldmark are not
+  # opened in a new tab by default. We can use the render hook to make it happen
+  # for just markdown links but not image links or linkify links (i.e., URLs in
+  # the markdown documents as-is). So before you come and waste a lot of time to
+  # switch to Goldmark, don't. Of course, unless this problem has been solved in
+  # Goldmark.
+  # defaultMarkdownHandler: blackfriday # use Blackfriday
+  # blackFriday:
+  #   fractions: false
+  #   hrefTargetBlank: true
+  #   latexDashes: false
+  #   nofollowLinks: true
+  #   smartDashes: false
+  #   smartypants: false
+
+  # Goodbye blackfriday, you have been deprecated.
+  # The render hook is not fired for linkify links in Goldmark so we have to
+  # replace all of them.
+  goldmark:
+    extensions:
+      typographer: false
+    renderer:
+      hardWraps: false
+      unsafe: true
+
+  # Change the defaults for the toc because I want to render every heading in
+  # the document.
+  tableOfContents:
+    endLevel: 7
+    startLevel: 1
+    # Note to future me: Consider changing the start level to 2 but then you
+    # have to go and change it for every blog post that started with a level 1
+    # heading.
+  highlight:
+    # use solarized-dark to highlight code.
+    style: "solarized-dark"
